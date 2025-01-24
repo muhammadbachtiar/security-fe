@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 
 function Divisi() {
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pageSize: 10,
-  });
+  // const [pagination, setPagination] = useState({
+  //   page: 1,
+  //   pageSize: 10,
+  // });
 
   // const { columns, isLoading, leaves } = useLeaveList({
   //   limit: pagination.pageSize,

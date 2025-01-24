@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { DatePicker, Table } from "antd";
 import { useState } from "react";

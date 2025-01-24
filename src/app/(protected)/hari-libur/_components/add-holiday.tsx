@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useDisclosure } from "@/hooks/use-disclosure";
 import errorResponse from "@/lib/error";
 import HolidayService from "@/services/holiday/holiday.service";
