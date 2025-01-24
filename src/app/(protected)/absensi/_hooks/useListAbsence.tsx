@@ -24,8 +24,8 @@ function useListAbsence({ limit, page, from, to }: Props) {
         page,
         from,
         to,
-        order: "created_at",
-        by: "desc",
+        order: "desc",
+        by: "created_at",
         with: "staff",
       });
       return response;
