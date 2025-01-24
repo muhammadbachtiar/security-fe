@@ -1,0 +1,114 @@
+import { useQuery } from "@tanstack/react-query";
+import { TableProps, Tag, Typography } from "antd";
+import { DeleteOvertime } from "../_components/delete-overtime";
+import { ActionOvertime } from "../_components/action-overtime";
+import moment from "moment";
+import "moment/locale/id";
+import OvertimeService from "@/services/overtime/overtime.service";
+import { TOvertime } from "@/services/overtime/overtime.type";
+import { DialogText } from "@/components/common/dialog-text";
+
+type Props = {
+  page: number;
+  limit: number;
+};
+
+function useLeaveList({ limit, page }: Props) {
+  const { data: overtimes, isLoading } = useQuery({
+    queryKey: ["OVERTIMES", page, limit],
+    queryFn: async () => {
+      const response = await OvertimeService.getAll({
+        page_size: limit,
+        page,
+        with: "staff",
+      });
+      return response;
+    },
+    select(data) {
+      return {
+        ...data,
+        data: data.data.map((ovt, index) => ({
+          ...ovt,
+          no: index + 1 + limit * page - limit,
+        })),
+      };
+    },
+  });
+
+  const columns: TableProps<TOvertime>["columns"] = [
+    {
+      title: "No",
+      dataIndex: "no",
+      render: (text: string) => <Typography.Text>{text}</Typography.Text>,
+      align: "center",
+    },
+    {
+      title: "Nama Staff",
+      dataIndex: "staff",
+      render: (value, record) => <p>{record.staff.nama}</p>,
+    },
+    {
+      title: "Tipe",
+      dataIndex: "tanggal",
+      render: (value, record) => (
+        <p className="capitalize">{moment(record.tanggal).format("LL")}</p>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (value = "") =>
+        value.toLowerCase() === "approve" ? (
+          <Tag color="green" className="capitalize">
+            {value}
+          </Tag>
+        ) : value.toLowerCase() === "pending" ? (
+          <Tag color="orange" className="capitalize">
+            {value}
+          </Tag>
+        ) : (
+          <Tag color="red" className="capitalize">
+            {value}
+          </Tag>
+        ),
+    },
+    {
+      title: "Jam",
+      dataIndex: "jam_mulai",
+      render: (value, record) => (
+        <p className="capitalize">
+          {record?.jam_mulai?.split(":").slice(0, 2).join(":") || "-"} -{" "}
+          {record?.jam_selesai?.split(":").slice(0, 2).join(":") || "-"}
+        </p>
+      ),
+    },
+    {
+      title: "Alasan",
+      dataIndex: "alasan",
+      render: (value = "") => (
+        <DialogText content={value} textButton="Lihat Alasan" title="Alasan" />
+      ),
+    },
+
+    {
+      title: "Action",
+      key: "",
+      render: (value, record) => {
+        return (
+          <div key={record.id} className="flex gap-[8px]">
+            {record.status === "pending" && (
+              <>
+                <ActionOvertime ovtId={record.id} status="approve" />
+                <ActionOvertime ovtId={record.id} status="reject" />
+              </>
+            )}
+            <DeleteOvertime ovtId={record.id} />
+          </div>
+        );
+      },
+    },
+  ];
+  return { columns, overtimes, isLoading };
+}
+
+export default useLeaveList;
