@@ -57,7 +57,9 @@ function DetailAbsence() {
   useEffect(() => {
     if (absence) {
       setMarker([absence?.data?.lat, absence?.data?.long]);
-      setMarkerOut([absence?.data?.lat_pulang, absence?.data?.long_pulang]);
+      if (absence?.data?.lat_pulang && absence?.data?.long_pulang) {
+        setMarkerOut([absence.data.lat_pulang, absence.data.long_pulang]);
+      }
     }
   }, [absence]);
 

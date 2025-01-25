@@ -5,6 +5,7 @@ import { useState } from "react";
 import useListAbsence from "../_hooks/useListAbsence";
 import dayjs from "dayjs";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import { ShowQRAbsence } from "./show-qr-absence";
 
 function AbsensiPage() {
   const today = dayjs();
@@ -47,19 +48,23 @@ function AbsensiPage() {
           </p>
         </div>
 
-        <div>
-          <p className="mb-2">Tanggal</p>
-          <DatePicker.RangePicker
-            value={dateRange as any}
-            onChange={(val) => {
-              if (val) {
-                setDateRange(val as any);
-              }
-            }}
-            allowClear={false}
-            format="DD/MM/YYYY"
-            className="w-[280px]"
-          />
+        <div className="flex justify-between items-end">
+          <div>
+            <p className="mb-2">Tanggal</p>
+            <DatePicker.RangePicker
+              value={dateRange as any}
+              onChange={(val) => {
+                if (val) {
+                  setDateRange(val as any);
+                }
+              }}
+              allowClear={false}
+              format="DD/MM/YYYY"
+              className="w-[280px]"
+            />
+          </div>
+
+          <ShowQRAbsence />
         </div>
         <div className="overflow-auto">
           <Table

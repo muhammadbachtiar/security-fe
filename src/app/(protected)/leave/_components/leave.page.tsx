@@ -3,6 +3,7 @@ import { Table } from "antd";
 import { useState } from "react";
 import useLeaveList from "../_hooks/useLeaveList";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import { ShowQRLeave } from "./show-qr-leave";
 
 function Divisi() {
   const [pagination, setPagination] = useState({
@@ -43,6 +44,9 @@ function Divisi() {
           </p>
         </div>
 
+        <div>
+          <ShowQRLeave />
+        </div>
         <div className="overflow-auto">
           <Table
             id="leave-table"

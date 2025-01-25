@@ -82,9 +82,7 @@ function useListAbsence({ limit, page, from, to }: Props) {
       title: "Jam Masuk",
       dataIndex: "masuk",
       render: (value, record) => (
-        <p className="capitalize">
-          {record?.masuk?.split(":").slice(0, 2).join(":") || "-"}
-        </p>
+        <p className="capitalize">{moment(record.masuk).format("HH:mm")}</p>
       ),
     },
     {
@@ -92,7 +90,7 @@ function useListAbsence({ limit, page, from, to }: Props) {
       dataIndex: "keluar",
       render: (value, record) => (
         <p className="capitalize">
-          {record?.keluar?.split(":").slice(0, 2).join(":") || "-"}
+          {record.keluar ? moment(record.keluar).format("HH:mm") : "-"}
         </p>
       ),
     },

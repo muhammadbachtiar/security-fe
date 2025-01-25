@@ -3,6 +3,7 @@ import { Table } from "antd";
 import { useState } from "react";
 import useLeaveList from "../_hooks/useOvertimeList";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import { ShowQRAOvertime } from "./show-qr-overtime";
 
 function OvertimePage() {
   const [pagination, setPagination] = useState({
@@ -41,6 +42,10 @@ function OvertimePage() {
             Untuk pengelolaan pengajuan lemburan serta menyetujui atau
             menolaknya.
           </p>
+        </div>
+
+        <div>
+          <ShowQRAOvertime />
         </div>
 
         <div className="overflow-auto">
