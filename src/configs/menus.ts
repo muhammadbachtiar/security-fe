@@ -5,7 +5,7 @@ import {
   CircleGaugeIcon,
   Clock9Icon,
   FileClockIcon,
-  Home,
+  GaugeIcon,
   NetworkIcon,
   UsersIcon,
   UsersRoundIcon,
@@ -22,51 +22,55 @@ export const getMenus = (pathName: string) => {
     ];
   }
 
-  return [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: Home,
-    },
-    {
-      title: "Absensi",
-      url: "/absensi",
-      icon: FileClockIcon,
-    },
-    {
-      title: "Staff",
-      url: "/staff",
-      icon: UsersIcon,
-    },
-    {
-      title: "Divisi",
-      url: "/divisi",
-      icon: NetworkIcon,
-    },
-    {
-      title: "Shift",
-      url: "/shift",
-      icon: CalendarCheckIcon,
-    },
-    {
-      title: "Cuti & Izin",
-      url: "/leave",
-      icon: CircleGaugeIcon,
-    },
-    {
-      title: "Lembur",
-      url: "/overtime",
-      icon: Clock9Icon,
-    },
-    {
-      title: "Laporan",
-      url: "/laporan",
-      icon: BookUpIcon,
-    },
-    {
-      title: "Hari Libur",
-      url: "/hari-libur",
-      icon: CalendarMinusIcon,
-    },
-  ];
+  if (pathName.startsWith("/human-resource")) {
+    return [
+      {
+        title: "Dashboard",
+        url: "/human-resource",
+        icon: GaugeIcon,
+      },
+      {
+        title: "Absensi",
+        url: "/human-resource/absensi",
+        icon: FileClockIcon,
+      },
+      {
+        title: "Staff",
+        url: "/human-resource/staff",
+        icon: UsersIcon,
+      },
+      {
+        title: "Divisi",
+        url: "/human-resource/divisi",
+        icon: NetworkIcon,
+      },
+      {
+        title: "Shift",
+        url: "/human-resource/shift",
+        icon: CalendarCheckIcon,
+      },
+      {
+        title: "Cuti & Izin",
+        url: "/human-resource/leave",
+        icon: CircleGaugeIcon,
+      },
+      {
+        title: "Lembur",
+        url: "/human-resource/overtime",
+        icon: Clock9Icon,
+      },
+      {
+        title: "Laporan",
+        url: "/human-resource/laporan",
+        icon: BookUpIcon,
+      },
+      {
+        title: "Hari Libur",
+        url: "/human-resource/hari-libur",
+        icon: CalendarMinusIcon,
+      },
+    ];
+  }
+
+  return [];
 };

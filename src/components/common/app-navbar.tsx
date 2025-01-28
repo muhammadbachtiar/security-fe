@@ -1,9 +1,107 @@
+"use client";
+import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "../ui/sidebar";
+import { Avatar, Dropdown } from "antd";
+import { ChevronDownIcon, PowerIcon, UserIcon } from "lucide-react";
+import Link from "next/link";
+import Cookies from "js-cookie";
+import { useQuery } from "@tanstack/react-query";
+import AuthService from "@/services/auth/auth.service";
+import { cn } from "@/lib/utils";
 
 function AppNavbar() {
+  const pathname = usePathname();
+
+  const handleLogout = () => {
+    Cookies.remove("session");
+    window.location.href = "/login";
+  };
+
+  const { data: user } = useQuery({
+    queryKey: ["ME"],
+    queryFn: async () => {
+      const response = await AuthService.me();
+      return response;
+    },
+  });
+
   return (
-    <nav className="h-12 px-4 w-full border-b flex justify-between items-center bg-white">
-      <SidebarTrigger />
+    <nav
+      className={cn(
+        "h-14 px-4 w-full border-b flex items-center bg-white",
+        pathname === "/" ? "justify-end" : "justify-between"
+      )}
+    >
+      {pathname !== "/" && <SidebarTrigger />}
+
+      <Dropdown
+        placement="bottomRight"
+        trigger={["click"]}
+        overlayClassName="!min-w-[120px] !max-w-[120px]"
+        menu={{
+          style: {
+            borderRadius: "12px",
+            padding: "0px",
+            overflow: "hidden",
+          },
+          items: [
+            {
+              key: "1",
+              style: {
+                paddingTop: "8px",
+                paddingBottom: "8px",
+                borderRadius: 0,
+              },
+              label: (
+                <Link type="next-link" href="/profile" passHref>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "12px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <UserIcon />
+                    Profile
+                  </div>
+                </Link>
+              ),
+            },
+            {
+              key: "2",
+              style: {
+                paddingTop: "8px",
+                paddingBottom: "8px",
+                borderRadius: 0,
+              },
+              label: (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "12px",
+                    alignItems: "center",
+                  }}
+                  data-test="logout-button"
+                >
+                  <PowerIcon />
+                  Log out
+                </div>
+              ),
+              danger: true,
+              onClick: handleLogout,
+            },
+          ],
+        }}
+      >
+        <div className="flex items-center gap-2 cursor-pointer">
+          <p>{user?.data.username}</p>
+          <div className="flex items-center gap-1">
+            <Avatar className="!bg-blue-300" icon={<UserIcon />} />
+
+            <ChevronDownIcon />
+          </div>
+        </div>
+      </Dropdown>
     </nav>
   );
 }

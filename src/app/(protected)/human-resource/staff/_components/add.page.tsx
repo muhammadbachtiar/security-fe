@@ -43,7 +43,7 @@ function AddPage() {
       });
       toast.success("Staff berhasil dibuat");
       form.resetFields();
-      router.push("/staff");
+      router.push("/human-resource/staff");
     } catch (error) {
       errorResponse(error as AxiosError);
     } finally {

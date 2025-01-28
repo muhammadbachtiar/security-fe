@@ -5,6 +5,7 @@ import { useState } from "react";
 import useListDivisi from "../_hooks/useListDivisi";
 import AddDivision from "./add-division";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import AddSubDivision from "./add-sub-division";
 
 function Divisi() {
   const [pagination, setPagination] = useState({
@@ -38,7 +39,10 @@ function Divisi() {
         <div className="border-b pb-3">
           <div className="flex justify-between">
             <p className="text-xl font-medium">Data Divisi</p>
-            <AddDivision />
+            <div className="flex gap-2">
+              <AddDivision />
+              <AddSubDivision />
+            </div>
           </div>
           <p className="text-sm text-gray-500">
             Fitur divisi memudahkan pengelolaan struktur organisasi dan

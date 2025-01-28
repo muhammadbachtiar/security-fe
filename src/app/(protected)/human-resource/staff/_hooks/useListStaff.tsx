@@ -63,7 +63,9 @@ function useListStaff({ limit, page }: Props) {
         return (
           <div key={record.id} className="flex gap-[8px]">
             <Button
-              onClick={() => router.push(`/staff/${record.id}/edit`)}
+              onClick={() =>
+                router.push(`/human-resource/staff/${record.id}/edit`)
+              }
               icon={<PencilIcon className="w-4 h-4 !text-orange-500" />}
               type="text"
             ></Button>

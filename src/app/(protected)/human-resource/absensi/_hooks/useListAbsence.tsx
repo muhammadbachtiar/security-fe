@@ -6,6 +6,7 @@ import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AbsenceService from "@/services/absence/absence.service";
 import { TAbsence } from "@/services/absence/absence.type";
+import { splitTime } from "@/lib/utils";
 
 type Props = {
   page: number;
@@ -26,7 +27,7 @@ function useListAbsence({ limit, page, from, to }: Props) {
         to,
         order: "desc",
         by: "created_at",
-        with: "staff",
+        with: "staff,shift",
       });
       return response;
     },
@@ -94,7 +95,19 @@ function useListAbsence({ limit, page, from, to }: Props) {
         </p>
       ),
     },
-
+    {
+      title: "Shift",
+      dataIndex: "shift",
+      render: (value, record) => (
+        <div className="capitalize">
+          <p>{record.shift.nama}</p>
+          <p>
+            ({splitTime(record.shift.jam_masuk)} -{" "}
+            {splitTime(record.shift.jam_keluar)})
+          </p>
+        </div>
+      ),
+    },
     {
       title: "Action",
       key: "",
@@ -105,7 +118,9 @@ function useListAbsence({ limit, page, from, to }: Props) {
             <Button
               icon={<EyeIcon className="w-4 h-4 !text-primary " />}
               type="text"
-              onClick={() => router.push(`/absensi/${record.id}`)}
+              onClick={() =>
+                router.push(`/human-resource/absensi/${record.id}`)
+              }
               className="!border !border-primary !text-primary"
             >
               Detail

@@ -1,9 +1,8 @@
 export type UserType = {
   id: number;
-  name: string;
-  email: string;
-  email_verified_at: null;
-  avatar?: string;
+  username: string;
+  is_changed: boolean;
+  is_staff: boolean;
   deleted_at: null | Date;
   created_at: null | Date;
   updated_at: null | Date;

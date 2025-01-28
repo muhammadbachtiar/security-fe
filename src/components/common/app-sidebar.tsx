@@ -1,6 +1,4 @@
 "use client";
-import { UserIcon } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -16,15 +14,16 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "./image";
-import { Button } from "antd";
 import { getMenus } from "@/configs/menus";
+import { Button } from "antd";
+import { HomeIcon } from "lucide-react";
 
 const isActive = (pathname: string, item: string) => {
-  if (item === "/" && pathname === "/") {
+  if (item === "/human-resource" && pathname === "/human-resource") {
     return true;
   }
 
-  if (item !== "/" && pathname.startsWith(item)) {
+  if (item !== "/human-resource" && pathname.startsWith(item)) {
     return true;
   }
 
@@ -34,6 +33,11 @@ const isActive = (pathname: string, item: string) => {
 export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
+
+  if (pathname === "/") {
+    return null;
+  }
+
   return (
     <Sidebar className="bg-red-300">
       <SidebarContent>
@@ -69,13 +73,14 @@ export function AppSidebar() {
       <SidebarFooter>
         <div className="p-3 space-y-4 flex items-center flex-col">
           <Button
-            onClick={() => router.push("/user-management")}
-            icon={<UserIcon className="w-4 h-4" />}
+            onClick={() => router.push("/")}
+            icon={<HomeIcon className="w-4 h-4" />}
           >
-            User Management
+            Kembali ke Home
           </Button>
           <p className="text-xs text-center">
-            Copyright © 2024 Sarana Technology. All Rights Reserved
+            Copyright © {new Date().getFullYear()} Sarana Technology. All Rights
+            Reserved
           </p>
         </div>
       </SidebarFooter>

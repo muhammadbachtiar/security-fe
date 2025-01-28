@@ -11,6 +11,7 @@ export type TDivision = {
 };
 
 export type RequestBodyDivision = {
+  division_id: number | null;
   name: string;
   division?: RequestBodyDivision[];
 };

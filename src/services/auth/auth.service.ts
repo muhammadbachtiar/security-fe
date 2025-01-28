@@ -3,7 +3,7 @@ import { BaseResponseDto } from "@/types/response";
 import { LoginResponseDto, UserType } from "./auth.dto";
 
 const AuthService = {
-  me: async (params: { with?: string }) => {
+  me: async (params?: { with?: string }) => {
     const response = await axiosConfig.get<BaseResponseDto<UserType>>("/auth", {
       params,
     });

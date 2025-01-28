@@ -39,7 +39,7 @@ function StaffPage() {
           <div className="flex justify-between">
             <p className="text-xl font-medium">Data Staff</p>
             <Button
-              onClick={() => router.push("/staff/tambah")}
+              onClick={() => router.push("/human-resource/staff/tambah")}
               icon={<PlusIcon />}
               type="primary"
             >

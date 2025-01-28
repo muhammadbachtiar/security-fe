@@ -77,7 +77,7 @@ function useListDivisi({ limit, page }: Props) {
               className="w-full px-3 !text-blue-500"
               icon={<NetworkIcon className="w-5 h-5 !text-blue-500" />}
               type="text"
-              onClick={() => router.push(`/divisi/${record.id}`)}
+              onClick={() => router.push(`/human-resource/divisi/${record.id}`)}
             ></Button>
           </div>
         );

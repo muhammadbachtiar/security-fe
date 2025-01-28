@@ -3,7 +3,7 @@ import errorResponse from "@/lib/error";
 import DivisionService from "@/services/divisi/divisi.service";
 import { RequestBodyDivision } from "@/services/divisi/divisi.type";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, Modal, Typography } from "antd";
+import { Button, Form, Input, Modal, Select, Typography } from "antd";
 import { AxiosError } from "axios";
 import { PencilIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -25,11 +25,25 @@ function EditDivision({ divId }: { divId: number }) {
     },
   });
 
+  const { data: divisions } = useQuery({
+    queryKey: ["DIVISIONS"],
+    queryFn: async () => {
+      const response = await DivisionService.getAll({
+        page_size: 9999,
+        page: 1,
+      });
+      return response;
+    },
+  });
+
   const onSubmit = async (val: RequestBodyDivision) => {
     try {
       setLoading(true);
 
-      await DivisionService.update(divId, val);
+      await DivisionService.update(divId, {
+        ...val,
+        division_id: val?.division_id || null,
+      });
       queryClient.invalidateQueries({
         queryKey: ["DIVISIONS"],
       });
@@ -49,6 +63,9 @@ function EditDivision({ divId }: { divId: number }) {
   useEffect(() => {
     if (division) {
       form.setFieldValue("name", division.data.name);
+      if (division.data?.division_id) {
+        form.setFieldValue("division_id", division.data.division_id);
+      }
     }
   }, [division]);
 
@@ -81,6 +98,21 @@ function EditDivision({ divId }: { divId: number }) {
           onFinish={onSubmit}
           autoComplete="off"
         >
+          <Form.Item name="division_id" label="Divisi" className="!mb-2 w-full">
+            <Select
+              allowClear
+              placeholder="Parent"
+              options={divisions?.data.map((div) => ({
+                label: div.name,
+                value: div.id,
+              }))}
+            />
+            <p className="text-gray-500 text-sm">
+              Jika parent tidak di isi, maka otomatis akan menjadi divisi
+              parent.
+            </p>
+          </Form.Item>
+
           <Form.Item
             name="name"
             label="Nama"

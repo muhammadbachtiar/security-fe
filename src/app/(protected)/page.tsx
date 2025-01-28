@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
-export { default } from "./_components/dashboard.page";
+export { default } from "./_components/portal.page";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Dashboard",
+  title: "Portal",
+  description: "Portal",
 };

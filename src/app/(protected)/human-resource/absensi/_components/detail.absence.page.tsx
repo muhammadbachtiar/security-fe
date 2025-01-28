@@ -103,19 +103,19 @@ function DetailAbsence() {
           </div>
           <div className="space-y-2">
             <p className="font-bold">Jam Masuk</p>
-            <p>
-              {absence?.data?.masuk?.split(":").slice(0, 2).join(":") || "-"}
-            </p>
+            <p>{moment(absence?.data?.masuk).format("HH:mm")}</p>
           </div>
           <div className="space-y-2">
             <p className="font-bold">Jam Keluar</p>
             <p>
-              {absence?.data?.keluar?.split(":").slice(0, 2).join(":") || "-"}
+              {absence?.data?.keluar
+                ? moment(absence?.data?.keluar).format("HH:mm")
+                : "-"}
             </p>
           </div>
         </div>
         <div className="border">
-          {marker.length && (
+          {marker.length ? (
             <MapContainer
               center={marker as LatLngExpression}
               zoom={DEFAULT_MAP_ZOOM}
@@ -129,14 +129,14 @@ function DetailAbsence() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <Marker icon={redIcon} position={marker as LatLngExpression} />
-              {markerOut.length && (
+              {markerOut.length ? (
                 <Marker
                   icon={blueIcon}
                   position={markerOut as LatLngExpression}
                 />
-              )}
+              ) : null}
             </MapContainer>
-          )}
+          ) : null}
         </div>
 
         <div className="mt-4">

@@ -52,7 +52,7 @@ function EditPage() {
       });
       toast.success("Staff berhasil diubah");
       form.resetFields();
-      router.push("/staff");
+      router.push("/human-resource/staff");
     } catch (error) {
       errorResponse(error as AxiosError);
     } finally {
