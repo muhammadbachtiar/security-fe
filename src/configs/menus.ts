@@ -1,5 +1,6 @@
 import {
   BookUpIcon,
+  BoxesIcon,
   CalendarCheckIcon,
   CalendarMinusIcon,
   CircleGaugeIcon,
@@ -23,6 +24,11 @@ export const getMenus = (pathName: string) => {
         title: "Satuan",
         url: "/warehouse/satuan",
         icon: WeightIcon,
+      },
+      {
+        title: "Kategori",
+        url: "/warehouse/kategori",
+        icon: BoxesIcon,
       },
     ];
   }

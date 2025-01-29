@@ -41,7 +41,7 @@ const CategoryService = {
     );
     return response.data;
   },
-  getAllProducTCategory: async (params: any) => {
+  getAllProductCategory: async (params: any) => {
     const response = await axiosConfigWms.get<
       BaseResponsePaginate<TCategory[]>
     >("/product-category", {
@@ -49,27 +49,27 @@ const CategoryService = {
     });
     return response.data;
   },
-  createProducTCategory: async (payload: any) => {
+  createProductCategory: async (payload: any) => {
     const response = await axiosConfigWms.post<BaseResponseDto<TCategory>>(
       "/product-category",
       payload
     );
     return response.data;
   },
-  updateProducTCategory: async (unitId: number, payload: any) => {
+  updateProductCategory: async (unitId: number, payload: any) => {
     const response = await axiosConfigWms.put<BaseResponseDto<TCategory>>(
       `/product-category/${unitId}`,
       payload
     );
     return response.data;
   },
-  deleteProducTCategory: async (unitId: number) => {
+  deleteProductCategory: async (unitId: number) => {
     const response = await axiosConfigWms.delete<BaseResponseDto<TCategory>>(
       `/product-category/${unitId}`
     );
     return response.data;
   },
-  getOneProducTCategory: async (unitId: number, params?: any) => {
+  getOneProductCategory: async (unitId: number, params?: any) => {
     const response = await axiosConfigWms.get<BaseResponseDto<TCategory>>(
       `/product-category/${unitId}`,
       {

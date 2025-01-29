@@ -19,19 +19,17 @@ import { Button } from "antd";
 import { HomeIcon } from "lucide-react";
 
 const isActive = (pathname: string, item: string) => {
-  if (item === "/human-resource" && pathname === "/human-resource") {
+  const paths = ["/human-resource", "/warehouse"];
+
+  if (paths.includes(item) && paths.includes(pathname)) {
     return true;
   }
 
-  if (item === "/warehouse" && pathname === "/warehouse") {
-    return true;
-  }
+  // if (item === "/warehouse" && pathname === "/warehouse") {
+  //   return true;
+  // }
 
-  if (item !== "/human-resource" && pathname.startsWith(item)) {
-    return true;
-  }
-
-  if (item !== "/warehouse" && pathname.startsWith(item)) {
+  if (!paths.includes(item) && pathname.startsWith(item)) {
     return true;
   }
 

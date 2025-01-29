@@ -39,6 +39,20 @@ const StaffService = {
     );
     return response.data;
   },
+  exportReportPersonal: async (params: any) => {
+    const response = await axiosConfig.get(`/report/personal`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
+  exportReportTotal: async (params: any) => {
+    const response = await axiosConfig.get(`/report/total`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
 };
 
 export default StaffService;

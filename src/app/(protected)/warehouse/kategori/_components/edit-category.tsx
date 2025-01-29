@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useDisclosure } from "@/hooks/use-disclosure";
 import errorResponse from "@/lib/error";
-import UnitService from "@/services/unit/unit.service";
+import CategoryService from "@/services/category/category.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, Modal, Switch, Typography } from "antd";
+import { Button, Form, Input, Modal, Typography } from "antd";
 import { AxiosError } from "axios";
 import { PencilIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-function EditSatuan({
+function EditCategory({
   isProduct,
-  productId,
+  categoryId,
 }: {
   isProduct: boolean;
-  productId: number;
+  categoryId: number;
 }) {
   const modal = useDisclosure();
   const [form] = Form.useForm();
@@ -22,19 +22,19 @@ function EditSatuan({
 
   const queryClient = useQueryClient();
 
-  const { data: unitsProduct, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["UNIT_PRODUCT", productId, modal.isOpen],
+  const { data: categoryProduct, isLoading: isLoadingProduct } = useQuery({
+    queryKey: ["CATEGORY_PRODUCT", categoryId, modal.isOpen],
     enabled: isProduct,
     queryFn: async () => {
-      const response = await UnitService.getOneProductUnit(productId);
+      const response = await CategoryService.getOneProductCategory(categoryId);
       return response;
     },
   });
-  const { data: unit, isLoading } = useQuery({
-    queryKey: ["UNIT", productId, modal.isOpen],
+  const { data: category, isLoading } = useQuery({
+    queryKey: ["CATEGORY", categoryId, modal.isOpen],
     enabled: !isProduct,
     queryFn: async () => {
-      const response = await UnitService.getOne(productId);
+      const response = await CategoryService.getOne(categoryId);
       return response;
     },
   });
@@ -44,30 +44,30 @@ function EditSatuan({
       setLoading(true);
 
       if (isProduct) {
-        await UnitService.updateProductUnit(productId, {
+        await CategoryService.updateProductCategory(categoryId, {
           name: val.name,
-          is_count: !!val?.is_count,
+          code: val.code,
         });
       } else {
-        await UnitService.update(productId, {
+        await CategoryService.update(categoryId, {
           name: val.name,
-          is_count: !!val?.is_count,
+          code: val.code,
         });
       }
 
       queryClient.invalidateQueries({
-        queryKey: ["UNITS"],
+        queryKey: ["CATEGORIES"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["UNIT", productId],
+        queryKey: ["CATEGORY", categoryId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["UNITS_PRODUCT"],
+        queryKey: ["CATEGORIES_PRODUCT"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["UNIT_PRODUCT", productId],
+        queryKey: ["CATEGORY_PRODUCT", categoryId],
       });
-      toast.success("Satuan berhasil dibuat");
+      toast.success("Kategori berhasil dibuat");
       form.resetFields();
       modal.onClose();
     } catch (error) {
@@ -78,15 +78,15 @@ function EditSatuan({
   };
 
   useEffect(() => {
-    if (unit) {
-      form.setFieldValue("name", unit.data.name);
-      form.setFieldValue("is_count", unit.data.is_count);
+    if (category) {
+      form.setFieldValue("name", category.data.name);
+      form.setFieldValue("code", category.data.code);
     }
-    if (unitsProduct) {
-      form.setFieldValue("name", unitsProduct.data.name);
-      form.setFieldValue("is_count", unitsProduct.data.is_count);
+    if (categoryProduct) {
+      form.setFieldValue("name", categoryProduct.data.name);
+      form.setFieldValue("code", categoryProduct.data.code);
     }
-  }, [unit, unitsProduct]);
+  }, [category, categoryProduct]);
 
   return (
     <>
@@ -102,8 +102,8 @@ function EditSatuan({
           modal.onClose();
           form.resetFields();
         }}
-        okText="Simpan"
         loading={isProduct ? isLoadingProduct : isLoading}
+        okText="Simpan"
         okButtonProps={{
           onClick: form.submit,
         }}
@@ -118,16 +118,21 @@ function EditSatuan({
           autoComplete="off"
         >
           <Form.Item
-            label="Nama Satuan"
+            label="Nama Kategori"
             name="name"
             className="w-full !mb-2"
-            rules={[{ required: true, message: "Nama Satuan harus diisi" }]}
+            rules={[{ required: true, message: "Nama Kategori harus diisi" }]}
           >
             <Input placeholder="Nama" />
           </Form.Item>
 
-          <Form.Item label="Terhitung" name="is_count" className="w-full !mb-2">
-            <Switch />
+          <Form.Item
+            label="Kode"
+            name="code"
+            className="w-full !mb-2"
+            rules={[{ required: true, message: "Kode harus diisi" }]}
+          >
+            <Input placeholder="Kode" />
           </Form.Item>
         </Form>
       </Modal>
@@ -135,4 +140,4 @@ function EditSatuan({
   );
 }
 
-export default EditSatuan;
+export default EditCategory;
