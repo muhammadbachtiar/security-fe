@@ -8,16 +8,21 @@ import {
   GaugeIcon,
   NetworkIcon,
   UsersIcon,
-  UsersRoundIcon,
+  WeightIcon,
 } from "lucide-react";
 
 export const getMenus = (pathName: string) => {
-  if (pathName.startsWith("/user-management")) {
+  if (pathName.startsWith("/warehouse")) {
     return [
       {
-        title: "User",
-        url: "/user-management",
-        icon: UsersRoundIcon,
+        title: "Dashboard",
+        url: "/warehouse",
+        icon: GaugeIcon,
+      },
+      {
+        title: "Satuan",
+        url: "/warehouse/satuan",
+        icon: WeightIcon,
       },
     ];
   }

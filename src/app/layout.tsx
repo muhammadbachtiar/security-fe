@@ -6,8 +6,8 @@ import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Your App",
-  description: "Description your app",
+  title: "Sarana Technology",
+  description: "Sarana Technology",
 };
 
 export default function RootLayout({

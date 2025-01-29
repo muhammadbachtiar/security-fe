@@ -25,6 +25,10 @@ function AppNavbar() {
     },
   });
 
+  if (pathname === "/warehouse/login") {
+    return null;
+  }
+
   return (
     <nav
       className={cn(

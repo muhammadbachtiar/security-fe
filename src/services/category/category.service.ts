@@ -1,0 +1,83 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { BaseResponseDto, BaseResponsePaginate } from "@/types/response";
+import { axiosConfigWms } from "@/configs/axios";
+import { TCategory } from "./category.type";
+
+const CategoryService = {
+  getAll: async (params: any) => {
+    const response = await axiosConfigWms.get<
+      BaseResponsePaginate<TCategory[]>
+    >("/category", {
+      params,
+    });
+    return response.data;
+  },
+  create: async (payload: any) => {
+    const response = await axiosConfigWms.post<BaseResponseDto<TCategory>>(
+      "/category",
+      payload
+    );
+    return response.data;
+  },
+  update: async (unitId: number, payload: any) => {
+    const response = await axiosConfigWms.put<BaseResponseDto<TCategory>>(
+      `/category/${unitId}`,
+      payload
+    );
+    return response.data;
+  },
+  delete: async (unitId: number) => {
+    const response = await axiosConfigWms.delete<BaseResponseDto<TCategory>>(
+      `/category/${unitId}`
+    );
+    return response.data;
+  },
+  getOne: async (unitId: number, params?: any) => {
+    const response = await axiosConfigWms.get<BaseResponseDto<TCategory>>(
+      `/category/${unitId}`,
+      {
+        params,
+      }
+    );
+    return response.data;
+  },
+  getAllProducTCategory: async (params: any) => {
+    const response = await axiosConfigWms.get<
+      BaseResponsePaginate<TCategory[]>
+    >("/product-category", {
+      params,
+    });
+    return response.data;
+  },
+  createProducTCategory: async (payload: any) => {
+    const response = await axiosConfigWms.post<BaseResponseDto<TCategory>>(
+      "/product-category",
+      payload
+    );
+    return response.data;
+  },
+  updateProducTCategory: async (unitId: number, payload: any) => {
+    const response = await axiosConfigWms.put<BaseResponseDto<TCategory>>(
+      `/product-category/${unitId}`,
+      payload
+    );
+    return response.data;
+  },
+  deleteProducTCategory: async (unitId: number) => {
+    const response = await axiosConfigWms.delete<BaseResponseDto<TCategory>>(
+      `/product-category/${unitId}`
+    );
+    return response.data;
+  },
+  getOneProducTCategory: async (unitId: number, params?: any) => {
+    const response = await axiosConfigWms.get<BaseResponseDto<TCategory>>(
+      `/product-category/${unitId}`,
+      {
+        params,
+      }
+    );
+    return response.data;
+  },
+};
+
+export default CategoryService;

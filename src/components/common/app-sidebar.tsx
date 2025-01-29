@@ -23,7 +23,15 @@ const isActive = (pathname: string, item: string) => {
     return true;
   }
 
+  if (item === "/warehouse" && pathname === "/warehouse") {
+    return true;
+  }
+
   if (item !== "/human-resource" && pathname.startsWith(item)) {
+    return true;
+  }
+
+  if (item !== "/warehouse" && pathname.startsWith(item)) {
     return true;
   }
 
@@ -34,7 +42,7 @@ export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  if (pathname === "/") {
+  if (pathname === "/" || pathname === "/warehouse/login") {
     return null;
   }
 

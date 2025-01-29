@@ -3,11 +3,17 @@ import { NextResponse, type NextRequest } from "next/server";
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("session");
-  const accessTokenWarehouse = request.cookies.get("session_warehouse");
+  const accessTokenWarehouse = request.cookies.get("session_wms");
 
   if (request.nextUrl.pathname === "/login") {
     if (accessToken) {
       return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  if (request.nextUrl.pathname === "/warehouse/login") {
+    if (accessTokenWarehouse) {
+      return NextResponse.redirect(new URL("/warehouse", request.url));
     }
   }
 
@@ -20,8 +26,15 @@ export function middleware(request: NextRequest) {
     }
 
     if (request.nextUrl.pathname.startsWith("/warehouse")) {
+      if (request.nextUrl.pathname === "/warehouse/login") {
+        if (accessTokenWarehouse) {
+          return NextResponse.redirect(new URL("/warehouse", request.url));
+        } else {
+          return;
+        }
+      }
       if (!accessTokenWarehouse) {
-        return NextResponse.redirect(new URL(`/`, request.url));
+        return NextResponse.redirect(new URL(`/warehouse/login`, request.url));
       }
     }
   }

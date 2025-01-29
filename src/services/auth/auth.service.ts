@@ -1,4 +1,4 @@
-import axiosConfig from "@/configs/axios";
+import axiosConfig, { axiosConfigWms } from "@/configs/axios";
 import { BaseResponseDto } from "@/types/response";
 import { LoginResponseDto, UserType } from "./auth.dto";
 
@@ -14,6 +14,12 @@ const AuthService = {
       "/login",
       payload
     );
+    return response.data;
+  },
+  loginWms: async (payload: { username: string; password: string }) => {
+    const response = await axiosConfigWms.post<
+      BaseResponseDto<LoginResponseDto>
+    >("/login", payload);
     return response.data;
   },
 };
