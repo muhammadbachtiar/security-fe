@@ -5,11 +5,13 @@ import {
   CalendarMinusIcon,
   CircleGaugeIcon,
   Clock9Icon,
+  ContainerIcon,
   FileClockIcon,
   GaugeIcon,
   NetworkIcon,
   UsersIcon,
   WeightIcon,
+  WheatIcon,
 } from "lucide-react";
 
 export const getMenus = (pathName: string) => {
@@ -29,6 +31,16 @@ export const getMenus = (pathName: string) => {
         title: "Kategori",
         url: "/warehouse/kategori",
         icon: BoxesIcon,
+      },
+      {
+        title: "Bahan",
+        url: "/warehouse/bahan",
+        icon: WheatIcon,
+      },
+      {
+        title: "Supplier",
+        url: "/warehouse/supplier",
+        icon: ContainerIcon,
       },
     ];
   }

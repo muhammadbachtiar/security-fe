@@ -4,6 +4,7 @@ import EditShift from "../_components/edit-shift";
 import { DeleteShift } from "../_components/delete-shift";
 import ShiftService from "@/services/shift/shift.service";
 import { TShift } from "@/services/shift/shift.type";
+import moment from "moment";
 
 type Props = {
   page: number;
@@ -46,12 +47,12 @@ function useListShift({ limit, page }: Props) {
     {
       title: "Jam Masuk",
       dataIndex: "jam_masuk",
-      render: (value = "") => value,
+      render: (value = "") => moment(value).utc().format("HH:mm"),
     },
     {
       title: "Jam Keluar",
       dataIndex: "jam_keluar",
-      render: (value = "") => value,
+      render: (value = "") => moment(value).utc().format("HH:mm"),
     },
     {
       title: "Action",

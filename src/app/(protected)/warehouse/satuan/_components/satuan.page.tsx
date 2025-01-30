@@ -77,7 +77,7 @@ function SatuanPage() {
               onChange: (page, pageSize) => {
                 setPagination({ page, pageSize });
               },
-              total: !isProduct ? units?.meta.total : 10, //todo
+              total: !isProduct ? units?.meta.total : unitsProduct?.meta.total,
               pageSize: pagination.pageSize,
               current: pagination.page,
             }}

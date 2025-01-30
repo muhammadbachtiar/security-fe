@@ -10,6 +10,7 @@ export type TAbsence = {
   keluar: string;
   // telat: string | boolean;
   waktu: string;
+  by: string | null;
   lat: number;
   long: number;
   lat_pulang: number;

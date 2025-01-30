@@ -5,6 +5,7 @@ import { ActionLeave } from "../_components/action-leave";
 import LeaveService from "@/services/leave/leave.service";
 import { TLeave } from "@/services/leave/leave.type";
 import { DialogText } from "@/components/common/dialog-text";
+import moment from "moment";
 
 type Props = {
   page: number;
@@ -71,11 +72,7 @@ function useLeaveList({ limit, page }: Props) {
     {
       title: "Jam",
       dataIndex: "jam",
-      render: (value, record) => (
-        <p className="capitalize">
-          {record?.jam?.split(":").slice(0, 2).join(":") || "-"}
-        </p>
-      ),
+      render: (value = "") => moment(value).utc().format("HH:mm"),
     },
     {
       title: "Alasan",

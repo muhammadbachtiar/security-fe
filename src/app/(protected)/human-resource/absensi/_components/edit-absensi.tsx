@@ -7,6 +7,7 @@ import { Button, Form, Modal, TimePicker, Typography } from "antd";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PencilIcon } from "lucide-react";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -29,9 +30,20 @@ function EditAbsensi({ absenceId }: { absenceId: number }) {
   const onSubmit = async (val: any) => {
     try {
       setLoading(true);
+      const today = moment().format("YYYY-MM-DD");
+      const beforeFormatIn = dayjs(val.masuk).format("HH:mm");
+      const beforeFormatOut = dayjs(val.keluar).format("HH:mm");
+
+      const inTime = moment(`${today} ${beforeFormatIn}`, "YYYY-MM-DD HH:mm")
+        .utc()
+        .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+      const outTime = moment(`${today} ${beforeFormatOut}`, "YYYY-MM-DD HH:mm")
+        .utc()
+        .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+
       await AbsenceService.update(absenceId, {
-        masuk: dayjs(val.masuk).format("HH:mm"),
-        keluar: dayjs(val.keluar).format("HH:mm"),
+        masuk: inTime,
+        keluar: outTime,
       });
       queryClient.resetQueries({
         queryKey: ["ABSENCES"],
@@ -48,8 +60,10 @@ function EditAbsensi({ absenceId }: { absenceId: number }) {
 
   useEffect(() => {
     if (absence) {
-      form.setFieldValue("masuk", dayjs(absence.data.masuk, "HH:mm:ss"));
-      form.setFieldValue("keluar", dayjs(absence.data.keluar, "HH:mm:ss"));
+      form.setFieldValue("masuk", dayjs(absence.data.masuk));
+      if (absence.data.keluar) {
+        form.setFieldValue("keluar", dayjs(absence.data.keluar));
+      }
     }
   }, [absence]);
 
@@ -73,7 +87,7 @@ function EditAbsensi({ absenceId }: { absenceId: number }) {
           onClick: form.submit,
         }}
         confirmLoading={loading}
-        title={<Typography.Title level={4}>Edit Hari Libur</Typography.Title>}
+        title={<Typography.Title level={4}>Edit Absensi</Typography.Title>}
       >
         <Form
           form={form}
@@ -96,7 +110,7 @@ function EditAbsensi({ absenceId }: { absenceId: number }) {
           </Form.Item>
           <Form.Item
             label="Jam Keluar"
-            name="masuk"
+            name="keluar"
             className="w-full !mb-2"
             rules={[{ required: true, message: "Jam Keluar harus diisi" }]}
           >

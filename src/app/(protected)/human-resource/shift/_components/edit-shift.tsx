@@ -9,6 +9,9 @@ import dayjs from "dayjs";
 import { PencilIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 function EditShift({ shiftId }: { shiftId: number }) {
   const modal = useDisclosure();
@@ -54,11 +57,8 @@ function EditShift({ shiftId }: { shiftId: number }) {
   useEffect(() => {
     if (shift) {
       form.setFieldValue("nama", shift.data.nama);
-      form.setFieldValue("jam_masuk", dayjs(shift.data.jam_masuk, "HH:mm:ss"));
-      form.setFieldValue(
-        "jam_keluar",
-        dayjs(shift.data.jam_keluar, "HH:mm:ss")
-      );
+      form.setFieldValue("jam_masuk", dayjs(shift.data.jam_masuk).utc());
+      form.setFieldValue("jam_keluar", dayjs(shift.data.jam_keluar).utc());
     }
   }, [shift]);
 

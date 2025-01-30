@@ -68,17 +68,13 @@ function useLeaveList({ limit, page }: Props) {
           </Tag>
         ),
     },
+    // {
+    //   title: "Jam",
+    //   dataIndex: "jam",
+    //   render: (value = "") => moment(value).utc().format("HH:mm"),
+    // },
     {
-      title: "Jam",
-      dataIndex: "jam",
-      render: (value, record) => (
-        <p className="capitalize">
-          {record?.jam?.split(":").slice(0, 2).join(":") || "-"}
-        </p>
-      ),
-    },
-    {
-      title: "Alasan",
+      title: "Alasanb",
       dataIndex: "alasan",
       render: (value = "") => (
         <DialogText content={value} textButton="Lihat Alasan" title="Alasan" />

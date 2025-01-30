@@ -7,6 +7,7 @@ import ShiftService from "@/services/shift/shift.service";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, Select } from "antd";
 import { AxiosError } from "axios";
+import moment from "moment";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -159,13 +160,11 @@ function AbsencePage() {
             <Select
               placeholder="Pilih Shift"
               options={shifts?.data.map((s) => ({
-                label: `${s.nama} (${s.jam_masuk
-                  .split(":")
-                  .slice(0, 2)
-                  .join(":")} - ${s.jam_keluar
-                  .split(":")
-                  .slice(0, 2)
-                  .join(":")})`,
+                label: `${s.nama} (${moment(s.jam_masuk)
+                  .utc()
+                  .format("HH:mm")} - ${moment(s.jam_keluar)
+                  .utc()
+                  .format("HH:mm")})`,
                 value: s.id,
               }))}
             />

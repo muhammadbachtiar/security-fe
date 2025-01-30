@@ -108,7 +108,7 @@ function EditCategory({
           onClick: form.submit,
         }}
         confirmLoading={loading}
-        title={<Typography.Title level={4}>Edit Satuan</Typography.Title>}
+        title={<Typography.Title level={4}>Edit Kategori</Typography.Title>}
       >
         <Form
           form={form}

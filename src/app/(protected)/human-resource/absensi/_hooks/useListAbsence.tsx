@@ -6,7 +6,7 @@ import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AbsenceService from "@/services/absence/absence.service";
 import { TAbsence } from "@/services/absence/absence.type";
-import { splitTime } from "@/lib/utils";
+import EditAbsensi from "../_components/edit-absensi";
 
 type Props = {
   page: number;
@@ -102,11 +102,25 @@ function useListAbsence({ limit, page, from, to }: Props) {
         <div className="capitalize">
           <p>{record.shift.nama}</p>
           <p>
-            ({splitTime(record.shift.jam_masuk)} -{" "}
-            {splitTime(record.shift.jam_keluar)})
+            ({moment(record.shift.jam_masuk).utc().format("HH:mm")} -{" "}
+            {moment(record.shift.jam_keluar).utc().format("HH:mm")})
           </p>
         </div>
       ),
+    },
+    {
+      title: "Absence By",
+      dataIndex: "by",
+      render: (value) =>
+        value ? (
+          <Tag color="green" className="capitalize">
+            Admin
+          </Tag>
+        ) : (
+          <Tag color="purple" className="capitalize">
+            Staff
+          </Tag>
+        ),
     },
     {
       title: "Action",
@@ -114,17 +128,14 @@ function useListAbsence({ limit, page, from, to }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            {/* <EditAbsensi absenceId={record.id} /> */}
+            <EditAbsensi absenceId={record.id} />
             <Button
               icon={<EyeIcon className="w-4 h-4 !text-primary " />}
               type="text"
               onClick={() =>
                 router.push(`/human-resource/absensi/${record.id}`)
               }
-              className="!border !border-primary !text-primary"
-            >
-              Detail
-            </Button>
+            ></Button>
           </div>
         );
       },

@@ -77,8 +77,8 @@ function useLeaveList({ limit, page }: Props) {
       dataIndex: "jam_mulai",
       render: (value, record) => (
         <p className="capitalize">
-          {record?.jam_mulai?.split(":").slice(0, 2).join(":") || "-"} -{" "}
-          {record?.jam_selesai?.split(":").slice(0, 2).join(":") || "-"}
+          {moment(value).utc().format("HH:mm")} -{" "}
+          {moment(record.jam_selesai).utc().format("HH:mm")}
         </p>
       ),
     },
