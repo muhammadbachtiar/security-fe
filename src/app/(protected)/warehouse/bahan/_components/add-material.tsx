@@ -16,13 +16,14 @@ import {
 } from "antd";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 function AddMaterial() {
   const modal = useDisclosure();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [scannedData, setScannedData] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -67,6 +68,26 @@ function AddMaterial() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let buffer = "";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        setScannedData(buffer);
+        buffer = "";
+      } else {
+        buffer += event.key;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    form.setFieldValue("sku", scannedData);
+  }, [scannedData]);
 
   return (
     <>
@@ -157,7 +178,7 @@ function AddMaterial() {
             className="w-full !mb-2"
             rules={[{ required: true, message: "SKU harus diisi" }]}
           >
-            <Input placeholder="SKU" />
+            <InputNumber className="!w-full" placeholder="SKU" min={0} />
           </Form.Item>
         </Form>
       </Modal>

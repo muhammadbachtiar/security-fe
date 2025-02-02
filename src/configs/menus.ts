@@ -10,6 +10,7 @@ import {
   GaugeIcon,
   NetworkIcon,
   UsersIcon,
+  WarehouseIcon,
   WeightIcon,
   WheatIcon,
 } from "lucide-react";
@@ -41,6 +42,11 @@ export const getMenus = (pathName: string) => {
         title: "Supplier",
         url: "/warehouse/supplier",
         icon: ContainerIcon,
+      },
+      {
+        title: "Gudang",
+        url: "/warehouse/gudang",
+        icon: WarehouseIcon,
       },
     ];
   }

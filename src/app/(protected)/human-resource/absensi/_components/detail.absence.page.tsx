@@ -24,6 +24,11 @@ import { Skeleton } from "antd";
 import moment from "moment";
 import AbsenceService from "@/services/absence/absence.service";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import {
+  DEFAULT_MAP_ZOOM,
+  MAX_ZOOM_LEVEL,
+  MIN_ZOOM_LEVEL,
+} from "@/lib/constants";
 
 function DetailAbsence() {
   const { absenceId } = useParams();
@@ -38,10 +43,6 @@ function DetailAbsence() {
       return response;
     },
   });
-
-  const DEFAULT_MAP_ZOOM = 15;
-  const MIN_ZOOM_LEVEL = 5;
-  const MAX_ZOOM_LEVEL = 18;
 
   const blueIcon = L.icon({
     iconUrl: "/images/placeholder_blue.png",
