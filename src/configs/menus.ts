@@ -5,10 +5,14 @@ import {
   CalendarMinusIcon,
   CircleGaugeIcon,
   Clock9Icon,
+  ContactRoundIcon,
   ContainerIcon,
+  CookingPotIcon,
   FileClockIcon,
   GaugeIcon,
+  HandCoinsIcon,
   NetworkIcon,
+  Package2Icon,
   UsersIcon,
   WarehouseIcon,
   WeightIcon,
@@ -39,14 +43,29 @@ export const getMenus = (pathName: string) => {
         icon: WheatIcon,
       },
       {
+        title: "Produk",
+        url: "/warehouse/produk",
+        icon: Package2Icon,
+      },
+      {
         title: "Supplier",
         url: "/warehouse/supplier",
         icon: ContainerIcon,
       },
       {
+        title: "Customer",
+        url: "/warehouse/customer",
+        icon: ContactRoundIcon,
+      },
+      {
         title: "Gudang",
         url: "/warehouse/gudang",
         icon: WarehouseIcon,
+      },
+      {
+        title: "Recipe",
+        url: "/warehouse/recipe",
+        icon: CookingPotIcon,
       },
     ];
   }
@@ -97,6 +116,11 @@ export const getMenus = (pathName: string) => {
         title: "Hari Libur",
         url: "/human-resource/hari-libur",
         icon: CalendarMinusIcon,
+      },
+      {
+        title: "Payroll",
+        url: "/human-resource/payroll",
+        icon: HandCoinsIcon,
       },
     ];
   }

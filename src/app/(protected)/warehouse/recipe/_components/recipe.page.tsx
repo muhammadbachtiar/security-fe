@@ -1,19 +1,17 @@
 "use client";
-import { Button, Table } from "antd";
+import { Table } from "antd";
 import { useState } from "react";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
-import useListGudang from "../_hooks/useListGudang";
-import { useRouter } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import useListRecipe from "../_hooks/useListRecipe";
+import AddRecipe from "./add-recipe";
 
-function MaterialPage() {
-  const router = useRouter();
+function RecipePage() {
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
   });
 
-  const { columns, isLoading, gudang } = useListGudang({
+  const { columns, isLoading, recipes } = useListRecipe({
     limit: pagination.pageSize,
     page: pagination.page,
   });
@@ -28,7 +26,7 @@ function MaterialPage() {
               url: "/",
             },
             {
-              title: "Gudang",
+              title: "Recipe",
               url: "#",
             },
           ]}
@@ -38,28 +36,22 @@ function MaterialPage() {
       <div className="bg-white p-4 rounded-lg space-y-4">
         <div className="border-b pb-3">
           <div className="flex justify-between">
-            <p className="text-xl font-medium">Gudang</p>
-            <Button
-              onClick={() => router.push("/warehouse/gudang/tambah")}
-              icon={<PlusIcon />}
-              type="primary"
-            >
-              <span className="!hidden md:!inline">Tambah Gudang</span>
-            </Button>
+            <p className="text-xl font-medium">Recipe</p>
+            <AddRecipe />
           </div>
         </div>
 
         <div className="overflow-auto">
           <Table
-            id="gudang-table"
+            id="recipe-table"
             columns={columns}
-            dataSource={gudang?.data}
+            dataSource={recipes?.data}
             loading={isLoading}
             pagination={{
               onChange: (page, pageSize) => {
                 setPagination({ page, pageSize });
               },
-              total: gudang?.meta.total,
+              total: recipes?.meta.total,
               pageSize: pagination.pageSize,
               current: pagination.page,
             }}
@@ -70,4 +62,4 @@ function MaterialPage() {
   );
 }
 
-export default MaterialPage;
+export default RecipePage;

@@ -76,7 +76,7 @@ function LoginPage() {
         </Form>
         <div className="flex justify-center pt-6">
           <Image
-            alt="Logo Whitemarket"
+            alt="Sarana Logo"
             src="/images/sarana-logo.png"
             width={500}
             height={500}

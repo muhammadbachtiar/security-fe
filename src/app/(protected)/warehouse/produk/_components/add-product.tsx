@@ -1,0 +1,194 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useDisclosure } from "@/hooks/use-disclosure";
+import errorResponse from "@/lib/error";
+import CategoryService from "@/services/category/category.service";
+import ProductService from "@/services/product/product.service";
+import UnitService from "@/services/unit/unit.service";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Typography,
+} from "antd";
+import { AxiosError } from "axios";
+import { PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+function AddProduct() {
+  const modal = useDisclosure();
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [scannedData, setScannedData] = useState("");
+
+  const queryClient = useQueryClient();
+
+  const { data: categories } = useQuery({
+    queryKey: ["CATEGORIES_PRODUCT"],
+    queryFn: async () => {
+      const response = await CategoryService.getAllProductCategory({
+        page_size: 9999,
+        page: 1,
+      });
+      return response;
+    },
+  });
+
+  const { data: units } = useQuery({
+    queryKey: ["UNITS_PRODUCT"],
+    queryFn: async () => {
+      const response = await UnitService.getAllProductUnit({
+        page_size: 9999,
+        page: 1,
+      });
+      return response;
+    },
+  });
+
+  const onSubmit = async (val: any) => {
+    try {
+      setLoading(true);
+
+      await ProductService.create(val);
+
+      queryClient.invalidateQueries({
+        queryKey: ["PRODUCTS"],
+      });
+
+      toast.success("Produk berhasil dibuat");
+      form.resetFields();
+      modal.onClose();
+    } catch (error) {
+      errorResponse(error as AxiosError);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let buffer = "";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        setScannedData(buffer);
+        buffer = "";
+      } else {
+        buffer += event.key;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    form.setFieldValue("sku", scannedData);
+  }, [scannedData]);
+
+  return (
+    <>
+      <Button onClick={() => modal.onOpen()} icon={<PlusIcon />} type="primary">
+        <span className="!hidden md:!inline">Tambah Produk</span>
+      </Button>
+      <Modal
+        open={modal.isOpen}
+        maskClosable={false}
+        onCancel={() => {
+          modal.onClose();
+          form.resetFields();
+        }}
+        okText="Tambah"
+        okButtonProps={{
+          onClick: form.submit,
+        }}
+        confirmLoading={loading}
+        title={<Typography.Title level={4}>Tambah Produk</Typography.Title>}
+      >
+        <Form
+          form={form}
+          requiredMark
+          layout="vertical"
+          onFinish={onSubmit}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Nama Produk"
+            name="name"
+            className="w-full !mb-2"
+            rules={[{ required: true, message: "Nama produk harus diisi" }]}
+          >
+            <Input placeholder="Nama" />
+          </Form.Item>
+
+          <Form.Item
+            name="category_product_id"
+            label="Kategori"
+            className="!mb-2 w-full"
+            rules={[{ required: true, message: "Kategori harus diisi" }]}
+          >
+            <Select
+              placeholder="Pilih Kategori"
+              options={categories?.data.map((val) => ({
+                label: val.name,
+                value: val.id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="satuan_product_id"
+            label="Satuan"
+            className="!mb-2 w-full"
+            rules={[{ required: true, message: "Satuan harus diisi" }]}
+          >
+            <Select
+              placeholder="Pilih Satuan"
+              options={units?.data.map((val) => ({
+                label: val.name,
+                value: val.id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Stok"
+            name="stok"
+            className="w-full !mb-2"
+            rules={[{ required: true, message: "Stok harus diisi" }]}
+          >
+            <InputNumber className="!w-full" min={0} placeholder="0" />
+          </Form.Item>
+
+          <Form.Item
+            label="Harga"
+            name="harga"
+            className="w-full !mb-2"
+            rules={[{ required: true, message: "Harga harus diisi" }]}
+          >
+            <InputNumber
+              prefix="Rp. "
+              className="!w-full"
+              min={0}
+              placeholder="0"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="SKU"
+            name="sku"
+            className="w-full !mb-2"
+            rules={[{ required: true, message: "SKU harus diisi" }]}
+          >
+            <InputNumber className="!w-full" placeholder="SKU" min={0} />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
+  );
+}
+
+export default AddProduct;
