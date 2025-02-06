@@ -1,4 +1,5 @@
 import {
+  BanknoteIcon,
   BookUpIcon,
   BoxesIcon,
   CalendarCheckIcon,
@@ -121,6 +122,11 @@ export const getMenus = (pathName: string) => {
         title: "Payroll",
         url: "/human-resource/payroll",
         icon: HandCoinsIcon,
+      },
+      {
+        title: "Gaji Staff",
+        url: "/human-resource/salary",
+        icon: BanknoteIcon,
       },
     ];
   }

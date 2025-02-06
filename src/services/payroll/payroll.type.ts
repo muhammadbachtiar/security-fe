@@ -24,3 +24,12 @@ export type TPayrollDetail = {
   created_at: string;
   updated_at: string;
 };
+
+export type TSalary = {
+  data: {
+    total_hour: string;
+    total_salary: number;
+    salary_per_hour: number;
+    staff: TStaff;
+  };
+};

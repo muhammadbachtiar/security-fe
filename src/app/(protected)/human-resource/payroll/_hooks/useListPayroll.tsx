@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { TableProps, Typography } from "antd";
+import { Button, TableProps, Typography } from "antd";
 import "moment/locale/id";
 import PayrollService from "@/services/payroll/payroll.service";
 import { TPayroll } from "@/services/payroll/payroll.type";
@@ -8,6 +8,8 @@ import "moment/locale/id";
 import moment from "moment";
 import { DeletePayroll } from "../_components/delete-payroll";
 import EditPayroll from "../_components/edit-payroll";
+import { EyeIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   page: number;
@@ -15,6 +17,7 @@ type Props = {
 };
 
 function useListPayroll({ limit, page }: Props) {
+  const router = useRouter();
   const { data: payrolls, isLoading } = useQuery({
     queryKey: ["PAYROLLS", page, limit],
     queryFn: async () => {
@@ -69,6 +72,13 @@ function useListPayroll({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
+            <Button
+              icon={<EyeIcon className="w-4 h-4 !text-primary " />}
+              type="text"
+              onClick={() =>
+                router.push(`/human-resource/payroll/${record.id}`)
+              }
+            ></Button>
             <EditPayroll payrollId={record.id} />
             <DeletePayroll payrollId={record.id} />
           </div>

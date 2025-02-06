@@ -8,3 +8,12 @@ export function cn(...inputs: ClassValue[]) {
 export const splitTime = (time: string) => {
   return time.split(":").slice(0, 2).join(":") || "-";
 };
+
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
