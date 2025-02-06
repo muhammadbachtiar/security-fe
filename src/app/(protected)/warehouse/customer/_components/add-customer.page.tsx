@@ -10,14 +10,16 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
-import L, { LatLngExpression } from "leaflet";
+import { LatLngExpression } from "leaflet";
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from "@/lib/constants";
-import { useMapEvents } from "react-leaflet";
 import CustomerService from "@/services/customer/customer.service";
+import MapClickHandler from "@/components/common/map-click-handler";
+
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
 );
+
 const TileLayer = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
   { ssr: false }
@@ -28,12 +30,13 @@ const Marker = dynamic(
 );
 
 function AddCustomerPage() {
+  const [L, setL] = useState<typeof import("leaflet") | null>(null);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [myLatitude, setMyLatitude] = useState<number | null>(0);
-  const [myLongitude, setMyLongitude] = useState<number | null>(0);
+  const [myLatitude, setMyLatitude] = useState<number | null>(-6.186156);
+  const [myLongitude, setMyLongitude] = useState<number | null>(106.843649);
   const [marker, setMarker] = useState<any>(null);
 
   const getLocation = () => {
@@ -56,25 +59,23 @@ function AddCustomerPage() {
     }
   };
 
-  const MapClickHandler = () => {
-    useMapEvents({
-      click(e) {
-        setMarker([e.latlng.lat, e.latlng.lng]);
-        form.setFieldValue("marker", "true");
-      },
-    });
-    return null;
-  };
-
-  const redIcon = L.icon({
+  const redIcon = L?.icon({
     iconUrl: "/images/placeholder.png",
     iconSize: [32, 32],
     iconAnchor: [16, 32],
   });
 
+  useEffect(() => {
+    import("leaflet").then((leaflet) => {
+      setL(leaflet);
+    });
+  }, []);
+
   const onSubmit = async (val: any) => {
     try {
+      setMarker([]);
       setLoading(true);
+      console.log({ val });
       if (marker) {
         await CustomerService.create({
           ...val,
@@ -96,7 +97,9 @@ function AddCustomerPage() {
   };
 
   useEffect(() => {
-    getLocation();
+    if (typeof window !== "undefined" && "geolocation" in navigator) {
+      getLocation();
+    }
   }, []);
 
   return (
@@ -170,23 +173,33 @@ function AddCustomerPage() {
             name="marker"
             className="!mb-2 w-full"
           >
-            <MapContainer
-              center={[myLatitude, myLongitude] as LatLngExpression}
-              zoom={12}
-              minZoom={MIN_ZOOM_LEVEL}
-              maxZoom={MAX_ZOOM_LEVEL}
-              style={{ height: 500, width: "100%" }}
-              zoomControl={true}
-            >
-              <MapClickHandler />
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              {marker && (
-                <Marker icon={redIcon} position={marker as LatLngExpression} />
-              )}
-            </MapContainer>
+            {myLatitude && myLongitude && (
+              <MapContainer
+                center={[myLatitude, myLongitude] as LatLngExpression}
+                zoom={12}
+                minZoom={MIN_ZOOM_LEVEL}
+                maxZoom={MAX_ZOOM_LEVEL}
+                style={{ height: 500, width: "100%" }}
+                zoomControl={true}
+              >
+                <MapClickHandler
+                  onMapClick={(lat, long) => {
+                    setMarker([lat, long]);
+                    form.setFieldValue("marker", "true");
+                  }}
+                />
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {marker && (
+                  <Marker
+                    icon={redIcon}
+                    position={marker as LatLngExpression}
+                  />
+                )}
+              </MapContainer>
+            )}
           </Form.Item>
 
           <div className="flex justify-end mt-5">

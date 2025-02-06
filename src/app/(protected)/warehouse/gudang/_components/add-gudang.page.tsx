@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { GUDANG_TYPE_OPTIONS } from "../_constant";
 import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
-import L, { LatLngExpression } from "leaflet";
+import { LatLngExpression } from "leaflet";
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from "@/lib/constants";
 import { useMapEvents } from "react-leaflet";
 import GudangService from "@/services/gudang/gudang.service";
@@ -30,12 +30,12 @@ const Marker = dynamic(
 
 function AddGudangPage() {
   const [form] = Form.useForm();
-  const markerForm = Form.useWatch("marker", form);
   const [loading, setLoading] = useState(false);
+  const [L, setL] = useState<typeof import("leaflet") | null>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [myLatitude, setMyLatitude] = useState<number | null>(0);
-  const [myLongitude, setMyLongitude] = useState<number | null>(0);
+  const [myLatitude, setMyLatitude] = useState<number | null>(-6.186156);
+  const [myLongitude, setMyLongitude] = useState<number | null>(106.843649);
   const [marker, setMarker] = useState<any>(null);
 
   const getLocation = () => {
@@ -68,7 +68,13 @@ function AddGudangPage() {
     return null;
   };
 
-  const redIcon = L.icon({
+  useEffect(() => {
+    import("leaflet").then((leaflet) => {
+      setL(leaflet);
+    });
+  }, []);
+
+  const redIcon = L?.icon({
     iconUrl: "/images/placeholder.png",
     iconSize: [32, 32],
     iconAnchor: [16, 32],
