@@ -6,7 +6,15 @@ import errorResponse from "@/lib/error";
 import DivisionService from "@/services/divisi/divisi.service";
 import StaffService from "@/services/staff/staff.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, DatePicker, Form, Input, Select, Skeleton } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Skeleton,
+} from "antd";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
@@ -76,6 +84,7 @@ function EditPage() {
       form.setFieldValue("npwp", staff?.data?.npwp || "");
       form.setFieldValue("tanggal_lahir", dayjs(staff.data.tanggal_lahir));
       form.setFieldValue("tanggal_masuk", dayjs(staff.data.tanggal_masuk));
+      form.setFieldValue("salary", staff.data.salary);
     }
   }, [staff]);
 
@@ -309,6 +318,20 @@ function EditPage() {
                 allowClear={false}
                 format="DD/MM/YYYY"
                 className="w-full"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Gaji Pokok"
+              name="salary"
+              className="!mb-0"
+              rules={[{ required: true, message: "Gaji pokok harus diisi" }]}
+            >
+              <InputNumber
+                prefix="Rp. "
+                min={0}
+                placeholder={`0`}
+                className="!w-full"
               />
             </Form.Item>
 

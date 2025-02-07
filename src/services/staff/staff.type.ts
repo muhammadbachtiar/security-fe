@@ -14,6 +14,7 @@ export type TStaff = {
   email: string;
   gender: string;
   npwp: string;
+  salary: number;
   overtime_count?: number;
   absences_count?: number;
   permit_count?: number;

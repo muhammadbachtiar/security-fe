@@ -6,7 +6,7 @@ import errorResponse from "@/lib/error";
 import DivisionService from "@/services/divisi/divisi.service";
 import StaffService from "@/services/staff/staff.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, DatePicker, Form, Input, Select } from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
@@ -268,6 +268,20 @@ function AddPage() {
               allowClear={false}
               format="DD/MM/YYYY"
               className="w-full"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Gaji Pokok"
+            name="salary"
+            className="!mb-0"
+            rules={[{ required: true, message: "Gaji pokok harus diisi" }]}
+          >
+            <InputNumber
+              prefix="Rp. "
+              min={0}
+              placeholder={`0`}
+              className="!w-full"
             />
           </Form.Item>
 
