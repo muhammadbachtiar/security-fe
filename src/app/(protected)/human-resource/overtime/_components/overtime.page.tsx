@@ -1,11 +1,15 @@
 "use client";
-import { Table } from "antd";
+import { Select, Table } from "antd";
 import { useState } from "react";
 import useLeaveList from "../_hooks/useOvertimeList";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import { ShowQRAOvertime } from "./show-qr-overtime";
+import { ActionOvertimeMulti } from "./action-overtime-multi";
 
 function OvertimePage() {
+  const [status, setStatus] = useState("");
+  const [selectedData, setSelectedData] = useState<number[]>([]);
+
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -14,6 +18,7 @@ function OvertimePage() {
   const { columns, isLoading, overtimes } = useLeaveList({
     limit: pagination.pageSize,
     page: pagination.page,
+    status,
   });
 
   return (
@@ -44,7 +49,46 @@ function OvertimePage() {
           </p>
         </div>
 
-        <div>
+        <div className="flex justify-between">
+          <div className="flex gap-2">
+            {selectedData.length ? (
+              <>
+                <ActionOvertimeMulti
+                  ovtId={selectedData}
+                  status="approved"
+                  clear={() => setSelectedData([])}
+                />
+                <ActionOvertimeMulti
+                  ovtId={selectedData}
+                  status="rejected"
+                  clear={() => setSelectedData([])}
+                />
+              </>
+            ) : null}
+            <Select
+              onClear={() => setStatus("")}
+              onChange={(val) => {
+                setStatus(val);
+              }}
+              allowClear
+              placeholder="Pilih Status"
+              className="!w-[180px]"
+              options={[
+                {
+                  label: "Approved",
+                  value: "approved",
+                },
+                {
+                  label: "Rejected",
+                  value: "rejected",
+                },
+                {
+                  label: "Pending",
+                  value: "pending",
+                },
+              ]}
+            />
+          </div>
           <ShowQRAOvertime />
         </div>
 
@@ -52,6 +96,17 @@ function OvertimePage() {
           <Table
             id="overtime-table"
             columns={columns}
+            rowSelection={{
+              selectedRowKeys: selectedData,
+              onSelect(value, selected) {
+                if (selectedData.includes(value.id)) {
+                  setSelectedData((prev) => prev.filter((p) => p !== value.id));
+                  return;
+                }
+                setSelectedData((prev) => [...prev, value.id]);
+              },
+            }}
+            rowKey={(obj) => obj.id}
             dataSource={overtimes?.data}
             loading={isLoading}
             pagination={{

@@ -23,3 +23,27 @@ export type TAbsence = {
   created_at: string;
   updated_at: string;
 };
+
+export type TGraphAbsence = {
+  total_absen: number;
+  tidak_absen_pulang: {
+    value: number;
+    percentage: number;
+  };
+  masuk: {
+    value: number;
+    percentage: number;
+  };
+  telat: {
+    value: number;
+    percentage: number;
+  };
+  ijin: {
+    value: number;
+    percentage: number;
+  };
+  lupa_absen: {
+    value: number;
+    percentage: number;
+  };
+};

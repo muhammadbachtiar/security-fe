@@ -25,7 +25,7 @@ function AppNavbar() {
     },
   });
 
-  if (pathname === "/warehouse/login") {
+  if (pathname === "/warehouse/login" || pathname === "/core/login") {
     return null;
   }
 

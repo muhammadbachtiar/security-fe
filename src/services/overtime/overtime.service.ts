@@ -27,6 +27,13 @@ const OvertimeService = {
     );
     return response.data;
   },
+  updateStatusMulti: async (payload: any) => {
+    const response = await axiosConfig.patch<BaseResponseDto<TOvertime>>(
+      `/overtime`,
+      payload
+    );
+    return response.data;
+  },
   delete: async (overtimeId: number) => {
     const response = await axiosConfig.delete<BaseResponseDto<TOvertime>>(
       `/overtime/${overtimeId}`

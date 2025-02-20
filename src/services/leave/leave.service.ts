@@ -27,6 +27,13 @@ const LeaveService = {
     );
     return response.data;
   },
+  updateStatusMulti: async (payload: any) => {
+    const response = await axiosConfig.patch<BaseResponseDto<TLeave>>(
+      `/leave`,
+      payload
+    );
+    return response.data;
+  },
   delete: async (divId: number) => {
     const response = await axiosConfig.delete<BaseResponseDto<TLeave>>(
       `/leave/${divId}`

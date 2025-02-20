@@ -6,20 +6,23 @@ import LeaveService from "@/services/leave/leave.service";
 import { TLeave } from "@/services/leave/leave.type";
 import { DialogText } from "@/components/common/dialog-text";
 import moment from "moment";
+import "moment/locale/id";
 
 type Props = {
   page: number;
   limit: number;
+  status: string;
 };
 
-function useLeaveList({ limit, page }: Props) {
+function useLeaveList({ limit, page, status }: Props) {
   const { data: leaves, isLoading } = useQuery({
-    queryKey: ["LEAVES", page, limit],
+    queryKey: ["LEAVES", page, limit, status],
     queryFn: async () => {
       const response = await LeaveService.getAll({
         page_size: limit,
         page,
         with: "staff",
+        ...(status && { status }),
       });
       return response;
     },
@@ -55,9 +58,9 @@ function useLeaveList({ limit, page }: Props) {
       title: "Status",
       dataIndex: "status",
       render: (value = "") =>
-        value.toLowerCase() === "approve" ? (
+        value.toLowerCase().startsWith("approve") ? (
           <Tag color="green" className="capitalize">
-            {value}
+            Approved
           </Tag>
         ) : value.toLowerCase() === "pending" ? (
           <Tag color="orange" className="capitalize">
@@ -72,7 +75,12 @@ function useLeaveList({ limit, page }: Props) {
     {
       title: "Jam",
       dataIndex: "jam",
-      render: (value = "") => moment(value).utc().format("HH:mm"),
+      render: (value = "") => moment(value).utc(true).format("HH:mm"),
+    },
+    {
+      title: "Tanggal",
+      dataIndex: "tanggal",
+      render: (value = "") => moment(value).format("LL"),
     },
     {
       title: "Alasan",
@@ -90,8 +98,8 @@ function useLeaveList({ limit, page }: Props) {
           <div key={record.id} className="flex gap-[8px]">
             {record.status === "pending" && (
               <>
-                <ActionLeave leaveId={record.id} status="approve" />
-                <ActionLeave leaveId={record.id} status="reject" />
+                <ActionLeave leaveId={record.id} status="approved" />
+                <ActionLeave leaveId={record.id} status="rejected" />
               </>
             )}
             <DeleteLeave leaveId={record.id} />

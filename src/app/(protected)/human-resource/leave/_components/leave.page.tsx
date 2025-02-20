@@ -1,11 +1,14 @@
 "use client";
-import { Table } from "antd";
+import { Select, Table } from "antd";
 import { useState } from "react";
 import useLeaveList from "../_hooks/useLeaveList";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import { ShowQRLeave } from "./show-qr-leave";
+import { ActionLeaveMulti } from "./action-leave-multi";
 
-function Divisi() {
+function LeavePage() {
+  const [status, setStatus] = useState("");
+  const [selectedData, setSelectedData] = useState<number[]>([]);
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -14,6 +17,7 @@ function Divisi() {
   const { columns, isLoading, leaves } = useLeaveList({
     limit: pagination.pageSize,
     page: pagination.page,
+    status,
   });
 
   return (
@@ -44,12 +48,62 @@ function Divisi() {
           </p>
         </div>
 
-        <div>
+        <div className="flex justify-between">
+          <div className="flex gap-2">
+            {selectedData.length ? (
+              <>
+                <ActionLeaveMulti
+                  leaveId={selectedData}
+                  status="approved"
+                  clear={() => setSelectedData([])}
+                />
+                <ActionLeaveMulti
+                  leaveId={selectedData}
+                  status="rejected"
+                  clear={() => setSelectedData([])}
+                />
+              </>
+            ) : null}
+            <Select
+              onClear={() => setStatus("")}
+              onChange={(val) => {
+                setStatus(val);
+              }}
+              allowClear
+              placeholder="Pilih Status"
+              className="!w-[180px]"
+              options={[
+                {
+                  label: "Approved",
+                  value: "approved",
+                },
+                {
+                  label: "Rejected",
+                  value: "rejected",
+                },
+                {
+                  label: "Pending",
+                  value: "pending",
+                },
+              ]}
+            />
+          </div>
           <ShowQRLeave />
         </div>
         <div className="overflow-auto">
           <Table
             id="leave-table"
+            rowSelection={{
+              selectedRowKeys: selectedData,
+              onSelect(value, selected) {
+                if (selectedData.includes(value.id)) {
+                  setSelectedData((prev) => prev.filter((p) => p !== value.id));
+                  return;
+                }
+                setSelectedData((prev) => [...prev, value.id]);
+              },
+            }}
+            rowKey={(obj) => obj.id}
             columns={columns}
             dataSource={leaves?.data}
             loading={isLoading}
@@ -68,4 +122,4 @@ function Divisi() {
   );
 }
 
-export default Divisi;
+export default LeavePage;

@@ -1,12 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import axiosConfig from "@/configs/axios";
-import { TAbsence } from "./absence.type";
+import { TAbsence, TGraphAbsence } from "./absence.type";
 import { BaseResponseDto, BaseResponsePaginate } from "@/types/response";
 
 const AbsenceService = {
   getAll: async (params: any) => {
     const response = await axiosConfig.get<BaseResponsePaginate<TAbsence[]>>(
+      "/absence",
+      {
+        params,
+      }
+    );
+    return response.data;
+  },
+  getGraph: async (params: any) => {
+    const response = await axiosConfig.get<BaseResponseDto<TGraphAbsence>>(
       "/absence",
       {
         params,

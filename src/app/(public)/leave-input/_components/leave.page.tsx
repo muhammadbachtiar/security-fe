@@ -3,6 +3,7 @@
 import LeaveService from "@/services/leave/leave.service";
 import { Button, DatePicker, Form, Input, Select, TimePicker } from "antd";
 import dayjs from "dayjs";
+import moment from "moment";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -12,12 +13,22 @@ function LeavePage() {
   const type = Form.useWatch("tipe", form);
 
   const [loading, setLoading] = useState(false);
+  const disabledDate = (current: dayjs.Dayjs | null) => {
+    // Nonaktifkan tanggal besok dan seterusnya
+    return current && current > dayjs().endOf("day");
+  };
   // const [loadingUpload, setLoadingUpload] = useState(false);
   // const [dateValue, setDateValue] = useState<dayjs.Dayjs[]>([]);
 
   const onSubmit = async (val: any) => {
     try {
       setLoading(true);
+      const today = moment().format("YYYY-MM-DD");
+      const beforeFormatIn = dayjs(val.jam).format("HH:mm");
+      const hour = moment(`${today} ${beforeFormatIn}`, "YYYY-MM-DD HH:mm")
+        .utc()
+        .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+
       const payload = {
         nip: val.nip,
         tipe: val.tipe,
@@ -27,9 +38,12 @@ function LeavePage() {
           tanggal_selesai: dayjs(val.dates[1]).format("YYYY-MM-DD"),
         }),
         ...(val?.jam && {
-          jam: dayjs(val.jam).format("HH:mm"),
+          jam: hour,
         }),
         keterangan: "",
+        ...(val?.tanggal && {
+          tanggal: dayjs(val.tanggal).format("YYYY-MM-DD"),
+        }),
       };
 
       await LeaveService.create(payload);
@@ -102,18 +116,35 @@ function LeavePage() {
 
         <div className="space-y-2 mb-2">
           {type === "ijin" && (
-            <Form.Item
-              label="Jam"
-              name="jam"
-              className="w-full !mb-2"
-              rules={[{ required: true, message: "Jam harus diisi" }]}
-            >
-              <TimePicker
-                placeholder="Waktu"
-                className="w-full"
-                showSecond={false}
-              />
-            </Form.Item>
+            <>
+              <Form.Item
+                label="Jam"
+                name="jam"
+                className="w-full !mb-2"
+                rules={[{ required: true, message: "Jam harus diisi" }]}
+              >
+                <TimePicker
+                  placeholder="Waktu"
+                  className="w-full"
+                  showSecond={false}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Tanggal"
+                name="tanggal"
+                className="w-full !mb-2"
+                rules={[{ required: true, message: "Tanggal harus diisi" }]}
+              >
+                <DatePicker
+                  size="middle"
+                  placeholder={"Tanggal"}
+                  format={"DD/MM/YYYY"}
+                  className="w-full"
+                  disabledDate={disabledDate as any}
+                />
+              </Form.Item>
+            </>
           )}
           {type === "cuti" && (
             <Form.Item

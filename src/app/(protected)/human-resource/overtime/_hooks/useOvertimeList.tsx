@@ -11,16 +11,18 @@ import { DialogText } from "@/components/common/dialog-text";
 type Props = {
   page: number;
   limit: number;
+  status: string;
 };
 
-function useLeaveList({ limit, page }: Props) {
+function useLeaveList({ limit, page, status }: Props) {
   const { data: overtimes, isLoading } = useQuery({
-    queryKey: ["OVERTIMES", page, limit],
+    queryKey: ["OVERTIMES", page, limit, status],
     queryFn: async () => {
       const response = await OvertimeService.getAll({
         page_size: limit,
         page,
         with: "staff",
+        ...(status && { status }),
       });
       return response;
     },
@@ -58,7 +60,7 @@ function useLeaveList({ limit, page }: Props) {
       title: "Status",
       dataIndex: "status",
       render: (value = "") =>
-        value.toLowerCase() === "approve" ? (
+        value.toLowerCase().startsWith("approve") ? (
           <Tag color="green" className="capitalize">
             {value}
           </Tag>
@@ -98,8 +100,8 @@ function useLeaveList({ limit, page }: Props) {
           <div key={record.id} className="flex gap-[8px]">
             {record.status === "pending" && (
               <>
-                <ActionOvertime ovtId={record.id} status="approve" />
-                <ActionOvertime ovtId={record.id} status="reject" />
+                <ActionOvertime ovtId={record.id} status="approved" />
+                <ActionOvertime ovtId={record.id} status="rejected" />
               </>
             )}
             <DeleteOvertime ovtId={record.id} />

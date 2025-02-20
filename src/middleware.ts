@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("session");
   const accessTokenWarehouse = request.cookies.get("session_wms");
+  const accessTokenCore = request.cookies.get("session_core");
 
   if (request.nextUrl.pathname === "/login") {
     if (accessToken) {
@@ -17,9 +18,16 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  if (request.nextUrl.pathname === "/core/login") {
+    if (accessTokenCore) {
+      return NextResponse.redirect(new URL("/core", request.url));
+    }
+  }
+
   if (
     request.nextUrl.pathname === "/" ||
-    request.nextUrl.pathname.startsWith("/warehouse")
+    request.nextUrl.pathname.startsWith("/warehouse") ||
+    request.nextUrl.pathname.startsWith("/core")
   ) {
     if (!accessToken) {
       return NextResponse.redirect(new URL(`/login`, request.url));
@@ -35,6 +43,19 @@ export function middleware(request: NextRequest) {
       }
       if (!accessTokenWarehouse) {
         return NextResponse.redirect(new URL(`/warehouse/login`, request.url));
+      }
+    }
+
+    if (request.nextUrl.pathname.startsWith("/core")) {
+      if (request.nextUrl.pathname === "/core/login") {
+        if (accessTokenCore) {
+          return NextResponse.redirect(new URL("/core", request.url));
+        } else {
+          return;
+        }
+      }
+      if (!accessTokenCore) {
+        return NextResponse.redirect(new URL(`/core/login`, request.url));
       }
     }
   }

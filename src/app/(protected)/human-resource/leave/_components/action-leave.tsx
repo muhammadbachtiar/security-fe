@@ -13,7 +13,7 @@ export function ActionLeave({
   status,
 }: {
   leaveId: number;
-  status: "reject" | "approve";
+  status: "rejected" | "approved";
 }) {
   const queryClient = useQueryClient();
   const modal = useDisclosure();
@@ -36,11 +36,11 @@ export function ActionLeave({
   }
 
   return (
-    <Tooltip title={status === "approve" ? "Konfirmasi" : "Tolak"}>
+    <Tooltip title={status === "approved" ? "Konfirmasi" : "Tolak"}>
       <Button
         className="w-full px-3"
         icon={
-          status === "approve" ? (
+          status === "approved" ? (
             <CheckIcon className="w-4 !text-green-500" />
           ) : (
             <XIcon className="w-4 !text-red-500" />
@@ -53,19 +53,19 @@ export function ActionLeave({
       <Modal
         title={
           <Typography.Title className="font-normal" level={3}>
-            {status === "approve" ? "Konfirmasi" : "Tolak"}
+            {status === "approved" ? "Konfirmasi" : "Tolak"}
           </Typography.Title>
         }
         open={modal.isOpen}
         onCancel={() => modal.onClose()}
-        okText={status === "approve" ? "Konfirmasi" : "Tolak"}
+        okText={status === "approved" ? "Konfirmasi" : "Tolak"}
         okButtonProps={{
           loading: isLoading,
         }}
         onOk={handleDelete}
       >
         <Typography.Text>
-          Apakah yakin ingin {status === "approve" ? "konfirmasi" : "menolak"}?
+          Apakah yakin ingin {status === "approved" ? "konfirmasi" : "menolak"}?
         </Typography.Text>
       </Modal>
     </Tooltip>

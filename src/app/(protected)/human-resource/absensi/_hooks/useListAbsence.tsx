@@ -73,12 +73,34 @@ function useListAbsence({ limit, page, from, to }: Props) {
           <Tag color="orange" className="capitalize">
             {value}
           </Tag>
+        ) : value.toLowerCase() === "ijin" ? (
+          <Tag color="purple" className="capitalize">
+            {value}
+          </Tag>
         ) : (
           <Tag color="red" className="capitalize">
             Terlambat
           </Tag>
         ),
     },
+    // {
+    //   title: "Telat",
+    //   dataIndex: "telat",
+    //   render: (value = "") =>
+    //     value.toLowerCase() === "masuk" ? (
+    //       <Tag color="green" className="capitalize">
+    //         {value}
+    //       </Tag>
+    //     ) : value.toLowerCase() === "pulang" ? (
+    //       <Tag color="orange" className="capitalize">
+    //         {value}
+    //       </Tag>
+    //     ) : (
+    //       <Tag color="red" className="capitalize">
+    //         Terlambat
+    //       </Tag>
+    //     ),
+    // },
     {
       title: "Jam Masuk",
       dataIndex: "masuk",

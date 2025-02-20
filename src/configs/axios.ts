@@ -1,4 +1,4 @@
-import { getSession, getSessionWms } from "@/lib/session";
+import { getSession, getSessionCore, getSessionWms } from "@/lib/session";
 import axios, { AxiosError } from "axios";
 
 const API_VERSION = "/api/v1";
@@ -12,6 +12,13 @@ const axiosConfig = axios.create({
 
 export const axiosConfigWms = axios.create({
   baseURL: "/wms" + API_VERSION,
+  headers: {
+    Accept: "application/json",
+  },
+});
+
+export const axiosConfigCore = axios.create({
+  baseURL: "/api-core" + API_VERSION,
   headers: {
     Accept: "application/json",
   },
@@ -64,6 +71,39 @@ axiosConfigWms.interceptors.request.use(
 );
 
 axiosConfigWms.interceptors.response.use(
+  function (res) {
+    return res;
+  },
+  async function (error: AxiosError) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        // * Unauthorized
+        try {
+          // logout();
+          window.location.href = "/";
+        } catch (_error) {
+          return Promise.reject(_error);
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+axiosConfigCore.interceptors.request.use(
+  async function (config) {
+    const session = getSessionCore();
+    if (session) {
+      config.headers.Authorization = "Bearer " + session;
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+
+axiosConfigCore.interceptors.response.use(
   function (res) {
     return res;
   },

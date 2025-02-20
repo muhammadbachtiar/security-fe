@@ -4,29 +4,32 @@ import OvertimeService from "@/services/overtime/overtime.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { AxiosError } from "axios";
-import { CheckIcon, XIcon } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
 
-export function ActionOvertime({
+export function ActionOvertimeMulti({
   ovtId,
   status,
+  clear,
 }: {
-  ovtId: number;
+  ovtId: number[];
   status: "rejected" | "approved";
+  clear: () => void;
 }) {
   const queryClient = useQueryClient();
   const modal = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  async function handleOvt() {
+  async function handleDelete() {
     try {
       setIsLoading(true);
-      await OvertimeService.update(ovtId, {
+      await OvertimeService.updateStatusMulti({
         status,
+        id: ovtId,
       });
       toast.success("Data berhasil diperbarui!");
-      queryClient.invalidateQueries({ queryKey: ["OVERTIMES"] });
+      queryClient.resetQueries({ queryKey: ["OVERTIMES"] });
+      clear();
       modal.onClose();
     } catch (error) {
       errorResponse(error as AxiosError);
@@ -37,18 +40,18 @@ export function ActionOvertime({
 
   return (
     <Tooltip title={status === "approved" ? "Konfirmasi" : "Tolak"}>
-      <Button
-        className="w-full px-3"
-        icon={
-          status === "approved" ? (
-            <CheckIcon className="w-4 !text-green-500" />
-          ) : (
-            <XIcon className="w-4 !text-red-500" />
-          )
-        }
-        type="text"
-        onClick={() => modal.onOpen()}
-      ></Button>
+      {status === "approved" ? (
+        <Button type="primary" onClick={() => modal.onOpen()}>
+          Approve
+        </Button>
+      ) : (
+        <Button
+          className="!border-red-500 !text-red-500"
+          onClick={() => modal.onOpen()}
+        >
+          Reject
+        </Button>
+      )}
 
       <Modal
         title={
@@ -62,7 +65,7 @@ export function ActionOvertime({
         okButtonProps={{
           loading: isLoading,
         }}
-        onOk={handleOvt}
+        onOk={handleDelete}
       >
         <Typography.Text>
           Apakah yakin ingin {status === "approved" ? "konfirmasi" : "menolak"}?

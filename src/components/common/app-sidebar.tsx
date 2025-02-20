@@ -19,7 +19,7 @@ import { Button } from "antd";
 import { HomeIcon } from "lucide-react";
 
 const isActive = (pathname: string, item: string) => {
-  const paths = ["/human-resource", "/warehouse"];
+  const paths = ["/human-resource", "/warehouse", "/core"];
 
   if (paths.includes(item) && paths.includes(pathname)) {
     return true;
@@ -40,7 +40,11 @@ export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  if (pathname === "/" || pathname === "/warehouse/login") {
+  if (
+    pathname === "/" ||
+    pathname === "/warehouse/login" ||
+    pathname === "/core/login"
+  ) {
     return null;
   }
 

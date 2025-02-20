@@ -4,11 +4,18 @@ import LeaveService from "@/services/leave/leave.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { AxiosError } from "axios";
-import { TrashIcon } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
 
-export function DeleteLeave({ leaveId }: { leaveId: number }) {
+export function ActionLeaveMulti({
+  leaveId,
+  status,
+  clear,
+}: {
+  leaveId: number[];
+  status: "rejected" | "approved";
+  clear: () => void;
+}) {
   const queryClient = useQueryClient();
   const modal = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -16,9 +23,13 @@ export function DeleteLeave({ leaveId }: { leaveId: number }) {
   async function handleDelete() {
     try {
       setIsLoading(true);
-      await LeaveService.delete(leaveId);
-      toast.success("Data berhasil dihapus!");
-      queryClient.invalidateQueries({ queryKey: ["LEAVES"] });
+      await LeaveService.updateStatusMulti({
+        status,
+        id: leaveId,
+      });
+      toast.success("Data berhasil diperbarui!");
+      queryClient.resetQueries({ queryKey: ["LEAVES"] });
+      clear();
       modal.onClose();
     } catch (error) {
       errorResponse(error as AxiosError);
@@ -28,30 +39,37 @@ export function DeleteLeave({ leaveId }: { leaveId: number }) {
   }
 
   return (
-    <Tooltip title="Hapus">
-      <Button
-        className="w-full px-3 !text-red-500"
-        icon={<TrashIcon className="w-5 h-5 !text-red-500" />}
-        type="text"
-        onClick={() => modal.onOpen()}
-      ></Button>
+    <Tooltip title={status === "approved" ? "Konfirmasi" : "Tolak"}>
+      {status === "approved" ? (
+        <Button type="primary" onClick={() => modal.onOpen()}>
+          Approve
+        </Button>
+      ) : (
+        <Button
+          className="!border-red-500 !text-red-500"
+          onClick={() => modal.onOpen()}
+        >
+          Reject
+        </Button>
+      )}
 
       <Modal
         title={
           <Typography.Title className="font-normal" level={3}>
-            Hapus Data
+            {status === "approved" ? "Konfirmasi" : "Tolak"}
           </Typography.Title>
         }
         open={modal.isOpen}
         onCancel={() => modal.onClose()}
-        okText="Hapus"
+        okText={status === "approved" ? "Konfirmasi" : "Tolak"}
         okButtonProps={{
-          className: "!bg-red-500",
           loading: isLoading,
         }}
         onOk={handleDelete}
       >
-        <Typography.Text>Apakah yakin ingin menghapus data?</Typography.Text>
+        <Typography.Text>
+          Apakah yakin ingin {status === "approved" ? "konfirmasi" : "menolak"}?
+        </Typography.Text>
       </Modal>
     </Tooltip>
   );

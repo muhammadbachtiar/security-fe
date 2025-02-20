@@ -10,6 +10,10 @@ const nextConfig = {
         source: "/wms/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_BASE_URL_WMS}/:path*`,
       },
+      {
+        source: "/api-core/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL_CORE}/:path*`,
+      },
     ];
   },
 };

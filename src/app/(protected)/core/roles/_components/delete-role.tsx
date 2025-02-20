@@ -1,32 +1,24 @@
 import { useDisclosure } from "@/hooks/use-disclosure";
 import errorResponse from "@/lib/error";
-import OvertimeService from "@/services/overtime/overtime.service";
+import CoreServices from "@/services/core/core.services";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { AxiosError } from "axios";
-import { CheckIcon, XIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
 
-export function ActionOvertime({
-  ovtId,
-  status,
-}: {
-  ovtId: number;
-  status: "rejected" | "approved";
-}) {
+export function DeleteRole({ roleId }: { roleId: number }) {
   const queryClient = useQueryClient();
   const modal = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  async function handleOvt() {
+  async function handleDelete() {
     try {
       setIsLoading(true);
-      await OvertimeService.update(ovtId, {
-        status,
-      });
-      toast.success("Data berhasil diperbarui!");
-      queryClient.invalidateQueries({ queryKey: ["OVERTIMES"] });
+      await CoreServices.deleteRole(roleId);
+      toast.success("Data berhasil dihapus!");
+      queryClient.invalidateQueries({ queryKey: ["ROLES"] });
       modal.onClose();
     } catch (error) {
       errorResponse(error as AxiosError);
@@ -36,16 +28,10 @@ export function ActionOvertime({
   }
 
   return (
-    <Tooltip title={status === "approved" ? "Konfirmasi" : "Tolak"}>
+    <Tooltip title="Hapus">
       <Button
-        className="w-full px-3"
-        icon={
-          status === "approved" ? (
-            <CheckIcon className="w-4 !text-green-500" />
-          ) : (
-            <XIcon className="w-4 !text-red-500" />
-          )
-        }
+        className="w-full px-3 !text-red-500"
+        icon={<TrashIcon className="w-5 h-5 !text-red-500" />}
         type="text"
         onClick={() => modal.onOpen()}
       ></Button>
@@ -53,20 +39,19 @@ export function ActionOvertime({
       <Modal
         title={
           <Typography.Title className="font-normal" level={3}>
-            {status === "approved" ? "Konfirmasi" : "Tolak"}
+            Hapus Role
           </Typography.Title>
         }
         open={modal.isOpen}
         onCancel={() => modal.onClose()}
-        okText={status === "approved" ? "Konfirmasi" : "Tolak"}
+        okText="Hapus"
         okButtonProps={{
+          className: "!bg-red-500",
           loading: isLoading,
         }}
-        onOk={handleOvt}
+        onOk={handleDelete}
       >
-        <Typography.Text>
-          Apakah yakin ingin {status === "approved" ? "konfirmasi" : "menolak"}?
-        </Typography.Text>
+        <Typography.Text>Apakah yakin ingin menghapus data?</Typography.Text>
       </Modal>
     </Tooltip>
   );

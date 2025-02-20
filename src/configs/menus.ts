@@ -130,6 +130,25 @@ export const getMenus = (pathName: string) => {
       },
     ];
   }
+  if (pathName.startsWith("/core")) {
+    return [
+      {
+        title: "Dashboard",
+        url: "/core",
+        icon: GaugeIcon,
+      },
+      {
+        title: "User Management",
+        url: "/core/users",
+        icon: UsersIcon,
+      },
+      {
+        title: "Role Management",
+        url: "/core/roles",
+        icon: GaugeIcon,
+      },
+    ];
+  }
 
   return [];
 };
