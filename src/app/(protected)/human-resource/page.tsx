@@ -19,7 +19,7 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 function DashboardHrdPage() {
   const today = dayjs();
   const yesterday = dayjs().subtract(1, "day");
-  const { data: absences, isLoading } = useQuery({
+  const { data: absences } = useQuery({
     queryKey: ["ABSENCES_GRAPH"],
     queryFn: async () => {
       const response = await AbsenceService.getGraph({

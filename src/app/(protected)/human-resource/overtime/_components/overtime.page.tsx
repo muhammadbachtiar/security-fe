@@ -98,7 +98,7 @@ function OvertimePage() {
             columns={columns}
             rowSelection={{
               selectedRowKeys: selectedData,
-              onSelect(value, selected) {
+              onSelect(value) {
                 if (selectedData.includes(value.id)) {
                   setSelectedData((prev) => prev.filter((p) => p !== value.id));
                   return;
