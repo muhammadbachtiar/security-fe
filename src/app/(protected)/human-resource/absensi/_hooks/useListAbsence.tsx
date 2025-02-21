@@ -124,8 +124,8 @@ function useListAbsence({ limit, page, from, to }: Props) {
         <div className="capitalize">
           <p>{record.shift.nama}</p>
           <p>
-            ({moment(record.shift.jam_masuk).utc().format("HH:mm")} -{" "}
-            {moment(record.shift.jam_keluar).utc().format("HH:mm")})
+            ({moment(record.shift.jam_masuk).format("HH:mm")} -{" "}
+            {moment(record.shift.jam_keluar).format("HH:mm")})
           </p>
         </div>
       ),
