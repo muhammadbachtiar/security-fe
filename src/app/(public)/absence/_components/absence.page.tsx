@@ -161,9 +161,7 @@ function AbsencePage() {
               placeholder="Pilih Shift"
               options={shifts?.data.map((s) => ({
                 label: `${s.nama} (${moment(s.jam_masuk)
-                  .utc()
                   .format("HH:mm")} - ${moment(s.jam_keluar)
-                  .utc()
                   .format("HH:mm")})`,
                 value: s.id,
               }))}
