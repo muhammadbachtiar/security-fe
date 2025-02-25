@@ -17,7 +17,7 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-function AddKpiDivDetail({ detailId }: { detailId: number }) {
+function AddKpiStaffDetail({ detailId }: { detailId: number }) {
   const modal = useDisclosure();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -29,13 +29,14 @@ function AddKpiDivDetail({ detailId }: { detailId: number }) {
     try {
       setLoading(true);
 
-      await KPIService.createDetail({
+      await KPIService.createDetailStaff({
         ...val,
-        kpi_id: detailId,
+        task_kpi_id: detailId,
+        value: isPercent ? +val.value / 100 : val.value,
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["KPI_DIV", detailId.toString()],
+        queryKey: ["KPI_STAFF", detailId.toString()],
       });
 
       toast.success("Detail KPI berhasil dibuat");
@@ -99,19 +100,12 @@ function AddKpiDivDetail({ detailId }: { detailId: number }) {
             className="!mb-0"
             rules={[{ required: true, message: "Nilai harus diisi" }]}
           >
-            <Form.Item
-              label="Nilai"
-              name={"value"}
-              className="!mb-0"
-              rules={[{ required: true, message: "Nilai harus diisi" }]}
-            >
-              <InputNumber
-                className="!w-full"
-                suffix={isPercent ? "%" : ""}
-                max={isPercent ? 100 : undefined}
-                placeholder={isPercent ? "0%" : "10000"}
-              />
-            </Form.Item>
+            <InputNumber
+              className="!w-full"
+              suffix={isPercent ? "%" : ""}
+              max={isPercent ? 100 : undefined}
+              placeholder={isPercent ? "0%" : "10000"}
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -119,4 +113,4 @@ function AddKpiDivDetail({ detailId }: { detailId: number }) {
   );
 }
 
-export default AddKpiDivDetail;
+export default AddKpiStaffDetail;
