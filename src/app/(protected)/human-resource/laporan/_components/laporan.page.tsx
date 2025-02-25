@@ -9,6 +9,8 @@ import errorResponse from "@/lib/error";
 import { AxiosError } from "axios";
 import StaffService from "@/services/staff/staff.service";
 import { DownloadIcon } from "lucide-react";
+import moment from "moment-timezone";
+const timezone = moment.tz.guess();
 
 function LaporanPage() {
   const startOfMonth = dayjs().startOf("month");
@@ -23,6 +25,7 @@ function LaporanPage() {
     page: 1,
     pageSize: 10,
   });
+
   const [loading, setLoading] = useState(false);
   const [loadingTotal, setLoadingTotal] = useState(false);
 
@@ -39,6 +42,7 @@ function LaporanPage() {
       const res = await StaffService.exportReportPersonal({
         from: dayjs(dateRange[0]).format("YYYY-MM-DD"),
         to: dayjs(dateRange[1]).format("YYYY-MM-DD"),
+        timezone,
       });
 
       const blob = new Blob([res], { type: "'text/csv'" });

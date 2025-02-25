@@ -4,6 +4,8 @@ import {
   BoxesIcon,
   CalendarCheckIcon,
   CalendarMinusIcon,
+  ChartLineIcon,
+  ChartNetworkIcon,
   CircleGaugeIcon,
   Clock9Icon,
   ContactRoundIcon,
@@ -122,6 +124,16 @@ export const getMenus = (pathName: string) => {
         title: "Payroll",
         url: "/human-resource/payroll",
         icon: HandCoinsIcon,
+      },
+      {
+        title: "KPI Divisi",
+        url: "/human-resource/kpi-divisi",
+        icon: ChartNetworkIcon,
+      },
+      {
+        title: "KPI Staff",
+        url: "/human-resource/kpi-staff",
+        icon: ChartLineIcon,
       },
       {
         title: "Gaji Staff",

@@ -7,6 +7,7 @@ import { Button, Form, Input, Modal, TimePicker, Typography } from "antd";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { PlusIcon } from "lucide-react";
+import moment from "moment";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,12 +19,22 @@ function AddShift() {
   const queryClient = useQueryClient();
 
   const onSubmit = async (val: any) => {
+    const today = moment().format("YYYY-MM-DD");
+    const beforeFormatIn = dayjs(val.jam_masuk).format("HH:mm");
+    const beforeFormatOut = dayjs(val.jam_keluar).format("HH:mm");
+    const hourIn = moment(`${today} ${beforeFormatIn}`, "YYYY-MM-DD HH:mm")
+      .utc()
+      .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+    const hourOut = moment(`${today} ${beforeFormatOut}`, "YYYY-MM-DD HH:mm")
+      .utc()
+      .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+
     try {
       setLoading(true);
       await ShiftService.add({
         ...val,
-        jam_masuk: dayjs(val.jam_masuk).format("HH:mm"),
-        jam_keluar: dayjs(val.jam_keluar).format("HH:mm"),
+        jam_masuk: hourIn,
+        jam_keluar: hourOut,
       });
       queryClient.resetQueries({
         queryKey: ["SHIFTS"],

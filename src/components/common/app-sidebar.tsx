@@ -25,10 +25,6 @@ const isActive = (pathname: string, item: string) => {
     return true;
   }
 
-  // if (item === "/warehouse" && pathname === "/warehouse") {
-  //   return true;
-  // }
-
   if (!paths.includes(item) && pathname.startsWith(item)) {
     return true;
   }

@@ -80,7 +80,7 @@ function EditPayroll({ payrollId }: { payrollId: number }) {
           onClick: form.submit,
         }}
         confirmLoading={loading}
-        title={<Typography.Title level={4}>Edit Hari Libur</Typography.Title>}
+        title={<Typography.Title level={4}>Edit Payroll</Typography.Title>}
       >
         <Form
           form={form}

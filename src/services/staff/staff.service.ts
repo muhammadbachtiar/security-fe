@@ -13,6 +13,19 @@ const StaffService = {
     );
     return response.data;
   },
+  getCount: async (params: any) => {
+    const response = await axiosConfig.get<
+      BaseResponseDto<
+        {
+          month: string;
+          staff_count: number;
+        }[]
+      >
+    >("/staff", {
+      params,
+    });
+    return response.data;
+  },
   add: async (payload: any) => {
     const response = await axiosConfig.post<BaseResponseDto<TStaff>>(
       "/staff",

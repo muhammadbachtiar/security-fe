@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { DeleteStaff } from "../_components/delete-staff";
 import StaffService from "@/services/staff/staff.service";
 import { TStaff } from "@/services/staff/staff.type";
+import EditGajiPokok from "../_components/edit-gaji-pokok";
 
 type Props = {
   page: number;
@@ -62,6 +63,7 @@ function useListStaff({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
+            <EditGajiPokok staffId={record.id} />
             <Button
               onClick={() =>
                 router.push(`/human-resource/staff/${record.id}/edit`)

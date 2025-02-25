@@ -47,12 +47,12 @@ function useListShift({ limit, page }: Props) {
     {
       title: "Jam Masuk",
       dataIndex: "jam_masuk",
-      render: (value = "") => moment(value).utc().format("HH:mm"),
+      render: (value = "") => moment(value).utc().utcOffset(7).format("HH:mm"),
     },
     {
       title: "Jam Keluar",
       dataIndex: "jam_keluar",
-      render: (value = "") => moment(value).utc().format("HH:mm"),
+      render: (value = "") => moment(value).utc().utcOffset(7).format("HH:mm"),
     },
     {
       title: "Action",
