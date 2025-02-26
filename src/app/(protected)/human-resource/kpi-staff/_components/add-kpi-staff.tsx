@@ -1,27 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useDisclosure } from "@/hooks/use-disclosure";
 import errorResponse from "@/lib/error";
-import DivisionService from "@/services/divisi/divisi.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, Modal, Select, Switch, Typography } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Switch,
+  Typography,
+} from "antd";
 import { AxiosError } from "axios";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import FormItem from "./form-items";
 import KPIService from "@/services/kpi/kpi.service";
 import { toast } from "sonner";
+import StaffService from "@/services/staff/staff.service";
+import dayjs from "dayjs";
 
-function AddKPIDivisi() {
+function AddKPIStaff() {
   const modal = useDisclosure();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const { data: divisions } = useQuery({
-    queryKey: ["DIVISIONS"],
+  const { data: staffs } = useQuery({
+    queryKey: ["STAFFS"],
     queryFn: async () => {
-      const response = await DivisionService.getAll({
+      const response = await StaffService.getAll({
         page_size: 9999,
         page: 1,
       });
@@ -39,6 +49,8 @@ function AddKPIDivisi() {
 
       const payload = {
         ...val,
+        from: dayjs(val?.from).format("YYYY-MM-DD"),
+        to: dayjs(val?.to).format("YYYY-MM-DD"),
         status: val?.status ? "active" : "inactive",
         details: val.details.map((detail: any) => {
           const isPercent = !!detail?.isPercent;
@@ -50,10 +62,10 @@ function AddKPIDivisi() {
         }),
       };
 
-      await KPIService.create(payload);
+      await KPIService.createStaff(payload);
 
       queryClient.invalidateQueries({
-        queryKey: ["KPIS_DIV"],
+        queryKey: ["KPIS_STAFF"],
       });
       toast.success("KPI berhasil dibuat");
       form.resetFields();
@@ -91,6 +103,32 @@ function AddKPIDivisi() {
           onFinish={onSubmit}
           autoComplete="off"
         >
+          <div className="flex gap-3">
+            <Form.Item
+              name="from"
+              label="Dari"
+              className="!mb-2 w-full"
+              rules={[{ required: true, message: "Tanggal harus diisi" }]}
+            >
+              <DatePicker
+                allowClear={false}
+                format="DD/MM/YYYY"
+                className="w-full"
+              />
+            </Form.Item>
+            <Form.Item
+              name="to"
+              label="Sampai"
+              className="!mb-2 w-full"
+              rules={[{ required: true, message: "Tanggal harus diisi" }]}
+            >
+              <DatePicker
+                allowClear={false}
+                format="DD/MM/YYYY"
+                className="w-full"
+              />
+            </Form.Item>
+          </div>
           <Form.Item
             label="Nama"
             name="name"
@@ -101,15 +139,15 @@ function AddKPIDivisi() {
           </Form.Item>
 
           <Form.Item
-            name="division_id"
-            label="Divisi"
+            name="staff_id"
+            label="Staff"
             className="!mb-2 w-full"
-            rules={[{ required: true, message: "Divisi harus diisi" }]}
+            rules={[{ required: true, message: "Staff harus diisi" }]}
           >
             <Select
-              placeholder="Pilih Divisi"
-              options={divisions?.data.map((val) => ({
-                label: val.name,
+              placeholder="Pilih Staff"
+              options={staffs?.data.map((val) => ({
+                label: val.nama,
                 value: val.id,
               }))}
             />
@@ -165,4 +203,4 @@ function AddKPIDivisi() {
   );
 }
 
-export default AddKPIDivisi;
+export default AddKPIStaff;

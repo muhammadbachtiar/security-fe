@@ -1,9 +1,9 @@
 import { Table, TableProps } from "antd";
-import { TKpiDivDetail } from "@/services/kpi/kpi.type";
-import { DeleteKpiDivDetail } from "./delete-kpi-div-detail";
+import { TKpiDivDetail, TKpiStaffDetail } from "@/services/kpi/kpi.type";
+import { DeleteKpiStaffDetail } from "./delete-kpi-staff-detail";
 import { isPercent } from "@/lib/utils";
 
-function DetailKpiDivTable({ kpiDetail }: { kpiDetail: TKpiDivDetail[] }) {
+function DetailKpiStaffTable({ kpiDetail }: { kpiDetail: TKpiStaffDetail[] }) {
   const columns: TableProps<TKpiDivDetail>["columns"] = [
     {
       title: "Keterangan",
@@ -24,7 +24,7 @@ function DetailKpiDivTable({ kpiDetail }: { kpiDetail: TKpiDivDetail[] }) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <DeleteKpiDivDetail kpiId={record.kpi_id} detailId={record.id} />
+            <DeleteKpiStaffDetail kpiId={record.kpi_id} detailId={record.id} />
           </div>
         );
       },
@@ -42,4 +42,4 @@ function DetailKpiDivTable({ kpiDetail }: { kpiDetail: TKpiDivDetail[] }) {
   );
 }
 
-export default DetailKpiDivTable;
+export default DetailKpiStaffTable;

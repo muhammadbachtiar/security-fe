@@ -17,3 +17,5 @@ export const formatCurrency = (amount: number) => {
     maximumFractionDigits: 0,
   }).format(amount);
 };
+
+export const isPercent = (value: number): boolean => value >= 0 && value <= 1;
