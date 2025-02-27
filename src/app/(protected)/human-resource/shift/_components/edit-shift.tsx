@@ -10,6 +10,7 @@ import { PencilIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import utc from "dayjs/plugin/utc";
+import moment from "moment";
 
 dayjs.extend(utc);
 
@@ -30,13 +31,23 @@ function EditShift({ shiftId }: { shiftId: number }) {
   });
 
   const onSubmit = async (val: any) => {
+    const today = moment().format("YYYY-MM-DD");
+    const beforeFormatIn = dayjs(val.jam_masuk).format("HH:mm");
+    const beforeFormatOut = dayjs(val.jam_keluar).format("HH:mm");
+    const hourIn = moment(`${today} ${beforeFormatIn}`, "YYYY-MM-DD HH:mm")
+      .utc()
+      .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+    const hourOut = moment(`${today} ${beforeFormatOut}`, "YYYY-MM-DD HH:mm")
+      .utc()
+      .format("YYYY-MM-DDTHH:mm:ss.SSSSSSZ");
+
     try {
       setLoading(true);
 
       await ShiftService.update(shiftId, {
         ...val,
-        jam_masuk: dayjs(val.jam_masuk).format("HH:mm"),
-        jam_keluar: dayjs(val.jam_keluar).format("HH:mm"),
+        jam_masuk: hourIn,
+        jam_keluar: hourOut,
       });
       queryClient.invalidateQueries({
         queryKey: ["SHIFTS"],
