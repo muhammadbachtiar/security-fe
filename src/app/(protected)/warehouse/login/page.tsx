@@ -33,7 +33,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4">
+    <div className="min-h-screen bg-white flex flex-col justify-center items-center px-4">
       <div className="w-full md:max-w-[50vw] xl:max-w-[30vw] max-xl:max-w-[500px] border rounded-md p-3">
         <div className="flex justify-center mb-5 border-b pb-3">
           <span className="text-primary font-bold text-xl text-center">

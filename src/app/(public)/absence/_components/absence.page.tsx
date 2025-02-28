@@ -162,8 +162,10 @@ function AbsencePage() {
               options={shifts?.data.map((s) => ({
                 label: `${s.nama} (${moment(s.jam_masuk)
                   .utc()
+                  .utcOffset(7)
                   .format("HH:mm")} - ${moment(s.jam_keluar)
                   .utc()
+                  .utcOffset(7)
                   .format("HH:mm")})`,
                 value: s.id,
               }))}

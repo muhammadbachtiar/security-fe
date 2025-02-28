@@ -2,7 +2,7 @@
 "use client";
 
 import errorResponse from "@/lib/error";
-import { loginCore } from "@/lib/session";
+import { loginHrd } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
@@ -19,11 +19,11 @@ function LoginPage() {
   async function onSubmit(values: any) {
     try {
       setLoading(true);
-      const response = await AuthService.loginCore(values);
+      const response = await AuthService.loginHrd(values);
       if (response.success) {
-        loginCore(response.data.token);
+        loginHrd(response.data.token);
         toast.success("Login Berhasil");
-        router.replace("/");
+        router.replace("/human-resource");
       }
     } catch (error: any) {
       errorResponse(error);
@@ -33,10 +33,12 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4">
+    <div className="min-h-screen bg-white flex flex-col justify-center items-center px-4">
       <div className="w-full md:max-w-[50vw] xl:max-w-[30vw] max-xl:max-w-[500px] border rounded-md p-3">
         <div className="flex justify-center mb-5 border-b pb-3">
-          <span className="text-primary font-bold text-xl">Login</span>
+          <span className="text-primary font-bold text-xl text-center">
+            Welcome to Human Resource Application
+          </span>
         </div>
         <Form
           form={form}

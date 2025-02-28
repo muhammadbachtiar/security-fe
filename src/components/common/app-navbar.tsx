@@ -14,6 +14,8 @@ function AppNavbar() {
 
   const handleLogout = () => {
     Cookies.remove("session");
+    Cookies.remove("session_wms");
+    Cookies.remove("session_hrd");
     window.location.href = "/login";
   };
 
@@ -25,7 +27,7 @@ function AppNavbar() {
     },
   });
 
-  if (pathname === "/warehouse/login" || pathname === "/core/login") {
+  if (pathname === "/warehouse/login" || pathname === "/human-resource/login") {
     return null;
   }
 

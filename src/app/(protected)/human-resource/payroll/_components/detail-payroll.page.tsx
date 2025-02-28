@@ -23,8 +23,6 @@ function DetailPayroll() {
     },
   });
 
-  console.log(payroll);
-
   return (
     <div className="p-4 space-y-4">
       <div className="space-y-2">

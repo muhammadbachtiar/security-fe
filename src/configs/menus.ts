@@ -11,9 +11,11 @@ import {
   ContactRoundIcon,
   ContainerIcon,
   CookingPotIcon,
+  DockIcon,
   FileClockIcon,
   GaugeIcon,
   HandCoinsIcon,
+  LayoutTemplateIcon,
   NetworkIcon,
   Package2Icon,
   UsersIcon,
@@ -158,6 +160,16 @@ export const getMenus = (pathName: string) => {
         title: "Role Management",
         url: "/core/roles",
         icon: GaugeIcon,
+      },
+      {
+        title: "Plan",
+        url: "/core/plan",
+        icon: DockIcon,
+      },
+      {
+        title: "Subscription",
+        url: "/core/subscription",
+        icon: LayoutTemplateIcon,
       },
     ];
   }
