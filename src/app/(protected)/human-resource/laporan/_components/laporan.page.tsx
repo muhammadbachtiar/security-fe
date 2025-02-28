@@ -68,6 +68,7 @@ function LaporanPage() {
       const res = await StaffService.exportReportTotal({
         from: dayjs(dateRange[0]).format("YYYY-MM-DD"),
         to: dayjs(dateRange[1]).format("YYYY-MM-DD"),
+        timezone,
       });
 
       const blob = new Blob([res], { type: "'text/csv'" });
