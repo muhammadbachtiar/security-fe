@@ -13,7 +13,7 @@ function AppNavbar() {
   const pathname = usePathname();
 
   const handleLogout = () => {
-    Cookies.remove("session");
+    Cookies.remove("session_core");
     Cookies.remove("session_wms");
     Cookies.remove("session_hrd");
     window.location.href = "/login";
