@@ -25,6 +25,7 @@ export type SubsType = {
   status: string;
   start_date: string;
   end_date: string;
+  plan: PlanType;
   created_at: string;
   updated_at: string;
 };

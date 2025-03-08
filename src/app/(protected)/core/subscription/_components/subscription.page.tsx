@@ -7,12 +7,13 @@ import moment from "moment";
 import "moment/locale/id";
 
 function PlanPage() {
-  const { data: plans, isLoading } = useQuery({
+  const { data: subs, isLoading } = useQuery({
     queryKey: ["SUBS"],
     queryFn: async () => {
       const response = await PlanService.getSubs({
         page_size: 100,
         page: 1,
+        with: "plan.app",
       });
       return response;
     },
@@ -35,26 +36,32 @@ function PlanPage() {
             <div className="flex justify-center">
               <Skeleton />
             </div>
-          ) : plans?.data?.length ? (
+          ) : subs?.data?.length ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              {plans?.data.map((plan) => (
-                <div key={plan.id} className="border rounded-lg">
+              {subs?.data.map((sub) => (
+                <div key={sub.id} className="border rounded-lg">
                   <div className="p-4">
-                    {/* <p>{plan.name}</p> */}
+                    <p>
+                      {sub.plan.app.name} ({sub.plan.name})
+                    </p>
                     <p className="text-gray-500">
-                      Expired: {moment(plan.expired_finance).format("LL")}
+                      Expired: {moment(sub.expired_finance).format("LL")}
                     </p>
                   </div>
                   <div className="px-4 py-2 border-t items-center flex justify-between">
                     <p> Status</p>
-                    <Tag>{plan.status}</Tag>
+                    {sub.status.toLowerCase() === "active" ? (
+                      <Tag color="green-inverse">{sub.status}</Tag>
+                    ) : (
+                      <Tag color="red-inverse">{sub.status}</Tag>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="flex justify-center">
-              <p>Belum ada Plan</p>
+              <p>Belum ada Subcription</p>
             </div>
           )}
         </div>
