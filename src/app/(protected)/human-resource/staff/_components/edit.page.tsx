@@ -91,7 +91,7 @@ function EditPage() {
             },
             {
               title: "Staff",
-              url: "/staff",
+              url: "/human-resource/staff",
             },
             {
               title: "Edit Staff",

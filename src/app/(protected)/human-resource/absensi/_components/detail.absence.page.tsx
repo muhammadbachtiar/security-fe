@@ -83,7 +83,7 @@ function DetailAbsence() {
             },
             {
               title: "Absensi",
-              url: "/absensi",
+              url: "/human-resource/absensi",
             },
             {
               title: absence?.data?.staff?.nama || "",

@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import errorResponse from "@/lib/error";
 import { loginHrd } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 function LoginPage() {
   const [form] = Form.useForm();
 
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(values: any) {
@@ -23,7 +20,7 @@ function LoginPage() {
       if (response.success) {
         loginHrd(response.data.token);
         toast.success("Login Berhasil");
-        router.replace("/human-resource");
+        window.location.href = "/human-resource";
       }
     } catch (error: any) {
       errorResponse(error);

@@ -18,7 +18,7 @@ export function DeleteHoliday({ holidayId }: { holidayId: number }) {
       setIsLoading(true);
       await HolidayService.delete(holidayId);
       toast.success("Data berhasil dihapus!");
-      queryClient.resetQueries({ queryKey: ["HOLIDAYS"] });
+      queryClient.invalidateQueries({ queryKey: ["HOLIDAYS"] });
       modal.onClose();
     } catch (error) {
       errorResponse(error as AxiosError);
