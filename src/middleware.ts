@@ -2,12 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  const accessToken = request.cookies.get("session");
+  const accessTokenHrd = request.cookies.get("session_hrd");
   const accessTokenWarehouse = request.cookies.get("session_wms");
   const accessTokenCore = request.cookies.get("session_core");
 
   if (request.nextUrl.pathname === "/login") {
-    if (accessToken) {
+    if (accessTokenCore) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
@@ -18,18 +18,18 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  if (request.nextUrl.pathname === "/core/login") {
-    if (accessTokenCore) {
-      return NextResponse.redirect(new URL("/core", request.url));
+  if (request.nextUrl.pathname === "/human-resource/login") {
+    if (accessTokenHrd) {
+      return NextResponse.redirect(new URL("/human-resource", request.url));
     }
   }
 
   if (
     request.nextUrl.pathname === "/" ||
     request.nextUrl.pathname.startsWith("/warehouse") ||
-    request.nextUrl.pathname.startsWith("/core")
+    request.nextUrl.pathname.startsWith("/human-resource")
   ) {
-    if (!accessToken) {
+    if (!accessTokenCore) {
       return NextResponse.redirect(new URL(`/login`, request.url));
     }
 
@@ -46,16 +46,18 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    if (request.nextUrl.pathname.startsWith("/core")) {
-      if (request.nextUrl.pathname === "/core/login") {
-        if (accessTokenCore) {
-          return NextResponse.redirect(new URL("/core", request.url));
+    if (request.nextUrl.pathname.startsWith("/human-resource")) {
+      if (request.nextUrl.pathname === "/human-resource/login") {
+        if (accessTokenHrd) {
+          return NextResponse.redirect(new URL("/human-resource", request.url));
         } else {
           return;
         }
       }
-      if (!accessTokenCore) {
-        return NextResponse.redirect(new URL(`/core/login`, request.url));
+      if (!accessTokenHrd) {
+        return NextResponse.redirect(
+          new URL(`/human-resource/login`, request.url)
+        );
       }
     }
   }

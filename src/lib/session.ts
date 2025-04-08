@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
-export function getSession() {
-  const session = Cookies.get("session");
+export function getSessionHrd() {
+  const session = Cookies.get("session_hrd");
   if (!session) return null;
   return session;
 }
@@ -18,8 +18,8 @@ export function getSessionCore() {
   return session;
 }
 
-export async function login(data: string) {
-  Cookies.set("session", data, {
+export async function loginHrd(data: string) {
+  Cookies.set("session_hrd", data, {
     expires: process.env.NODE_ENV === "development" ? 7 : 1,
   });
 }

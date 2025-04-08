@@ -28,8 +28,6 @@ export function DetailSalary({
     },
   });
 
-  console.log({ salary });
-
   return (
     <Tooltip title="Detail">
       <Button

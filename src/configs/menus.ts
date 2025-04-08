@@ -4,16 +4,16 @@ import {
   BoxesIcon,
   CalendarCheckIcon,
   CalendarMinusIcon,
-  ChartLineIcon,
-  ChartNetworkIcon,
   CircleGaugeIcon,
   Clock9Icon,
   ContactRoundIcon,
   ContainerIcon,
   CookingPotIcon,
+  DockIcon,
   FileClockIcon,
   GaugeIcon,
   HandCoinsIcon,
+  LayoutTemplateIcon,
   NetworkIcon,
   Package2Icon,
   UsersIcon,
@@ -125,16 +125,16 @@ export const getMenus = (pathName: string) => {
         url: "/human-resource/payroll",
         icon: HandCoinsIcon,
       },
-      {
-        title: "KPI Divisi",
-        url: "/human-resource/kpi-divisi",
-        icon: ChartNetworkIcon,
-      },
-      {
-        title: "KPI Staff",
-        url: "/human-resource/kpi-staff",
-        icon: ChartLineIcon,
-      },
+      // {
+      //   title: "KPI Divisi",
+      //   url: "/human-resource/kpi-divisi",
+      //   icon: ChartNetworkIcon,
+      // },
+      // {
+      //   title: "KPI Staff",
+      //   url: "/human-resource/kpi-staff",
+      //   icon: ChartLineIcon,
+      // },
       {
         title: "Gaji Staff",
         url: "/human-resource/salary",
@@ -158,6 +158,16 @@ export const getMenus = (pathName: string) => {
         title: "Role Management",
         url: "/core/roles",
         icon: GaugeIcon,
+      },
+      {
+        title: "Plan",
+        url: "/core/plan",
+        icon: DockIcon,
+      },
+      {
+        title: "Subscription",
+        url: "/core/subscription",
+        icon: LayoutTemplateIcon,
       },
     ];
   }

@@ -79,8 +79,8 @@ const columns: TableProps<TAbsence>["columns"] = [
       <div className="capitalize">
         <p>{record.shift.nama}</p>
         <p>
-          ({moment(record.shift.jam_masuk).utc().format("HH:mm")} -{" "}
-          {moment(record.shift.jam_keluar).utc().format("HH:mm")})
+          ({moment(record.shift.jam_masuk).utc().utcOffset(7).format("HH:mm")} -{" "}
+          {moment(record.shift.jam_keluar).utc().utcOffset(7).format("HH:mm")})
         </p>
       </div>
     ),

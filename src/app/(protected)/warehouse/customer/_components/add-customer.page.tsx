@@ -75,7 +75,6 @@ function AddCustomerPage() {
     try {
       setMarker([]);
       setLoading(true);
-      console.log({ val });
       if (marker) {
         await CustomerService.create({
           ...val,

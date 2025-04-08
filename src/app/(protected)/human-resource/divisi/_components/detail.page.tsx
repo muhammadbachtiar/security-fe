@@ -64,7 +64,7 @@ function DetailDivisi() {
             },
             {
               title: "Divisi",
-              url: "/divisi",
+              url: "/human-resource/divisi",
             },
             {
               title: division?.data.name || "",

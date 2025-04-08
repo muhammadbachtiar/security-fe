@@ -6,10 +6,16 @@ import useListAbsence from "../_hooks/useListAbsence";
 import dayjs from "dayjs";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import { ShowQRAbsence } from "./show-qr-absence";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function AbsensiPage() {
   const today = dayjs();
-  const [dateRange, setDateRange] = useState<dayjs.Dayjs[]>([today, today]);
+  const searchParams = useSearchParams();
+  const start = searchParams.get("start") ?? today;
+  const end = searchParams.get("end") ?? today;
+
+  const pathname = usePathname();
+  const { replace } = useRouter();
 
   const [pagination, setPagination] = useState({
     page: 1,
@@ -19,8 +25,8 @@ function AbsensiPage() {
   const { columns, isLoading, absences } = useListAbsence({
     limit: pagination.pageSize,
     page: pagination.page,
-    from: dayjs(dateRange[0]).format("YYYY-MM-DD"),
-    to: dayjs(dateRange[1]).format("YYYY-MM-DD"),
+    from: dayjs(start).format("YYYY-MM-DD"),
+    to: dayjs(end).format("YYYY-MM-DD"),
   });
 
   return (
@@ -52,13 +58,20 @@ function AbsensiPage() {
           <div>
             <p className="mb-2">Tanggal</p>
             <DatePicker.RangePicker
-              value={dateRange as any}
+              value={start && end ? ([dayjs(start), dayjs(end)] as any) : null}
               onChange={(val) => {
+                const params = new URLSearchParams(searchParams);
                 if (val) {
-                  setDateRange(val as any);
+                  params.set("start", val[0] as any);
+                  params.set("end", val[1] as any);
+                  replace(`${pathname}?${params.toString()}`);
+                  return;
                 }
+                params.set("start", today as any);
+                params.set("end", today as any);
+                replace(`${pathname}?${params.toString()}`);
               }}
-              allowClear={false}
+              allowClear={true}
               format="DD/MM/YYYY"
               className="w-[280px]"
             />

@@ -39,7 +39,7 @@ export function AppSidebar() {
   if (
     pathname === "/" ||
     pathname === "/warehouse/login" ||
-    pathname === "/core/login"
+    pathname === "/human-resource/login"
   ) {
     return null;
   }

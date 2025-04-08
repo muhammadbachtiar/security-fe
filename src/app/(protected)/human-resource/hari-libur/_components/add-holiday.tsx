@@ -22,8 +22,10 @@ function AddHoliday() {
       setLoading(true);
 
       await HolidayService.create({
-        ...val,
-        date: dayjs(val?.date).format("YYYY-MM-DD"),
+        name: val.name,
+        description: val.description,
+        from: dayjs(val?.date[0]).format("YYYY-MM-DD"),
+        to: dayjs(val?.date[1]).format("YYYY-MM-DD"),
       });
 
       queryClient.invalidateQueries({
@@ -88,7 +90,7 @@ function AddHoliday() {
             className="!mb-2 w-full"
             rules={[{ required: true, message: "Tanggal harus diisi" }]}
           >
-            <DatePicker
+            <DatePicker.RangePicker
               allowClear={false}
               format="DD/MM/YYYY"
               className="w-full"

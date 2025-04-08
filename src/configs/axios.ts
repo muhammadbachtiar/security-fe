@@ -1,4 +1,4 @@
-import { getSession, getSessionCore, getSessionWms } from "@/lib/session";
+import { getSessionHrd, getSessionCore, getSessionWms } from "@/lib/session";
 import axios, { AxiosError } from "axios";
 
 const API_VERSION = "/api/v1";
@@ -26,7 +26,7 @@ export const axiosConfigCore = axios.create({
 
 axiosConfig.interceptors.request.use(
   async function (config) {
-    const session = getSession();
+    const session = getSessionHrd();
     if (session) {
       config.headers.Authorization = "Bearer " + session;
     }
