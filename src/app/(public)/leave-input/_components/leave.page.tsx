@@ -172,65 +172,6 @@ function LeavePage() {
           <Input.TextArea placeholder="Tulis alasan..." maxLength={255} />
         </Form.Item>
 
-        {/* <div>
-          <p className="font-medium mb-2">Lampiran (Jika Ada)</p>
-          {loadingUpload ? (
-            <div className="pl-4 pt-4">
-              <Loader2Icon className="text-blue-500 animate-spin" />
-            </div>
-          ) : (
-            <>
-              <Upload
-                accept="image/png,image/jpg,image/jpeg"
-                name="file"
-                listType="picture"
-                showUploadList={false}
-                beforeUpload={(file) => {
-                  const isJpgOrPng =
-                    file.type === "image/jpeg" || file.type === "image/png";
-                  if (!isJpgOrPng) {
-                    toast.error("Gsmbar harus png/jpg!");
-                  }
-                  const isLt2M = file.size / 1024 / 1024 < 2;
-                  if (!isLt2M) {
-                    toast.error("Gamnbar maksimal 2MB!");
-                  }
-                  return isJpgOrPng && isLt2M;
-                }}
-                customRequest={async ({ file }) => {
-                  try {
-                    setLoadingUpload(true);
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    const res = await axiosConfigCms.postForm<
-                      ResponseMockupDto<{ url: string }>
-                    >("/user/upload", formData);
-                    console.log({ res });
-                    return res.data;
-                  } catch (error) {
-                    errorResponse(error as AxiosError);
-                  } finally {
-                    setLoadingUpload(false);
-                  }
-                }}
-                style={{
-                  width: "100%",
-                }}
-              >
-                <button
-                  style={{ background: "none" }}
-                  type="button"
-                  className="!border border-dashed w-20 h-20 rounded-lg flex items-center justify-center flex-col"
-                >
-                  <PlusIcon />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </button>
-              </Upload>
-              <p className="text-gray-400">Maksimal 2MB (JPG, JPEG, PNG)</p>
-            </>
-          )}
-        </div> */}
-
         <div className="flex justify-end pt-2">
           <Button loading={loading} type="primary" htmlType="submit">
             Ajukan
