@@ -9,9 +9,11 @@ import DetailPayrollTable from "./detail-payroll-table";
 import { Skeleton } from "antd";
 import { TPayrollDetail } from "@/services/payroll/payroll.type";
 import AddPayrollDetail from "./add-payroll-detail";
+import usePermission from "@/hooks/use-permission";
 
 function DetailPayroll() {
   const { payrollId } = useParams();
+  const { checkPermission } = usePermission();
 
   const { data: payroll, isLoading } = useQuery({
     queryKey: ["PAYROLL", payrollId],
@@ -52,7 +54,9 @@ function DetailPayroll() {
               {payroll?.data.staff.nama || ""}
             </p>
 
-            <AddPayrollDetail detailId={+payrollId} />
+            {checkPermission(["create-payroll"]) && (
+              <AddPayrollDetail detailId={+payrollId} />
+            )}
           </div>
 
           <DetailPayrollTable

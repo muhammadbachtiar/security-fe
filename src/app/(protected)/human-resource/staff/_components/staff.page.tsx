@@ -5,8 +5,10 @@ import useListStaff from "../_hooks/useListStaff";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import usePermission from "@/hooks/use-permission";
 
 function StaffPage() {
+  const { checkPermission } = usePermission();
   const router = useRouter();
   const [pagination, setPagination] = useState({
     page: 1,
@@ -38,13 +40,15 @@ function StaffPage() {
         <div className="border-b pb-3">
           <div className="flex justify-between">
             <p className="text-xl font-medium">Data Staff</p>
-            <Button
-              onClick={() => router.push("/human-resource/staff/tambah")}
-              icon={<PlusIcon />}
-              type="primary"
-            >
-              <span className="!hidden md:!inline">Tambah Staff</span>
-            </Button>
+            {checkPermission(["create-staff"]) && (
+              <Button
+                onClick={() => router.push("/human-resource/staff/tambah")}
+                icon={<PlusIcon />}
+                type="primary"
+              >
+                <span className="!hidden md:!inline">Tambah Staff</span>
+              </Button>
+            )}
           </div>
           <p className="text-sm text-gray-500">
             Fitur staff memudahkan pengelolaan data karyawan, termasuk informasi

@@ -4,8 +4,10 @@ import { useState } from "react";
 import useListHoliday from "../_hooks/useListPayroll";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import AddPayroll from "./add-payroll";
+import usePermission from "@/hooks/use-permission";
 
 function PayrollPage() {
+  const { checkPermission } = usePermission();
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -37,7 +39,7 @@ function PayrollPage() {
         <div className="border-b pb-3">
           <div className="flex justify-between">
             <p className="text-xl font-medium">Payroll</p>
-            <AddPayroll />
+            {checkPermission(["create-payroll"]) && <AddPayroll />}
           </div>
           {/* <p className="text-sm text-gray-500">
             Untuk pengelolaan hari libur yang akan menyesuaikan jam operasional

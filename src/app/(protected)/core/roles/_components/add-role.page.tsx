@@ -2,6 +2,7 @@
 "use client";
 
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import errorResponse from "@/lib/error";
 import CoreServices from "@/services/core/core.services";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,20 +12,30 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+export const tabOptions = [
+  { label: "Core", value: "core" },
+  { label: "HRD", value: "hrd" },
+  { label: "Warehouse", value: "warehouse" },
+];
+
 function AddRolePage() {
   const [form] = Form.useForm();
   const roleName = Form.useWatch("name", form);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"core" | "hrd" | "warehouse">(
+    "core"
+  );
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data: permissions, isLoading } = useQuery({
-    queryKey: ["PERMISSIONS"],
+    queryKey: ["PERMISSIONS", activeTab],
     queryFn: async () => {
       const response = await CoreServices.getAllPermissions({
         page: 1,
         page_size: 9999,
+        apps: activeTab,
       });
       return response;
     },
@@ -49,7 +60,6 @@ function AddRolePage() {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="p-4 space-y-4">
@@ -91,6 +101,22 @@ function AddRolePage() {
           >
             <Input placeholder="Nama" maxLength={255} />
           </Form.Item>
+
+          <div className="mb-4">
+            <Tabs value={activeTab} className="w-[400px]">
+              <TabsList>
+                {tabOptions.map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    onClick={() => setActiveTab(tab.value as typeof activeTab)}
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
 
           {isLoading ? (
             <Skeleton />

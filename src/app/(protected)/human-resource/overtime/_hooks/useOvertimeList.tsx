@@ -7,6 +7,7 @@ import "moment/locale/id";
 import OvertimeService from "@/services/overtime/overtime.service";
 import { TOvertime } from "@/services/overtime/overtime.type";
 import { DialogText } from "@/components/common/dialog-text";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 function useLeaveList({ limit, page, status }: Props) {
+  const { checkPermission } = usePermission();
   const { data: overtimes, isLoading } = useQuery({
     queryKey: ["OVERTIMES", page, limit, status],
     queryFn: async () => {
@@ -98,13 +100,16 @@ function useLeaveList({ limit, page, status }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            {record.status === "pending" && (
-              <>
-                <ActionOvertime ovtId={record.id} status="approved" />
-                <ActionOvertime ovtId={record.id} status="rejected" />
-              </>
+            {checkPermission(["update-overtime"]) &&
+              record.status === "pending" && (
+                <>
+                  <ActionOvertime ovtId={record.id} status="approved" />
+                  <ActionOvertime ovtId={record.id} status="rejected" />
+                </>
+              )}
+            {checkPermission(["delete-overtime"]) && (
+              <DeleteOvertime ovtId={record.id} />
             )}
-            <DeleteOvertime ovtId={record.id} />
           </div>
         );
       },

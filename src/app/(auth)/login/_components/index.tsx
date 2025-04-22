@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import errorResponse from "@/lib/error";
 import { loginCore } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
@@ -20,8 +19,26 @@ function LoginPage() {
     try {
       setLoading(true);
       const response = await AuthService.loginCore(values);
+      const auth = await AuthService.me({
+        with: "roles.permission",
+        token: response.data.token,
+      });
+
+      console.log({ auth });
+
+      const userPermissions = Array.from(
+        new Set(
+          auth.data.roles.flatMap((role) =>
+            role.permission.map((p) => p.function)
+          )
+        )
+      );
+
+      localStorage.setItem("permissions", JSON.stringify(userPermissions));
+
       if (response.success) {
         loginCore(response.data.token);
+
         toast.success("Login Berhasil");
         router.replace("/");
       }

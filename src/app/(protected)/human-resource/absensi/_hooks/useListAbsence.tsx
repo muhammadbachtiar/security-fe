@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import AbsenceService from "@/services/absence/absence.service";
 import { TAbsence } from "@/services/absence/absence.type";
 import EditAbsensi from "../_components/edit-absensi";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -17,6 +18,7 @@ type Props = {
 
 function useListAbsence({ limit, page, from, to }: Props) {
   const router = useRouter();
+  const { checkPermission } = usePermission();
   const { data: absences, isLoading } = useQuery({
     queryKey: ["ABSENCES", page, limit, from, to],
     queryFn: async () => {
@@ -150,7 +152,10 @@ function useListAbsence({ limit, page, from, to }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <EditAbsensi absenceId={record.id} />
+            {checkPermission(["update-absen"]) && (
+              <EditAbsensi absenceId={record.id} />
+            )}
+
             <Button
               icon={<EyeIcon className="w-4 h-4 !text-primary " />}
               type="text"

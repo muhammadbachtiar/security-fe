@@ -3,6 +3,19 @@ export type UserType = {
   username: string;
   is_changed: boolean;
   is_staff: boolean;
+  roles: {
+    id: number;
+    name: string;
+    created_at: string;
+    updated_at: string;
+    permission: {
+      id: number;
+      name: string;
+      function: string;
+      created_at: string;
+      updated_at: string;
+    }[];
+  }[];
   deleted_at: null | Date;
   created_at: null | Date;
   updated_at: null | Date;

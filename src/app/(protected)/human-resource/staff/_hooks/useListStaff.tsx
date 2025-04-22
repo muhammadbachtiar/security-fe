@@ -6,6 +6,7 @@ import { DeleteStaff } from "../_components/delete-staff";
 import StaffService from "@/services/staff/staff.service";
 import { TStaff } from "@/services/staff/staff.type";
 import EditGajiPokok from "../_components/edit-gaji-pokok";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -14,6 +15,7 @@ type Props = {
 
 function useListStaff({ limit, page }: Props) {
   const router = useRouter();
+  const { checkPermission } = usePermission();
   const { data: staffs, isLoading } = useQuery({
     queryKey: ["STAFFS", page, limit],
     queryFn: async () => {
@@ -63,15 +65,21 @@ function useListStaff({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <EditGajiPokok staffId={record.id} />
-            <Button
-              onClick={() =>
-                router.push(`/human-resource/staff/${record.id}/edit`)
-              }
-              icon={<PencilIcon className="w-4 h-4 !text-orange-500" />}
-              type="text"
-            ></Button>
-            <DeleteStaff staffId={record.id} />
+            {checkPermission(["update-staff"]) && (
+              <>
+                <EditGajiPokok staffId={record.id} />
+                <Button
+                  onClick={() =>
+                    router.push(`/human-resource/staff/${record.id}/edit`)
+                  }
+                  icon={<PencilIcon className="w-4 h-4 !text-orange-500" />}
+                  type="text"
+                ></Button>
+              </>
+            )}
+            {checkPermission(["delete-staff"]) && (
+              <DeleteStaff staffId={record.id} />
+            )}
           </div>
         );
       },
