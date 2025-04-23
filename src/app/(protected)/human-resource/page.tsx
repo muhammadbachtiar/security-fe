@@ -31,7 +31,7 @@ const columns: TableProps<TAbsence>["columns"] = [
   {
     title: "Nama Staff",
     dataIndex: "staff",
-    render: (value, record) => <p>{record.staff.nama}</p>,
+    render: (value, record) => <p>{record?.staff?.nama}</p>,
   },
   {
     title: "Status",
