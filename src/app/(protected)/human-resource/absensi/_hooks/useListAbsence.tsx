@@ -54,7 +54,7 @@ function useListAbsence({ limit, page, from, to }: Props) {
     {
       title: "Nama Staff",
       dataIndex: "staff",
-      render: (value, record) => <p>{record.staff.nama}</p>,
+      render: (value, record) => <p>{record?.staff?.nama}</p>,
     },
     {
       title: "Tanggal",
