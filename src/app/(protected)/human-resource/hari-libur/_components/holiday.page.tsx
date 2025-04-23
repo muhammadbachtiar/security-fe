@@ -4,12 +4,15 @@ import { useState } from "react";
 import useListHoliday from "../_hooks/useListHoliday";
 import AddHoliday from "./add-holiday";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import usePermission from "@/hooks/use-permission";
 
 function HolidayPage() {
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
   });
+
+  const { checkPermission } = usePermission();
 
   const { columns, isLoading, holidays } = useListHoliday({
     limit: pagination.pageSize,
@@ -37,7 +40,7 @@ function HolidayPage() {
         <div className="border-b pb-3">
           <div className="flex justify-between">
             <p className="text-xl font-medium">Hari Libur</p>
-            <AddHoliday />
+            {checkPermission(["create-hari-libur"]) && <AddHoliday />}
           </div>
           <p className="text-sm text-gray-500">
             Untuk pengelolaan hari libur yang akan menyesuaikan jam operasional

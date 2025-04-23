@@ -17,6 +17,7 @@ import Image from "./image";
 import { getMenus } from "@/configs/menus";
 import { Button } from "antd";
 import { HomeIcon } from "lucide-react";
+import usePermission from "@/hooks/use-permission";
 
 const isActive = (pathname: string, item: string) => {
   const paths = ["/human-resource", "/warehouse", "/core"];
@@ -35,6 +36,8 @@ const isActive = (pathname: string, item: string) => {
 export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
+
+  const { checkPermission } = usePermission();
 
   if (
     pathname === "/" ||
@@ -62,7 +65,10 @@ export function AppSidebar() {
                     className={cn(
                       `py-5 flex gap-2 transition-all duration-300 hover:bg-primary/75 hover:text-white`,
                       isActive(pathname, item.url) &&
-                        "bg-primary/10 text-primary font-medium"
+                        "bg-primary/10 text-primary font-medium",
+                      item.permission !== "*" &&
+                        !checkPermission(item.permission) &&
+                        "hidden"
                     )}
                   >
                     <Link href={item.url}>

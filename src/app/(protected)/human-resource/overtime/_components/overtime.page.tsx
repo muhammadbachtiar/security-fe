@@ -5,10 +5,12 @@ import useLeaveList from "../_hooks/useOvertimeList";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import { ShowQRAOvertime } from "./show-qr-overtime";
 import { ActionOvertimeMulti } from "./action-overtime-multi";
+import usePermission from "@/hooks/use-permission";
 
 function OvertimePage() {
   const [status, setStatus] = useState("");
   const [selectedData, setSelectedData] = useState<number[]>([]);
+  const { checkPermission } = usePermission();
 
   const [pagination, setPagination] = useState({
     page: 1,
@@ -96,16 +98,22 @@ function OvertimePage() {
           <Table
             id="overtime-table"
             columns={columns}
-            rowSelection={{
-              selectedRowKeys: selectedData,
-              onSelect(value) {
-                if (selectedData.includes(value.id)) {
-                  setSelectedData((prev) => prev.filter((p) => p !== value.id));
-                  return;
-                }
-                setSelectedData((prev) => [...prev, value.id]);
-              },
-            }}
+            rowSelection={
+              !checkPermission(["update-overtime"])
+                ? undefined
+                : {
+                    selectedRowKeys: selectedData,
+                    onSelect(value) {
+                      if (selectedData.includes(value.id)) {
+                        setSelectedData((prev) =>
+                          prev.filter((p) => p !== value.id)
+                        );
+                        return;
+                      }
+                      setSelectedData((prev) => [...prev, value.id]);
+                    },
+                  }
+            }
             rowKey={(obj) => obj.id}
             dataSource={overtimes?.data}
             loading={isLoading}

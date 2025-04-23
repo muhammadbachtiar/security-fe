@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { Button, TableProps, Tag, Typography } from "antd";
 import { NetworkIcon } from "lucide-react";
@@ -7,6 +8,7 @@ import EditDivision from "../_components/edit-division";
 import { ToggleShift } from "../_components/toggle-shift";
 import DivisionService from "@/services/divisi/divisi.service";
 import { TDivision } from "@/services/divisi/divisi.type";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -14,6 +16,7 @@ type Props = {
 };
 
 function useListDivisi({ limit, page }: Props) {
+  const { checkPermission } = usePermission();
   const router = useRouter();
   const { data: divisions, isLoading } = useQuery({
     queryKey: ["DIVISIONS", page, limit],
@@ -47,13 +50,17 @@ function useListDivisi({ limit, page }: Props) {
       dataIndex: "name",
       render: (value = "") => <p>{value}</p>,
     },
-    {
-      title: "Shift",
-      dataIndex: "is_shift",
-      render: (value, record) => (
-        <ToggleShift divId={record.id} shift={record.is_shift} />
-      ),
-    },
+    ...(checkPermission(["update-division"])
+      ? [
+          {
+            title: "Shift",
+            dataIndex: "is_shift",
+            render: (value: string, record: any) => (
+              <ToggleShift divId={record.id} shift={record.is_shift} />
+            ),
+          },
+        ]
+      : []),
     {
       title: "Status",
       dataIndex: "division_id",
@@ -71,8 +78,13 @@ function useListDivisi({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <EditDivision divId={record.id} />
-            <DeleteDivision divId={record.id} />
+            {checkPermission(["update-division"]) && (
+              <EditDivision divId={record.id} />
+            )}
+            {checkPermission(["delete-division"]) && (
+              <DeleteDivision divId={record.id} />
+            )}
+
             <Button
               className="w-full px-3 !text-blue-500"
               icon={<NetworkIcon className="w-5 h-5 !text-blue-500" />}

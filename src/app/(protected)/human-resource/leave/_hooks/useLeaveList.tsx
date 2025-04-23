@@ -7,6 +7,7 @@ import { TLeave } from "@/services/leave/leave.type";
 import { DialogText } from "@/components/common/dialog-text";
 import moment from "moment";
 import "moment/locale/id";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 function useLeaveList({ limit, page, status }: Props) {
+  const { checkPermission } = usePermission();
   const { data: leaves, isLoading } = useQuery({
     queryKey: ["LEAVES", page, limit, status],
     queryFn: async () => {
@@ -47,7 +49,7 @@ function useLeaveList({ limit, page, status }: Props) {
     {
       title: "Nama Staff",
       dataIndex: "staff",
-      render: (value, record) => <p>{record.staff.nama}</p>,
+      render: (value, record) => <p>{record.staff?.nama}</p>,
     },
     {
       title: "Tipe",
@@ -96,13 +98,16 @@ function useLeaveList({ limit, page, status }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            {record.status === "pending" && (
-              <>
-                <ActionLeave leaveId={record.id} status="approved" />
-                <ActionLeave leaveId={record.id} status="rejected" />
-              </>
+            {checkPermission(["update-leave"]) &&
+              record.status === "pending" && (
+                <>
+                  <ActionLeave leaveId={record.id} status="approved" />
+                  <ActionLeave leaveId={record.id} status="rejected" />
+                </>
+              )}
+            {checkPermission(["delete-leave"]) && (
+              <DeleteLeave leaveId={record.id} />
             )}
-            <DeleteLeave leaveId={record.id} />
           </div>
         );
       },

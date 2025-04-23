@@ -2,12 +2,14 @@ import { formatCurrency } from "@/lib/utils";
 import { TPayrollDetail } from "@/services/payroll/payroll.type";
 import { Table, TableProps } from "antd";
 import { DeletePayrollDetail } from "./delete-payroll-detail";
+import usePermission from "@/hooks/use-permission";
 
 function DetailPayrollTable({
   payrollDetail,
 }: {
   payrollDetail: TPayrollDetail[];
 }) {
+  const { checkPermission } = usePermission();
   const columns: TableProps<TPayrollDetail>["columns"] = [
     {
       title: "Keterangan",
@@ -26,10 +28,12 @@ function DetailPayrollTable({
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <DeletePayrollDetail
-              payrollId={record.payroll_id}
-              detailId={record.id}
-            />
+            {checkPermission(["delete-payroll"]) && (
+              <DeletePayrollDetail
+                payrollId={record.payroll_id}
+                detailId={record.id}
+              />
+            )}
           </div>
         );
       },

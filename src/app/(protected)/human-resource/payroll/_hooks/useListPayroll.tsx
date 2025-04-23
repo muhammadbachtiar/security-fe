@@ -10,6 +10,7 @@ import { DeletePayroll } from "../_components/delete-payroll";
 import EditPayroll from "../_components/edit-payroll";
 import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 function useListPayroll({ limit, page }: Props) {
+  const { checkPermission } = usePermission();
   const router = useRouter();
   const { data: payrolls, isLoading } = useQuery({
     queryKey: ["PAYROLLS", page, limit],
@@ -79,8 +81,12 @@ function useListPayroll({ limit, page }: Props) {
                 router.push(`/human-resource/payroll/${record.id}`)
               }
             ></Button>
-            <EditPayroll payrollId={record.id} />
-            <DeletePayroll payrollId={record.id} />
+            {checkPermission(["update-payroll"]) && (
+              <EditPayroll payrollId={record.id} />
+            )}
+            {checkPermission(["delete-payroll"]) && (
+              <DeletePayroll payrollId={record.id} />
+            )}
           </div>
         );
       },

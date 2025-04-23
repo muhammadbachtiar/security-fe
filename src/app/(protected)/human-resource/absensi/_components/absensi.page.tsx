@@ -10,6 +10,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function AbsensiPage() {
   const today = dayjs();
+
   const searchParams = useSearchParams();
   const start = searchParams.get("start") ?? today;
   const end = searchParams.get("end") ?? today;

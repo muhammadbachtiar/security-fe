@@ -10,11 +10,14 @@ import { AxiosError } from "axios";
 import StaffService from "@/services/staff/staff.service";
 import { DownloadIcon } from "lucide-react";
 import moment from "moment-timezone";
+import usePermission from "@/hooks/use-permission";
 const timezone = moment.tz.guess();
 
 function LaporanPage() {
   const startOfMonth = dayjs().startOf("month");
   const endOfMonth = dayjs().endOf("month");
+
+  const { checkPermission } = usePermission();
 
   const [dateRange, setDateRange] = useState<dayjs.Dayjs[]>([
     startOfMonth,
@@ -131,25 +134,26 @@ function LaporanPage() {
               className="w-[280px]"
             />
           </div>
-
-          <div className="flex gap-2">
-            <Button
-              icon={<DownloadIcon className="w-4 h-4" />}
-              type="primary"
-              loading={loading}
-              onClick={handleExportDaily}
-            >
-              Export Laporan Daily
-            </Button>
-            <Button
-              icon={<DownloadIcon className="w-4 h-4" />}
-              type="primary"
-              loading={loadingTotal}
-              onClick={handleExportTotal}
-            >
-              Export Laporan Total
-            </Button>
-          </div>
+          {checkPermission(["export-laporan"]) && (
+            <div className="flex gap-2">
+              <Button
+                icon={<DownloadIcon className="w-4 h-4" />}
+                type="primary"
+                loading={loading}
+                onClick={handleExportDaily}
+              >
+                Export Laporan Daily
+              </Button>
+              <Button
+                icon={<DownloadIcon className="w-4 h-4" />}
+                type="primary"
+                loading={loadingTotal}
+                onClick={handleExportTotal}
+              >
+                Export Laporan Total
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="overflow-auto">

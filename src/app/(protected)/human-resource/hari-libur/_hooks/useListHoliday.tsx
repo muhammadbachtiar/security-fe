@@ -6,6 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import HolidayService from "@/services/holiday/holiday.service";
 import { THoliday } from "@/services/holiday/holiday";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 function useListHoliday({ limit, page }: Props) {
+  const { checkPermission } = usePermission();
   const { data: holidays, isLoading } = useQuery({
     queryKey: ["HOLIDAYS", page, limit],
     queryFn: async () => {
@@ -62,8 +64,12 @@ function useListHoliday({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <EditHoliday holidayId={record.id} />
-            <DeleteHoliday holidayId={record.id} />
+            {checkPermission(["update-hari-libur"]) && (
+              <EditHoliday holidayId={record.id} />
+            )}
+            {checkPermission(["delete-hari-libur"]) && (
+              <DeleteHoliday holidayId={record.id} />
+            )}
           </div>
         );
       },

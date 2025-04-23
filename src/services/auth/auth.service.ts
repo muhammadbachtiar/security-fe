@@ -3,11 +3,16 @@ import { BaseResponseDto } from "@/types/response";
 import { LoginResponseDto, UserType } from "./auth.dto";
 
 const AuthService = {
-  me: async (params?: { with?: string }) => {
+  me: async (params?: { with?: string; token?: string }) => {
     const response = await axiosConfigCore.get<BaseResponseDto<UserType>>(
       "/auth",
       {
         params,
+        ...(params?.token && {
+          headers: {
+            Authorization: "Bearer " + params.token,
+          },
+        }),
       }
     );
     return response.data;

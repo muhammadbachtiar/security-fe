@@ -5,6 +5,7 @@ import { DeleteShift } from "../_components/delete-shift";
 import ShiftService from "@/services/shift/shift.service";
 import { TShift } from "@/services/shift/shift.type";
 import moment from "moment";
+import usePermission from "@/hooks/use-permission";
 
 type Props = {
   page: number;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 function useListShift({ limit, page }: Props) {
+  const { checkPermission } = usePermission();
   const { data: shifts, isLoading } = useQuery({
     queryKey: ["SHIFTS", page, limit],
     queryFn: async () => {
@@ -60,8 +62,12 @@ function useListShift({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <EditShift shiftId={record.id} />
-            <DeleteShift shiftId={record.id} />
+            {checkPermission(["update-shift"]) && (
+              <EditShift shiftId={record.id} />
+            )}
+            {checkPermission(["delete-shift"]) && (
+              <DeleteShift shiftId={record.id} />
+            )}
           </div>
         );
       },

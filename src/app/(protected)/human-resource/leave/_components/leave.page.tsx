@@ -5,8 +5,11 @@ import useLeaveList from "../_hooks/useLeaveList";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import { ShowQRLeave } from "./show-qr-leave";
 import { ActionLeaveMulti } from "./action-leave-multi";
+import usePermission from "@/hooks/use-permission";
 
 function LeavePage() {
+  const { checkPermission } = usePermission();
+
   const [status, setStatus] = useState("");
   const [selectedData, setSelectedData] = useState<number[]>([]);
   const [pagination, setPagination] = useState({
@@ -93,16 +96,22 @@ function LeavePage() {
         <div className="overflow-auto">
           <Table
             id="leave-table"
-            rowSelection={{
-              selectedRowKeys: selectedData,
-              onSelect(value) {
-                if (selectedData.includes(value.id)) {
-                  setSelectedData((prev) => prev.filter((p) => p !== value.id));
-                  return;
-                }
-                setSelectedData((prev) => [...prev, value.id]);
-              },
-            }}
+            rowSelection={
+              !checkPermission(["update-leave"])
+                ? undefined
+                : {
+                    selectedRowKeys: selectedData,
+                    onSelect(value) {
+                      if (selectedData.includes(value.id)) {
+                        setSelectedData((prev) =>
+                          prev.filter((p) => p !== value.id)
+                        );
+                        return;
+                      }
+                      setSelectedData((prev) => [...prev, value.id]);
+                    },
+                  }
+            }
             rowKey={(obj) => obj.id}
             columns={columns}
             dataSource={leaves?.data}

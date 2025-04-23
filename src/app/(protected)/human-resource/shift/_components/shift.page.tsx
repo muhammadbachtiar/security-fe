@@ -5,8 +5,11 @@ import { useState } from "react";
 import useListShift from "../_hooks/useListShift";
 import AddShift from "./add-shift";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
+import usePermission from "@/hooks/use-permission";
 
 function Divisi() {
+  const { checkPermission } = usePermission();
+
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -38,7 +41,7 @@ function Divisi() {
         <div className="border-b pb-3">
           <div className="flex justify-between">
             <p className="text-xl font-medium">Data Shift</p>
-            <AddShift />
+            {checkPermission(["create-shift"]) && <AddShift />}
           </div>
           <p className="text-sm text-gray-500">Untuk pengelolaan jam kerja.</p>
         </div>
