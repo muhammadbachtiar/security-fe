@@ -23,9 +23,6 @@ function LoginPage() {
         with: "roles.permission",
         token: response.data.token,
       });
-
-      console.log({ auth });
-
       const userPermissions = Array.from(
         new Set(
           auth.data.roles.flatMap((role) =>
@@ -33,8 +30,10 @@ function LoginPage() {
           )
         )
       );
+      const { roles, ...userData } = auth.data;
 
       localStorage.setItem("permissions", JSON.stringify(userPermissions));
+      localStorage.setItem("user_data", JSON.stringify(userData));
 
       if (response.success) {
         loginCore(response.data.token);

@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import errorResponse from "@/lib/error";
 import { loginWms } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 function LoginPage() {
   const [form] = Form.useForm();
 
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(values: any) {
@@ -23,7 +20,7 @@ function LoginPage() {
       if (response.success) {
         loginWms(response.data.token);
         toast.success("Login Berhasil");
-        router.replace("/warehouse");
+        window.location.href = "/warehouse";
       }
     } catch (error: any) {
       errorResponse(error);

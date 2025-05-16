@@ -32,6 +32,7 @@ function EditMaterial({ materialId }: { materialId: number }) {
       const response = await MaterialService.getOne(materialId);
       return response;
     },
+    enabled: modal.isOpen,
   });
 
   const { data: categories } = useQuery({

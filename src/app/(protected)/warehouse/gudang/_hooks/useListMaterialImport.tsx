@@ -1,38 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
 import { TableProps, Typography } from "antd";
 import "moment/locale/id";
-import { DeleteMaterial } from "../_components/delete-material";
-import { TMaterial } from "@/services/material/material.type";
-import MaterialService from "@/services/material/material.service";
-import EditMaterial from "../_components/edit-material";
+import GudangService from "@/services/gudang/gudang.service";
+import { TMaterialInOut } from "@/services/gudang/gudang.type";
+import { useParams } from "next/navigation";
+import { DeleteMaterialImport } from "../[gudangId]/_components/delete-material-import";
 
 type Props = {
   page: number;
   limit: number;
 };
 
-function useListMaterial({ limit, page }: Props) {
-  const { data: materials, isLoading } = useQuery({
-    queryKey: ["MATERIALS", page, limit],
+function useListMaterialImport({ limit, page }: Props) {
+  const { gudangId } = useParams();
+  const { data: materialImport, isLoading } = useQuery({
+    queryKey: ["MATERIAL_IMPORTS", page, limit],
     queryFn: async () => {
-      const response = await MaterialService.getAll({
+      const response = await GudangService.getBahanMasuk({
         page_size: limit,
         page,
+        gudang: gudangId,
+        with: "bahan",
       });
       return response;
     },
     select(data) {
       return {
         ...data,
-        data: data.data.map((mat, index) => ({
-          ...mat,
+        data: data.data.map((imp, index) => ({
+          ...imp,
           no: index + 1 + limit * page - limit,
         })),
       };
     },
   });
 
-  const columns: TableProps<TMaterial>["columns"] = [
+  const columns: TableProps<TMaterialInOut>["columns"] = [
     {
       title: "No",
       dataIndex: "no",
@@ -41,17 +44,17 @@ function useListMaterial({ limit, page }: Props) {
     },
     {
       title: "Nama",
-      dataIndex: "name",
+      dataIndex: "nama",
       render: (value = "") => <p>{value}</p>,
     },
     {
       title: "SKU",
       dataIndex: "sku",
-      render: (value = "") => <p>{value}</p>,
+      render: (value = "", record) => <p>{record.bahan.sku}</p>,
     },
     {
-      title: "Stok",
-      dataIndex: "stok",
+      title: "Keterangan",
+      dataIndex: "keterangan",
       render: (value = "") => <p>{value}</p>,
     },
     {
@@ -60,8 +63,7 @@ function useListMaterial({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <DeleteMaterial materialId={record.id} />
-            <EditMaterial materialId={record.id} />
+            <DeleteMaterialImport matId={record.id} />
           </div>
         );
       },
@@ -70,8 +72,8 @@ function useListMaterial({ limit, page }: Props) {
   return {
     columns,
     isLoading,
-    materials,
+    materialImport,
   };
 }
 
-export default useListMaterial;
+export default useListMaterialImport;
