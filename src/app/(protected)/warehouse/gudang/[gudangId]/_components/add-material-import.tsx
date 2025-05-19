@@ -4,9 +4,9 @@ import { useDisclosure } from "@/hooks/use-disclosure";
 import errorResponse from "@/lib/error";
 import GudangService from "@/services/gudang/gudang.service";
 import { TMaterial } from "@/services/material/material.type";
-import { Button, Input, InputNumber, Modal, Typography } from "antd";
+import { Button, Input, InputNumber, Modal, Switch, Typography } from "antd";
 import { AxiosError } from "axios";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, ScanQrCodeIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -21,6 +21,7 @@ function AddMaterialImport({
 }) {
   const modal = useDisclosure();
   const [loadingCheck, setLoadingCheck] = useState(false);
+  const [isManual, setIsManual] = useState(false);
   const [sku, setSku] = useState("");
   const [desc, setDesc] = useState("");
   const [qty, setqty] = useState<number>(1);
@@ -41,6 +42,7 @@ function AddMaterialImport({
 
       setMaterial(res.data);
       setSku("");
+      setIsManual(false);
     } catch (error: any) {
       if (error.status === 400) {
         console.log({ error: error.status });
@@ -60,9 +62,14 @@ function AddMaterialImport({
   }, [modal]);
 
   useEffect(() => {
+    setSku("");
+  }, [isManual]);
+
+  useEffect(() => {
     if (code) {
       onCheck();
       setSku("");
+      setIsManual(false);
     }
   }, [code]);
 
@@ -77,6 +84,7 @@ function AddMaterialImport({
         maskClosable={false}
         onCancel={() => {
           setSku("");
+          setIsManual(false);
           setDesc("");
           setqty(1);
           setMaterial(null);
@@ -91,6 +99,7 @@ function AddMaterialImport({
               desc,
             });
             setSku("");
+            setIsManual(false);
             setDesc("");
             setqty(1);
             setMaterial(null);
@@ -100,45 +109,65 @@ function AddMaterialImport({
         }}
         title={<Typography.Title level={4}>Input Bahan Masuk</Typography.Title>}
       >
-        {/* <input
-          ref={inputRef as any}
-          value={sku}
-          type="text"
-          autoFocus
-          onChange={(e) => {
-            if (modal.isOpen) {
-              setSku(e.target.value);
-            }
-          }}
-          className="opacity-0 cursor-default"
-          onBlur={() => inputRef.current?.focus()}
-        /> */}
+        {!material && (
+          <div className="flex gap-2 items-center">
+            <Switch
+              id="manual"
+              value={isManual}
+              onChange={(v) => setIsManual(v)}
+            />
+            <label htmlFor="manual">Manual Input</label>
+          </div>
+        )}
         {!material ? (
-          <div className="space-y-2">
-            <p className="italic">*) Scan barcode atau input manual SKU</p>
-            <div className="flex gap-2">
-              <Input
-                placeholder="SKU"
-                className="w-full"
-                value={sku}
-                onChange={(e) => setSku(e.target.value)}
-              />
-              <Button
-                onClick={onCheck}
-                loading={loadingCheck}
-                type="text"
-                className="!border !border-blue-400 !text-blue-400"
-                disabled={!sku}
-              >
-                Cek
-              </Button>
-            </div>
+          <div>
+            {isManual ? (
+              <div className="space-y-2 pt-3">
+                <p className="italic">*) Input manual SKU</p>
+                <div className="flex gap-2">
+                  <Input
+                    ref={inputRef as any}
+                    placeholder="SKU"
+                    className="w-full"
+                    value={sku}
+                    onChange={(e) => setSku(e.target.value)}
+                  />
+                  <Button
+                    onClick={onCheck}
+                    loading={loadingCheck}
+                    type="text"
+                    className="!border !border-blue-400 !text-blue-400"
+                    disabled={!sku}
+                  >
+                    Cek
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center flex-col gap-4">
+                <input
+                  ref={inputRef as any}
+                  value={sku}
+                  type="text"
+                  autoFocus
+                  onChange={(e) => {
+                    if (modal.isOpen) {
+                      setSku(e.target.value);
+                    }
+                  }}
+                  className="opacity-0 cursor-default"
+                  onBlur={() => inputRef.current?.focus()}
+                />
+                <ScanQrCodeIcon className="w-10 h-10" />
+                <p>Silahkan scan barcode</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="space-y-2">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <p className="italic text-green-500">
-                Bahan dengan SKU {sku} ditemukan!
+                Bahan dengan SKU {material.sku} ditemukan!
               </p>
               <Button
                 type="link"
