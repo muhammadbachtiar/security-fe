@@ -3,7 +3,7 @@
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import GudangService from "@/services/gudang/gudang.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Table, TableProps, Typography } from "antd";
+import { Button, Input, Table, TableProps, Typography } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { TempMaterial } from "../../_components/add-material";
 import { useState } from "react";
@@ -13,8 +13,9 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 import AddMaterial from "../../_components/add-material";
 
-function TambahBahanMasuk() {
+function TambahProdukMasuk() {
   const [loading, setLoading] = useState(false);
+  const [pic, setPic] = useState("");
 
   const { gudangId } = useParams();
   const [materials, setMaterials] = useState<TempMaterial[]>([]);
@@ -37,9 +38,10 @@ function TambahBahanMasuk() {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      await GudangService.submitImportBahan({
+      await GudangService.submitImportProduct({
         gudang_id: +gudangId,
-        bahan: materials.map((mat) => ({
+        // nama: pic,
+        product: materials.map((mat) => ({
           nama: mat.material.name,
           sku: mat.material.sku,
           jumlah: mat.qty,
@@ -47,8 +49,8 @@ function TambahBahanMasuk() {
         })),
       });
       queryClient.invalidateQueries({ queryKey: ["MATERIAL_IMPORTS"] });
-      toast.success("Bahan masuk berhasil diselesaikan!");
-      router.push(`/warehouse/gudang/${gudangId}/bahan-masuk`);
+      toast.success("Produk masuk berhasil diselesaikan!");
+      router.push(`/warehouse/gudang/${gudangId}/produk-masuk`);
     } catch (error: any) {
       errorResponse(error as AxiosError);
     } finally {
@@ -66,7 +68,7 @@ function TambahBahanMasuk() {
       align: "center",
     },
     {
-      title: "Nama Bahan",
+      title: "Nama Produk",
       dataIndex: "nama",
       render: (value, record) => <p>{record.material.name}</p>,
     },
@@ -120,11 +122,11 @@ function TambahBahanMasuk() {
               url: `/warehouse/gudang/${gudangId}`,
             },
             {
-              title: "Bahan Masuk",
-              url: `/warehouse/gudang/${gudangId}/bahan-masuk`,
+              title: "Produk Masuk",
+              url: `/warehouse/gudang/${gudangId}/produk-masuk`,
             },
             {
-              title: "Proses Bahan Masuk",
+              title: "Proses Produk Masuk",
               url: "#",
             },
           ]}
@@ -133,16 +135,22 @@ function TambahBahanMasuk() {
 
       <div className="bg-white p-4 rounded-lg space-y-4">
         <div className="border-b pb-3">
-          <p className="text-2xl font-semibold">Proses bahan masuk</p>
+          <p className="text-2xl font-semibold">Proses produk masuk</p>
         </div>
 
         <div className="bg-white p-4 rounded-lg space-y-4">
           <div className="border-b pb-3">
             <div className="flex justify-end gap-2">
               <AddMaterial
-                type="material"
+                type="product"
                 onSubmit={handleInput}
                 currentValue={materials}
+              />
+              <Input
+                value={pic}
+                onChange={(e) => setPic(e.target.value)}
+                className="max-w-[280px]"
+                placeholder="Penanggung Jawab"
               />
               {materials.length ? (
                 <Button
@@ -150,6 +158,7 @@ function TambahBahanMasuk() {
                   loading={loading}
                   icon={<Save />}
                   type="primary"
+                  disabled={!pic}
                 >
                   Simpan
                 </Button>
@@ -166,4 +175,4 @@ function TambahBahanMasuk() {
   );
 }
 
-export default TambahBahanMasuk;
+export default TambahProdukMasuk;

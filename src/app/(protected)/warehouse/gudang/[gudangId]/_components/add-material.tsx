@@ -15,9 +15,11 @@ export type TempMaterial = { qty: number; desc: string; material: TMaterial };
 function AddMaterial({
   onSubmit,
   currentValue,
+  type,
 }: {
   onSubmit: (value: TempMaterial) => void;
   currentValue: TempMaterial[];
+  type: "product" | "material";
 }) {
   const modal = useDisclosure();
   const [loadingCheck, setLoadingCheck] = useState(false);
@@ -40,13 +42,24 @@ function AddMaterial({
       ) {
         throw new Error("SKU sudah ada di daftar");
       }
-      const res = await GudangService.checkBahan({
-        code: sku,
-      });
+      if (type === "material") {
+        const res = await GudangService.checkBahan({
+          code: sku,
+        });
 
-      setMaterial(res.data);
-      setSku("");
-      setIsManual(false);
+        setMaterial(res.data);
+        setSku("");
+        setIsManual(false);
+      }
+      if (type === "product") {
+        const res = await GudangService.checkProduct({
+          code: sku,
+        });
+
+        setMaterial(res.data);
+        setSku("");
+        setIsManual(false);
+      }
     } catch (error: any) {
       if (error.status === 400) {
         toast.error("SKU tidak ditemukan");
@@ -112,7 +125,7 @@ function AddMaterial({
           },
           disabled: !material || !qty,
         }}
-        title={<Typography.Title level={4}>Input Bahan Masuk</Typography.Title>}
+        title={<Typography.Title level={4}>Input Barang</Typography.Title>}
       >
         {!material && (
           <div className="flex gap-2 items-center">
@@ -171,7 +184,7 @@ function AddMaterial({
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <p className="italic text-green-500">
-                Bahan dengan SKU {material.sku} ditemukan!
+                Barang dengan SKU {material.sku} ditemukan!
               </p>
               <Button
                 type="link"
@@ -185,7 +198,7 @@ function AddMaterial({
             </div>
             <div className="flex gap-2">
               <div className="space-y-1 w-full">
-                <p>Nama Bahan</p>
+                <p>Nama Barang</p>
                 <Input className="w-full" value={material.name} disabled />
               </div>
               <div className="space-y-1 w-full">

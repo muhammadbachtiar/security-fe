@@ -41,6 +41,13 @@ const MaterialService = {
     );
     return response.data;
   },
+  export: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/bahan`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
 };
 
 export default MaterialService;

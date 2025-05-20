@@ -140,7 +140,11 @@ function TambahBahanKeluar() {
         <div className="bg-white p-4 rounded-lg space-y-4">
           <div className="border-b pb-3">
             <div className="flex justify-end gap-2">
-              <AddMaterial onSubmit={handleInput} currentValue={materials} />
+              <AddMaterial
+                type="material"
+                onSubmit={handleInput}
+                currentValue={materials}
+              />
               {materials.length ? (
                 <Button
                   onClick={onSubmit}

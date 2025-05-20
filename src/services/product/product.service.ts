@@ -42,6 +42,13 @@ const ProductService = {
     );
     return response.data;
   },
+  export: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/product`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
 };
 
 export default ProductService;

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseResponseDto, BaseResponsePaginate } from "@/types/response";
 import { axiosConfigWms } from "@/configs/axios";
-import { TGudang, TMaterialInOut } from "./gudang.type";
+import { TGudang, TMaterialInOut, TProductInOut } from "./gudang.type";
 import { TMaterial } from "../material/material.type";
+import { TProduct } from "../product/product.type";
 
 const GudangService = {
   getAll: async (params: any) => {
@@ -59,9 +60,32 @@ const GudangService = {
     });
     return response.data;
   },
+  getProductMasuk: async (params: any) => {
+    const response = await axiosConfigWms.get<
+      BaseResponsePaginate<TProductInOut[]>
+    >("/product-masuk", {
+      params,
+    });
+    return response.data;
+  },
+  getProductKeluar: async (params: any) => {
+    const response = await axiosConfigWms.get<
+      BaseResponsePaginate<TProductInOut[]>
+    >("/product-keluar", {
+      params,
+    });
+    return response.data;
+  },
   checkBahan: async (payload: any) => {
     const response = await axiosConfigWms.post<BaseResponseDto<TMaterial>>(
       "/bahan/code",
+      payload
+    );
+    return response.data;
+  },
+  checkProduct: async (payload: any) => {
+    const response = await axiosConfigWms.post<BaseResponseDto<TMaterial>>(
+      "/product/code",
       payload
     );
     return response.data;
@@ -80,6 +104,20 @@ const GudangService = {
     );
     return response.data;
   },
+  submitImportProduct: async (payload: any) => {
+    const response = await axiosConfigWms.post<BaseResponseDto<TProduct[]>>(
+      "/product-masuk",
+      payload
+    );
+    return response.data;
+  },
+  submitExportProduct: async (payload: any) => {
+    const response = await axiosConfigWms.post<BaseResponseDto<TProduct[]>>(
+      "/product-keluar",
+      payload
+    );
+    return response.data;
+  },
   deleteImportBahan: async (id: number) => {
     const response = await axiosConfigWms.delete<BaseResponseDto<TGudang>>(
       `/masuk/${id}`
@@ -90,6 +128,27 @@ const GudangService = {
     const response = await axiosConfigWms.delete<BaseResponseDto<TGudang>>(
       `/keluar/${id}`
     );
+    return response.data;
+  },
+  exportStockOpname: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/stok-opname`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
+  exportHistory: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/history`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
+  exportInOut: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/masuk-keluar`, {
+      params,
+      responseType: "blob",
+    });
     return response.data;
   },
 };
