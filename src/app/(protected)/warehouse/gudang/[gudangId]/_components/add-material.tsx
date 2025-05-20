@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export type TempMaterial = { qty: number; desc: string; material: TMaterial };
 
-function AddMaterialImport({
+function AddMaterial({
   onSubmit,
   currentValue,
 }: {
@@ -33,7 +33,11 @@ function AddMaterialImport({
   const onCheck = async () => {
     try {
       setLoadingCheck(true);
-      if (currentValue.some((v) => v.material.sku === sku)) {
+      if (
+        currentValue.some(
+          (v) => v.material.sku === sku || v.material.sku === code
+        )
+      ) {
         throw new Error("SKU sudah ada di daftar");
       }
       const res = await GudangService.checkBahan({
@@ -45,7 +49,6 @@ function AddMaterialImport({
       setIsManual(false);
     } catch (error: any) {
       if (error.status === 400) {
-        console.log({ error: error.status });
         toast.error("SKU tidak ditemukan");
         return;
       }
@@ -56,17 +59,19 @@ function AddMaterialImport({
   };
 
   useEffect(() => {
-    if (modal.isOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (modal.isOpen) {
+      setTimeout(() => {
+        inputRef?.current?.focus();
+      }, 300);
     }
-  }, [modal]);
+  }, [modal.isOpen]);
 
   useEffect(() => {
     setSku("");
   }, [isManual]);
 
   useEffect(() => {
-    if (code) {
+    if (code && !isManual) {
       onCheck();
       setSku("");
       setIsManual(false);
@@ -126,7 +131,6 @@ function AddMaterialImport({
                 <p className="italic">*) Input manual SKU</p>
                 <div className="flex gap-2">
                   <Input
-                    ref={inputRef as any}
                     placeholder="SKU"
                     className="w-full"
                     value={sku}
@@ -209,4 +213,4 @@ function AddMaterialImport({
   );
 }
 
-export default AddMaterialImport;
+export default AddMaterial;

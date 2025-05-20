@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import GudangService from "@/services/gudang/gudang.service";
@@ -13,7 +14,7 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 import AddMaterial from "../../_components/add-material";
 
-function TambahBahanMasuk() {
+function TambahBahanKeluar() {
   const [loading, setLoading] = useState(false);
 
   const { gudangId } = useParams();
@@ -37,7 +38,7 @@ function TambahBahanMasuk() {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      await GudangService.submitImportBahan({
+      await GudangService.submitExportBahan({
         gudang_id: +gudangId,
         bahan: materials.map((mat) => ({
           nama: mat.material.name,
@@ -46,9 +47,9 @@ function TambahBahanMasuk() {
           keterangan: mat.desc || "-",
         })),
       });
-      queryClient.invalidateQueries({ queryKey: ["MATERIAL_IMPORTS"] });
-      toast.success("Bahan masuk berhasil diselesaikan!");
-      router.push(`/warehouse/gudang/${gudangId}/bahan-masuk`);
+      queryClient.invalidateQueries({ queryKey: ["MATERIAL_EXPORTS"] });
+      toast.success("Bahan keluar berhasil diselesaikan!");
+      router.push(`/warehouse/gudang/${gudangId}/bahan-keluar`);
     } catch (error: any) {
       errorResponse(error as AxiosError);
     } finally {
@@ -68,12 +69,12 @@ function TambahBahanMasuk() {
     {
       title: "Nama Bahan",
       dataIndex: "nama",
-      render: (value, record) => <p>{record.material.name}</p>,
+      render: (value = "", record) => <p>{record.material.name}</p>,
     },
     {
       title: "SKU",
       dataIndex: "sku",
-      render: (value, record) => <p>{record.material.sku}</p>,
+      render: (value = "", record) => <p>{record.material.sku}</p>,
     },
     {
       title: "Kuantiti",
@@ -88,7 +89,7 @@ function TambahBahanMasuk() {
     {
       title: "Action",
       dataIndex: "desc",
-      render: (value, record) => (
+      render: (value = "", record) => (
         <Button
           className="w-full px-3 !text-red-500"
           icon={<TrashIcon className="w-5 h-5 !text-red-500" />}
@@ -120,11 +121,11 @@ function TambahBahanMasuk() {
               url: `/warehouse/gudang/${gudangId}`,
             },
             {
-              title: "Bahan Masuk",
-              url: `/warehouse/gudang/${gudangId}/bahan-masuk`,
+              title: "Bahan Keluar",
+              url: `/warehouse/gudang/${gudangId}/bahan-keluar`,
             },
             {
-              title: "Proses Bahan Masuk",
+              title: "Proses Bahan Keluar",
               url: "#",
             },
           ]}
@@ -133,7 +134,7 @@ function TambahBahanMasuk() {
 
       <div className="bg-white p-4 rounded-lg space-y-4">
         <div className="border-b pb-3">
-          <p className="text-2xl font-semibold">Proses bahan masuk</p>
+          <p className="text-2xl font-semibold">Proses bahan keluar</p>
         </div>
 
         <div className="bg-white p-4 rounded-lg space-y-4">
@@ -162,4 +163,4 @@ function TambahBahanMasuk() {
   );
 }
 
-export default TambahBahanMasuk;
+export default TambahBahanKeluar;

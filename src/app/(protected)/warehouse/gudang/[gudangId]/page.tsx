@@ -60,7 +60,7 @@ function GudangDetail() {
                   </div>
                 </Link>
                 <Link
-                  href={`${pn}/bahan-masuk`}
+                  href={`${pn}/bahan-keluar`}
                   className="flex items-center justify-between border border-blue-500 rounded-lg p-2 cursor-pointer hover:bg-blue-50"
                 >
                   <div className="w-full flex gap-2 flex-col justify-center">

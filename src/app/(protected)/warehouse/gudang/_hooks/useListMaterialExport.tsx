@@ -11,12 +11,12 @@ type Props = {
   limit: number;
 };
 
-function useListMaterialImport({ limit, page }: Props) {
+function useListMaterialExport({ limit, page }: Props) {
   const { gudangId } = useParams();
-  const { data: materialImport, isLoading } = useQuery({
-    queryKey: ["MATERIAL_IMPORTS", page, limit],
+  const { data: materialExport, isLoading } = useQuery({
+    queryKey: ["MATERIAL_EXPORTS", page, limit],
     queryFn: async () => {
-      const response = await GudangService.getBahanMasuk({
+      const response = await GudangService.getBahanKeluar({
         page_size: limit,
         page,
         gudang: gudangId,
@@ -53,6 +53,11 @@ function useListMaterialImport({ limit, page }: Props) {
       render: (value, record) => <p>{record.bahan.sku}</p>,
     },
     {
+      title: "Kuantiti",
+      dataIndex: "jumlah",
+      render: (value, record) => <p>{record.jumlah}</p>,
+    },
+    {
       title: "Keterangan",
       dataIndex: "keterangan",
       render: (value = "") => <p>{value}</p>,
@@ -72,8 +77,8 @@ function useListMaterialImport({ limit, page }: Props) {
   return {
     columns,
     isLoading,
-    materialImport,
+    materialExport,
   };
 }
 
-export default useListMaterialImport;
+export default useListMaterialExport;
