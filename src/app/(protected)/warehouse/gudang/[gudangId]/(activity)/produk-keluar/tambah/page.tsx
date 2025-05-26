@@ -5,13 +5,13 @@ import GudangService from "@/services/gudang/gudang.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Table, TableProps, Typography } from "antd";
 import { useParams, useRouter } from "next/navigation";
-import { TempMaterial } from "../../_components/add-material";
+import { TempMaterial } from "../../../_components/add-material";
 import { useState } from "react";
 import { Save, TrashIcon } from "lucide-react";
 import errorResponse from "@/lib/error";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import AddMaterial from "../../_components/add-material";
+import AddMaterial from "../../../_components/add-material";
 
 function TambahProdukMasuk() {
   const [loading, setLoading] = useState(false);
@@ -38,19 +38,18 @@ function TambahProdukMasuk() {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      await GudangService.submitImportProduct({
+      await GudangService.submitExportProduct({
         gudang_id: +gudangId,
-        // nama: pic,
+        nama: pic,
         product: materials.map((mat) => ({
-          nama: mat.material.name,
           sku: mat.material.sku,
           jumlah: mat.qty,
           keterangan: mat.desc || "-",
         })),
       });
-      queryClient.invalidateQueries({ queryKey: ["MATERIAL_IMPORTS"] });
-      toast.success("Produk masuk berhasil diselesaikan!");
-      router.push(`/warehouse/gudang/${gudangId}/produk-masuk`);
+      queryClient.invalidateQueries({ queryKey: ["PRODUCT_EXPORTS"] });
+      toast.success("Produk keluar berhasil diselesaikan!");
+      router.push(`/warehouse/gudang/${gudangId}/produk-keluar`);
     } catch (error: any) {
       errorResponse(error as AxiosError);
     } finally {

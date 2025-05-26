@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Skeleton, Table } from "antd";
 import { PlusIcon } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import useListMaterialImport from "../../_hooks/useListMaterialImport";
 import { useState } from "react";
+import useListMaterialExport from "../../../_hooks/useListMaterialExport";
 
 function BahanMasuk() {
   const [pagination, setPagination] = useState({
@@ -25,7 +25,7 @@ function BahanMasuk() {
     },
   });
 
-  const { columns, materialImport } = useListMaterialImport({
+  const { columns, materialExport } = useListMaterialExport({
     limit: pagination.pageSize,
     page: pagination.page,
   });
@@ -48,7 +48,7 @@ function BahanMasuk() {
               url: `/warehouse/gudang/${gudangId}`,
             },
             {
-              title: "Bahan Masuk",
+              title: "Bahan Keluar",
               url: "#",
             },
           ]}
@@ -60,7 +60,7 @@ function BahanMasuk() {
         <div className="bg-white p-4 rounded-lg space-y-4">
           <div className="border-b pb-3">
             <p className="text-2xl font-semibold">
-              Bahan Masuk{" "}
+              Bahan Keluar{" "}
               <span className="text-blue-500">{gudang?.data.nama}</span>
             </p>
           </div>
@@ -73,7 +73,7 @@ function BahanMasuk() {
                   icon={<PlusIcon />}
                   type="primary"
                 >
-                  Bahan Masuk
+                  Bahan Keluar
                 </Button>
               </div>
             </div>
@@ -82,13 +82,13 @@ function BahanMasuk() {
               <Table
                 id="gudang-table"
                 columns={columns}
-                dataSource={materialImport?.data}
+                dataSource={materialExport?.data}
                 loading={isLoading}
                 pagination={{
                   onChange: (page, pageSize) => {
                     setPagination({ page, pageSize });
                   },
-                  total: materialImport?.meta.total,
+                  total: materialExport?.meta.total,
                   pageSize: pagination.pageSize,
                   current: pagination.page,
                 }}

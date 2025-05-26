@@ -2,6 +2,7 @@ import {
   BanknoteIcon,
   BookUpIcon,
   BoxesIcon,
+  BoxIcon,
   CalendarCheckIcon,
   CalendarMinusIcon,
   CircleGaugeIcon,
@@ -83,6 +84,12 @@ export const getMenus = (pathName: string): MenuType[] => {
         title: "Gudang",
         url: "/warehouse/gudang",
         icon: WarehouseIcon,
+        permission: [],
+      },
+      {
+        title: "Produksi",
+        url: "/warehouse/produksi",
+        icon: BoxIcon,
         permission: [],
       },
       {

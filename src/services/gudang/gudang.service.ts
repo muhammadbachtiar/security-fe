@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseResponseDto, BaseResponsePaginate } from "@/types/response";
 import { axiosConfigWms } from "@/configs/axios";
-import { TGudang, TMaterialInOut, TProductInOut } from "./gudang.type";
+import {
+  TGudang,
+  TMaterialInOut,
+  TProductInOut,
+  TProduction,
+} from "./gudang.type";
 import { TMaterial } from "../material/material.type";
 import { TProduct } from "../product/product.type";
 
@@ -130,6 +135,18 @@ const GudangService = {
     );
     return response.data;
   },
+  deleteImportProduct: async (id: number) => {
+    const response = await axiosConfigWms.delete<BaseResponseDto<TGudang>>(
+      `/masuk/${id}`
+    );
+    return response.data;
+  },
+  deleteExportProduct: async (id: number) => {
+    const response = await axiosConfigWms.delete<BaseResponseDto<TGudang>>(
+      `/keluar/${id}`
+    );
+    return response.data;
+  },
   exportStockOpname: async (params?: any) => {
     const response = await axiosConfigWms.get(`/export/excel/stok-opname`, {
       params,
@@ -149,6 +166,43 @@ const GudangService = {
       params,
       responseType: "blob",
     });
+    return response.data;
+  },
+
+  // Production
+  getProduction: async (params: any) => {
+    const response = await axiosConfigWms.get<
+      BaseResponsePaginate<TProduction[]>
+    >("/production", {
+      params,
+    });
+    return response.data;
+  },
+  createProduction: async (payload: any) => {
+    const response = await axiosConfigWms.post<BaseResponseDto<TProduction[]>>(
+      "/production",
+      payload
+    );
+    return response.data;
+  },
+  updateProduction: async (id: number, payload: any) => {
+    const response = await axiosConfigWms.put<BaseResponseDto<TProduction[]>>(
+      `/production/${id}`,
+      payload
+    );
+    return response.data;
+  },
+  deleteProduction: async (id: number) => {
+    const response = await axiosConfigWms.delete<
+      BaseResponseDto<TProduction[]>
+    >(`/production/${id}`);
+    return response.data;
+  },
+  getOneProduction: async (id: number, params?: any) => {
+    const response = await axiosConfigWms.get<BaseResponseDto<TProduction>>(
+      `/production/${id}`,
+      { params }
+    );
     return response.data;
   },
 };

@@ -2,12 +2,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TableProps, Typography } from "antd";
 import "moment/locale/id";
 import GudangService from "@/services/gudang/gudang.service";
-import { TMaterialInOut } from "@/services/gudang/gudang.type";
+import { TProductInOut } from "@/services/gudang/gudang.type";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
 import errorResponse from "@/lib/error";
+import { toast } from "sonner";
+import { useState } from "react";
 import { DeleteMaterial } from "../[gudangId]/_components/delete-material";
 
 type Props = {
@@ -15,20 +15,20 @@ type Props = {
   limit: number;
 };
 
-function useListMaterialExport({ limit, page }: Props) {
+function useListProductExport({ limit, page }: Props) {
   const { gudangId } = useParams();
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const { data: materialExport, isLoading } = useQuery({
-    queryKey: ["MATERIAL_EXPORTS", page, limit],
+  const { data: productExport, isLoading } = useQuery({
+    queryKey: ["PRODUCT_EXPORTS", page, limit],
     queryFn: async () => {
-      const response = await GudangService.getBahanKeluar({
+      const response = await GudangService.getProductKeluar({
         page_size: limit,
         page,
         gudang: gudangId,
-        with: "bahan",
+        with: "product",
       });
       return response;
     },
@@ -46,10 +46,10 @@ function useListMaterialExport({ limit, page }: Props) {
   async function handleDelete(id: number) {
     try {
       setIsLoadingDelete(true);
-      await GudangService.deleteExportBahan(id);
+      await GudangService.deleteExportProduct(id);
 
       toast.success("Data berhasil dihapus!");
-      queryClient.invalidateQueries({ queryKey: ["MATERIAL_EXPORTS"] });
+      queryClient.invalidateQueries({ queryKey: ["PRODUCT_EXPORTS"] });
     } catch (error) {
       errorResponse(error as AxiosError);
     } finally {
@@ -57,7 +57,7 @@ function useListMaterialExport({ limit, page }: Props) {
     }
   }
 
-  const columns: TableProps<TMaterialInOut>["columns"] = [
+  const columns: TableProps<TProductInOut>["columns"] = [
     {
       title: "No",
       dataIndex: "no",
@@ -72,12 +72,7 @@ function useListMaterialExport({ limit, page }: Props) {
     {
       title: "SKU",
       dataIndex: "sku",
-      render: (value, record) => <p>{record.bahan.sku}</p>,
-    },
-    {
-      title: "Kuantiti",
-      dataIndex: "jumlah",
-      render: (value, record) => <p>{record.jumlah}</p>,
+      render: (value, record) => <p>{record.product.sku}</p>,
     },
     {
       title: "Keterangan",
@@ -102,8 +97,8 @@ function useListMaterialExport({ limit, page }: Props) {
   return {
     columns,
     isLoading,
-    materialExport,
+    productExport,
   };
 }
 
-export default useListMaterialExport;
+export default useListProductExport;

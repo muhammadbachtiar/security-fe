@@ -1,9 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TableProps, Typography } from "antd";
 import "moment/locale/id";
 import GudangService from "@/services/gudang/gudang.service";
 import { TProductInOut } from "@/services/gudang/gudang.type";
 import { useParams } from "next/navigation";
+import { AxiosError } from "axios";
+import errorResponse from "@/lib/error";
+import { toast } from "sonner";
+import { useState } from "react";
+import { DeleteMaterial } from "../[gudangId]/_components/delete-material";
 
 type Props = {
   page: number;
@@ -12,6 +17,10 @@ type Props = {
 
 function useListProductImport({ limit, page }: Props) {
   const { gudangId } = useParams();
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+  const queryClient = useQueryClient();
+
   const { data: productImport, isLoading } = useQuery({
     queryKey: ["PRODUCT_IMPORTS", page, limit],
     queryFn: async () => {
@@ -34,6 +43,20 @@ function useListProductImport({ limit, page }: Props) {
     },
   });
 
+  async function handleDelete(id: number) {
+    try {
+      setIsLoadingDelete(true);
+      await GudangService.deleteImportProduct(id);
+
+      toast.success("Data berhasil dihapus!");
+      queryClient.invalidateQueries({ queryKey: ["PRODUCT_IMPORTS"] });
+    } catch (error) {
+      errorResponse(error as AxiosError);
+    } finally {
+      setIsLoadingDelete(false);
+    }
+  }
+
   const columns: TableProps<TProductInOut>["columns"] = [
     {
       title: "No",
@@ -42,7 +65,7 @@ function useListProductImport({ limit, page }: Props) {
       align: "center",
     },
     {
-      title: "Nama",
+      title: "PIC",
       dataIndex: "nama",
       render: (value = "") => <p>{value}</p>,
     },
@@ -62,7 +85,10 @@ function useListProductImport({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            {/* <DeleteMaterialImport matId={record.id} /> */}
+            <DeleteMaterial
+              handleDelete={async () => handleDelete(record.id)}
+              isLoading={isLoadingDelete}
+            />
           </div>
         );
       },

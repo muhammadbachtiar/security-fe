@@ -24,7 +24,7 @@ function EditSatuan({
 
   const { data: unitsProduct, isLoading: isLoadingProduct } = useQuery({
     queryKey: ["UNIT_PRODUCT", productId, modal.isOpen],
-    enabled: isProduct,
+    enabled: isProduct && modal.isOpen,
     queryFn: async () => {
       const response = await UnitService.getOneProductUnit(productId);
       return response;
@@ -32,7 +32,7 @@ function EditSatuan({
   });
   const { data: unit, isLoading } = useQuery({
     queryKey: ["UNIT", productId, modal.isOpen],
-    enabled: !isProduct,
+    enabled: !isProduct && modal.isOpen,
     queryFn: async () => {
       const response = await UnitService.getOne(productId);
       return response;

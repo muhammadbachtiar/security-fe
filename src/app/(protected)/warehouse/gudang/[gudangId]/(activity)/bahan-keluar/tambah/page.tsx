@@ -4,18 +4,19 @@
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
 import GudangService from "@/services/gudang/gudang.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Table, TableProps, Typography } from "antd";
+import { Button, Input, Table, TableProps, Typography } from "antd";
 import { useParams, useRouter } from "next/navigation";
-import { TempMaterial } from "../../_components/add-material";
+import { TempMaterial } from "../../../_components/add-material";
 import { useState } from "react";
 import { Save, TrashIcon } from "lucide-react";
 import errorResponse from "@/lib/error";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import AddMaterial from "../../_components/add-material";
+import AddMaterial from "../../../_components/add-material";
 
 function TambahBahanKeluar() {
   const [loading, setLoading] = useState(false);
+  const [pic, setPic] = useState("");
 
   const { gudangId } = useParams();
   const [materials, setMaterials] = useState<TempMaterial[]>([]);
@@ -144,6 +145,12 @@ function TambahBahanKeluar() {
                 type="material"
                 onSubmit={handleInput}
                 currentValue={materials}
+              />
+              <Input
+                value={pic}
+                onChange={(e) => setPic(e.target.value)}
+                className="max-w-[280px]"
+                placeholder="Penanggung Jawab"
               />
               {materials.length ? (
                 <Button

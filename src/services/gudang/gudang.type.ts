@@ -40,3 +40,17 @@ export type TProductInOut = {
   created_at: string;
   updated_at: string;
 };
+
+export type TProduction = {
+  id: number;
+  gudang_id: number;
+  product_id: number;
+  nama: string;
+  tanggal_selesai: string;
+  status: string;
+  jumlah: number;
+  created_at: string;
+  updated_at: string;
+  product: TProduct;
+  gudang: TGudang;
+};

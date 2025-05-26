@@ -1,10 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TableProps, Typography } from "antd";
 import "moment/locale/id";
 import GudangService from "@/services/gudang/gudang.service";
 import { TMaterialInOut } from "@/services/gudang/gudang.type";
 import { useParams } from "next/navigation";
-import { DeleteMaterialImport } from "../[gudangId]/_components/delete-material-import";
+import { useState } from "react";
+import { toast } from "sonner";
+import errorResponse from "@/lib/error";
+import { AxiosError } from "axios";
+import { DeleteMaterial } from "../[gudangId]/_components/delete-material";
 
 type Props = {
   page: number;
@@ -13,6 +17,10 @@ type Props = {
 
 function useListMaterialImport({ limit, page }: Props) {
   const { gudangId } = useParams();
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+
+  const queryClient = useQueryClient();
+
   const { data: materialImport, isLoading } = useQuery({
     queryKey: ["MATERIAL_IMPORTS", page, limit],
     queryFn: async () => {
@@ -35,6 +43,20 @@ function useListMaterialImport({ limit, page }: Props) {
     },
   });
 
+  async function handleDelete(id: number) {
+    try {
+      setIsLoadingDelete(true);
+      await GudangService.deleteImportBahan(id);
+
+      toast.success("Data berhasil dihapus!");
+      queryClient.invalidateQueries({ queryKey: ["MATERIAL_IMPORTS"] });
+    } catch (error) {
+      errorResponse(error as AxiosError);
+    } finally {
+      setIsLoadingDelete(false);
+    }
+  }
+
   const columns: TableProps<TMaterialInOut>["columns"] = [
     {
       title: "No",
@@ -43,7 +65,7 @@ function useListMaterialImport({ limit, page }: Props) {
       align: "center",
     },
     {
-      title: "Nama",
+      title: "PIC",
       dataIndex: "nama",
       render: (value = "") => <p>{value}</p>,
     },
@@ -63,7 +85,10 @@ function useListMaterialImport({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <DeleteMaterialImport matId={record.id} />
+            <DeleteMaterial
+              handleDelete={async () => handleDelete(record.id)}
+              isLoading={isLoadingDelete}
+            />
           </div>
         );
       },

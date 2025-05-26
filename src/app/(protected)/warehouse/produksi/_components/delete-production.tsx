@@ -1,6 +1,6 @@
 import { useDisclosure } from "@/hooks/use-disclosure";
 import errorResponse from "@/lib/error";
-import GudangService from "@/services/gudang/gudang.service";
+import ProductService from "@/services/product/product.service";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { AxiosError } from "axios";
@@ -8,7 +8,7 @@ import { TrashIcon } from "lucide-react";
 import * as React from "react";
 import { toast } from "sonner";
 
-export function DeleteMaterialImport({ matId }: { matId: number }) {
+export function DeleteProduct({ productId }: { productId: number }) {
   const queryClient = useQueryClient();
   const modal = useDisclosure();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -16,10 +16,10 @@ export function DeleteMaterialImport({ matId }: { matId: number }) {
   async function handleDelete() {
     try {
       setIsLoading(true);
-      await GudangService.deleteImportBahan(matId);
+      await ProductService.delete(productId);
 
       toast.success("Data berhasil dihapus!");
-      queryClient.invalidateQueries({ queryKey: ["MATERIAL_IMPORTS"] });
+      queryClient.invalidateQueries({ queryKey: ["PRODUCTS"] });
       modal.onClose();
     } catch (error) {
       errorResponse(error as AxiosError);

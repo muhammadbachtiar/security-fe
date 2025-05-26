@@ -6,9 +6,9 @@ import { Button, Skeleton, Table } from "antd";
 import { PlusIcon } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import useListProductImport from "../../_hooks/useListProductImport";
+import useListProductExport from "../../../_hooks/useListProductExport";
 
-function ProdukMasuk() {
+function ProdukKeluar() {
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -27,9 +27,9 @@ function ProdukMasuk() {
 
   const {
     columns,
-    productImport,
+    productExport,
     isLoading: loading,
-  } = useListProductImport({
+  } = useListProductExport({
     limit: pagination.pageSize,
     page: pagination.page,
   });
@@ -52,7 +52,7 @@ function ProdukMasuk() {
               url: `/warehouse/gudang/${gudangId}`,
             },
             {
-              title: "Produk Masuk",
+              title: "Produk Keluar",
               url: "#",
             },
           ]}
@@ -64,7 +64,7 @@ function ProdukMasuk() {
         <div className="bg-white p-4 rounded-lg space-y-4">
           <div className="border-b pb-3">
             <p className="text-2xl font-semibold">
-              Produk Masuk{" "}
+              Produk Keluar{" "}
               <span className="text-blue-500">{gudang?.data.nama}</span>
             </p>
           </div>
@@ -77,7 +77,7 @@ function ProdukMasuk() {
                   icon={<PlusIcon />}
                   type="primary"
                 >
-                  Produk Masuk
+                  Produk Keluar
                 </Button>
               </div>
             </div>
@@ -86,13 +86,13 @@ function ProdukMasuk() {
               <Table
                 id="gudang-table"
                 columns={columns}
-                dataSource={productImport?.data}
+                dataSource={productExport?.data}
                 loading={isLoading}
                 pagination={{
                   onChange: (page, pageSize) => {
                     setPagination({ page, pageSize });
                   },
-                  total: productImport?.meta.total,
+                  total: productExport?.meta.total,
                   pageSize: pagination.pageSize,
                   current: pagination.page,
                 }}
@@ -105,4 +105,4 @@ function ProdukMasuk() {
   );
 }
 
-export default ProdukMasuk;
+export default ProdukKeluar;

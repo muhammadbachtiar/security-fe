@@ -48,7 +48,7 @@ function GudangDetail() {
 
           <div className="space-y-3">
             <div className="space-y-2">
-              <p className="text-2xl font-semibold">Aktivitas Gudang</p>
+              <p className="text-xl font-semibold">Aktivitas Gudang</p>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <Link
                   href={`${pn}/bahan-masuk`}
@@ -89,7 +89,18 @@ function GudangDetail() {
               </div>
             </div>
             <div className="space-y-2">
-              <p className="text-2xl font-semibold">Informasi Gudang</p>
+              <p className="text-xl font-semibold">Produksi</p>
+              <div className="space-y-1">
+                <p className="font-semibold">Alamat</p>
+                <p>{gudang?.data.alamat}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold">Deskripsi</p>
+                <p>{gudang?.data.deskripsi}</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-xl font-semibold">Informasi Gudang</p>
               <div className="space-y-1">
                 <p className="font-semibold">Alamat</p>
                 <p>{gudang?.data.alamat}</p>

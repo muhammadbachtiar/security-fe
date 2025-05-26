@@ -6,9 +6,9 @@ import { Button, Skeleton, Table } from "antd";
 import { PlusIcon } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import useListMaterialExport from "../../_hooks/useListMaterialExport";
+import useListProductImport from "../../../_hooks/useListProductImport";
 
-function BahanMasuk() {
+function ProdukMasuk() {
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -25,7 +25,11 @@ function BahanMasuk() {
     },
   });
 
-  const { columns, materialExport } = useListMaterialExport({
+  const {
+    columns,
+    productImport,
+    isLoading: loading,
+  } = useListProductImport({
     limit: pagination.pageSize,
     page: pagination.page,
   });
@@ -48,19 +52,19 @@ function BahanMasuk() {
               url: `/warehouse/gudang/${gudangId}`,
             },
             {
-              title: "Bahan Keluar",
+              title: "Produk Masuk",
               url: "#",
             },
           ]}
         />
       </div>
-      {isLoading ? (
+      {isLoading || loading ? (
         <Skeleton />
       ) : (
         <div className="bg-white p-4 rounded-lg space-y-4">
           <div className="border-b pb-3">
             <p className="text-2xl font-semibold">
-              Bahan Keluar{" "}
+              Produk Masuk{" "}
               <span className="text-blue-500">{gudang?.data.nama}</span>
             </p>
           </div>
@@ -73,7 +77,7 @@ function BahanMasuk() {
                   icon={<PlusIcon />}
                   type="primary"
                 >
-                  Bahan Keluar
+                  Produk Masuk
                 </Button>
               </div>
             </div>
@@ -82,13 +86,13 @@ function BahanMasuk() {
               <Table
                 id="gudang-table"
                 columns={columns}
-                dataSource={materialExport?.data}
+                dataSource={productImport?.data}
                 loading={isLoading}
                 pagination={{
                   onChange: (page, pageSize) => {
                     setPagination({ page, pageSize });
                   },
-                  total: materialExport?.meta.total,
+                  total: productImport?.meta.total,
                   pageSize: pagination.pageSize,
                   current: pagination.page,
                 }}
@@ -101,4 +105,4 @@ function BahanMasuk() {
   );
 }
 
-export default BahanMasuk;
+export default ProdukMasuk;
