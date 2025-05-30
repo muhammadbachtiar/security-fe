@@ -11,6 +11,7 @@ import {
   ContainerIcon,
   CookingPotIcon,
   DockIcon,
+  FileBoxIcon,
   FileClockIcon,
   GaugeIcon,
   HandCoinsIcon,
@@ -81,6 +82,12 @@ export const getMenus = (pathName: string): MenuType[] => {
         permission: [],
       },
       {
+        title: "Recipe",
+        url: "/warehouse/recipe",
+        icon: CookingPotIcon,
+        permission: [],
+      },
+      {
         title: "Gudang",
         url: "/warehouse/gudang",
         icon: WarehouseIcon,
@@ -93,9 +100,9 @@ export const getMenus = (pathName: string): MenuType[] => {
         permission: [],
       },
       {
-        title: "Recipe",
-        url: "/warehouse/recipe",
-        icon: CookingPotIcon,
+        title: "Purchase Order",
+        url: "/warehouse/purchase-order",
+        icon: FileBoxIcon,
         permission: [],
       },
     ];
