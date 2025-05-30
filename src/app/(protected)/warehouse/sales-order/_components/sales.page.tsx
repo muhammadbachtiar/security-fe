@@ -2,11 +2,11 @@
 import { Button, Table } from "antd";
 import { useState } from "react";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
-import useListPurchase from "../_hooks/useListPurchase";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import useListSales from "../_hooks/useListSales";
 
-function PurchasePage() {
+function SalesOrderPage() {
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -14,7 +14,7 @@ function PurchasePage() {
 
   const router = useRouter();
 
-  const { columns, isLoading, purchases } = useListPurchase({
+  const { columns, isLoading, sales } = useListSales({
     limit: pagination.pageSize,
     page: pagination.page,
   });
@@ -29,7 +29,7 @@ function PurchasePage() {
               url: "/",
             },
             {
-              title: "Purchase Order",
+              title: "Sales Order",
               url: "#",
             },
           ]}
@@ -39,13 +39,13 @@ function PurchasePage() {
       <div className="bg-white p-4 rounded-lg space-y-4">
         <div className="border-b pb-3">
           <div className="flex justify-between">
-            <p className="text-xl font-medium">Purchase Order</p>
+            <p className="text-xl font-medium">Sales Order</p>
             <Button
-              onClick={() => router.push("/warehouse/purchase-order/tambah")}
+              onClick={() => router.push("/warehouse/sales-order/tambah")}
               icon={<PlusIcon />}
               type="primary"
             >
-              <span className="!hidden md:!inline">Tambah Purchase</span>
+              <span className="!hidden md:!inline">Tambah Sales Order</span>
             </Button>
           </div>
         </div>
@@ -54,13 +54,13 @@ function PurchasePage() {
           <Table
             id="po-table"
             columns={columns}
-            dataSource={purchases?.data}
+            dataSource={sales?.data}
             loading={isLoading}
             pagination={{
               onChange: (page, pageSize) => {
                 setPagination({ page, pageSize });
               },
-              total: purchases?.meta.total,
+              total: sales?.meta.total,
               pageSize: pagination.pageSize,
               current: pagination.page,
             }}
@@ -71,4 +71,4 @@ function PurchasePage() {
   );
 }
 
-export default PurchasePage;
+export default SalesOrderPage;

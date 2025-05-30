@@ -19,6 +19,7 @@ import {
   LucideProps,
   NetworkIcon,
   Package2Icon,
+  ShoppingBasketIcon,
   UsersIcon,
   WarehouseIcon,
   WeightIcon,
@@ -103,6 +104,12 @@ export const getMenus = (pathName: string): MenuType[] => {
         title: "Purchase Order",
         url: "/warehouse/purchase-order",
         icon: FileBoxIcon,
+        permission: [],
+      },
+      {
+        title: "Sales Order",
+        url: "/warehouse/sales-order",
+        icon: ShoppingBasketIcon,
         permission: [],
       },
     ];
