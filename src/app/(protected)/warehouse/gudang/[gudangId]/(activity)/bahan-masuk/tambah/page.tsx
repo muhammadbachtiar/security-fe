@@ -42,7 +42,6 @@ function TambahBahanMasuk() {
         gudang_id: +gudangId,
         nama: pic,
         bahan: materials.map((mat) => ({
-          // nama: mat.material.name,
           sku: mat.material.sku,
           jumlah: mat.qty,
           keterangan: mat.desc || "-",
@@ -158,6 +157,7 @@ function TambahBahanMasuk() {
                   loading={loading}
                   icon={<Save />}
                   type="primary"
+                  disabled={!pic}
                 >
                   Simpan
                 </Button>

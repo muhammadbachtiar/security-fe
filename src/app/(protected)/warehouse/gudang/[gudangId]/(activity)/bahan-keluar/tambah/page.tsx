@@ -40,6 +40,7 @@ function TambahBahanKeluar() {
     try {
       setLoading(true);
       await GudangService.submitExportBahan({
+        nama: pic,
         gudang_id: +gudangId,
         bahan: materials.map((mat) => ({
           nama: mat.material.name,
@@ -158,6 +159,7 @@ function TambahBahanKeluar() {
                   loading={loading}
                   icon={<Save />}
                   type="primary"
+                  disabled={!pic}
                 >
                   Simpan
                 </Button>
