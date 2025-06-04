@@ -13,23 +13,22 @@ pipeline {
                         usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN'),
                         file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
                     ]) {
-                      sh """
-                       ssh -o StrictHostKeyChecking=no root@18.142.177.215 '
-        rm -rf /var/www/fe-sarana-hrd &&
-        git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/nama-apps
-    '
+                        sh """
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
+                            rm -rf /var/www/fe-sarana-hrd &&
+                            git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/nama-apps
+                        '
 
-    ssh -o StrictHostKeyChecking=no root@18.142.177.215 '
-        echo "${ENVFILE}" > /var/www/nama-apps/.env
-    '
+                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} root@18.142.177.215:/var/www/fe-sarana-hrd/.env
 
-    ssh -o StrictHostKeyChecking=no root@18.142.177.215 '
-        cd /var/www/nama-apps &&
-        docker compose down || true &&
-        docker compose build --no-cache &&
-        docker compose up -d
-    '
-"""                    }
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
+                            cd /var/www/fe-sarana-hrd &&
+                            docker compose down || true &&
+                            docker compose build --no-cache &&
+                            docker compose up -d
+                        '
+                        """
+                    }
                 }
             }
         }
@@ -37,7 +36,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Deployment sukses ke /var/www/nama-apps dari branch: ${params.BRANCH_TO_BUILD}"
+            echo "✅ Deployment sukses ke /var/www/fe-sarana-hrd dari branch: ${params.BRANCH_TO_BUILD}"
         }
         failure {
             echo "❌ Deployment gagal untuk branch: ${params.BRANCH_TO_BUILD}"
