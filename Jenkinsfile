@@ -13,20 +13,23 @@ pipeline {
                         usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN'),
                         file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
                     ]) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no root@127.0.0.1 '
-                            rm -rf /var/www/fe-sarana-hrd &&
-                            git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/nama-apps
-                        '
-                        scp -o StrictHostKeyChecking=no \$ENVFILE root@127.0.0.1:/var/www/nama-apps/.env
-                        ssh -o StrictHostKeyChecking=no root@127.0.0.1 '
-                            cd /var/www/fe-sarana-hrd &&
-                            docker compose down || true &&
-                            docker compose build --no-cache &&
-                            docker compose up -d
-                        '
-                        """
-                    }
+                      sh """
+                       ssh -o StrictHostKeyChecking=no root@18.142.177.215 '
+        rm -rf /var/www/fe-sarana-hrd &&
+        git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/nama-apps
+    '
+
+    ssh -o StrictHostKeyChecking=no root@18.142.177.215 '
+        echo "${ENVFILE}" > /var/www/nama-apps/.env
+    '
+
+    ssh -o StrictHostKeyChecking=no root@18.142.177.215 '
+        cd /var/www/nama-apps &&
+        docker compose down || true &&
+        docker compose build --no-cache &&
+        docker compose up -d
+    '
+"""                    }
                 }
             }
         }
