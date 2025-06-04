@@ -137,13 +137,13 @@ const GudangService = {
   },
   deleteImportProduct: async (id: number) => {
     const response = await axiosConfigWms.delete<BaseResponseDto<TGudang>>(
-      `/masuk/${id}`
+      `/product-masuk/${id}`
     );
     return response.data;
   },
   deleteExportProduct: async (id: number) => {
     const response = await axiosConfigWms.delete<BaseResponseDto<TGudang>>(
-      `/keluar/${id}`
+      `/product-keluar/${id}`
     );
     return response.data;
   },
