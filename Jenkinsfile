@@ -16,7 +16,7 @@ pipeline {
                         sh """
                         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
                             rm -rf /var/www/fe-sarana-hrd &&
-                            git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/nama-apps
+                            git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
                         '
 
                         scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} root@18.142.177.215:/var/www/fe-sarana-hrd/.env
