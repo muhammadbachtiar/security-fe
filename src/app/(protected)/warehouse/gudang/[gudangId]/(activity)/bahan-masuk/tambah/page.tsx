@@ -47,7 +47,9 @@ function TambahBahanMasuk() {
           keterangan: mat.desc || "-",
         })),
       });
-      queryClient.invalidateQueries({ queryKey: ["MATERIAL_IMPORTS"] });
+      queryClient.invalidateQueries({
+        queryKey: ["MATERIAL_IMPORTS", gudangId],
+      });
       toast.success("Bahan masuk berhasil diselesaikan!");
       router.push(`/warehouse/gudang/${gudangId}/bahan-masuk`);
     } catch (error: any) {

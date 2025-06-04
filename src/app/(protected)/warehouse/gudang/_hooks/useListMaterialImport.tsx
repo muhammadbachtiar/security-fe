@@ -20,7 +20,7 @@ function useListMaterialImport({ limit }: Props) {
     hasNextPage,
     // @ts-ignore
   } = useInfiniteQuery({
-    queryKey: ["mi_infinite", gudangId as string],
+    queryKey: ["MATERIAL_IMPORTS", gudangId as string],
     queryFn: async ({ pageParam = 1 }) => {
       let cursor: string = "";
       if (typeof pageParam === "string") {
