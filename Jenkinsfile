@@ -17,9 +17,9 @@ pipeline {
                         sh 'rm -rf FE-sarana-hrd'
                         sh "git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git"
                         dir('FE-sarana-hrd') {
-                            sh 'docker-compose down || true'
-                            sh 'docker-compose build --no-cache'
-                            sh 'docker-compose up -d'
+                            sh 'docker compose down || true'
+                            sh 'docker compose build --no-cache'
+                            sh 'docker compose up -d'
                         }
                     }
                 }
