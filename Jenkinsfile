@@ -13,10 +13,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Gunakan credential dari Jenkins
                     withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
-                        sh 'rm -rf FE-sarana-hrd' // bersihkan dulu jika ada sisa
-                        sh 'git clone -b ${BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git'
+                        sh 'rm -rf FE-sarana-hrd'
+                        sh "git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git"
                         dir('FE-sarana-hrd') {
                             sh 'docker-compose down || true'
                             sh 'docker-compose build --no-cache'
