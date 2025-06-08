@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         SLACK_WEBHOOK = credentials('jenkinskey')
     }
