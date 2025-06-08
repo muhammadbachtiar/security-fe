@@ -42,24 +42,27 @@ pipeline {
             }
         }
     }
-
-    post {
-        success {
-            echo "✅ Deployment sukses ke /var/www/fe-sarana-hrd dari branch: ${params.BRANCH_TO_BUILD}"
+post {
+    success {
+        echo "✅ Deployment sukses ke /var/www/fe-sarana-hrd dari branch: ${params.BRANCH_TO_BUILD}"
+        withCredentials([string(credentialsId: 'jenkinskey', variable: 'WEBHOOK_URL')]) {
             sh '''#!/bin/bash
-            curl -X POST -H "Content-type: application/json" --data '{
-              "text": "✅ *FE HRD deployed successfully* from *'"$BRANCH_TO_BUILD"'* to `/var/www/fe-sarana-hrd`"
-            }' "$SLACK_WEBHOOK"
+              curl -X POST -H "Content-type: application/json" --data '{
+                "text": "✅ *FE HRD deployed successfully* from *'"$BRANCH_TO_BUILD"'* to `/var/www/fe-sarana-hrd`"
+              }' "$WEBHOOK_URL"
             '''
         }
+    }
 
-        failure {
-            echo "❌ Deployment gagal untuk branch: ${params.BRANCH_TO_BUILD}"
+    failure {
+        echo "❌ Deployment gagal untuk branch: ${params.BRANCH_TO_BUILD}"
+        withCredentials([string(credentialsId: 'jenkinskey', variable: 'WEBHOOK_URL')]) {
             sh '''#!/bin/bash
-            curl -X POST -H "Content-type: application/json" --data '{
-              "text": "❌ *FE HRD deployment FAILED* for branch *'"$BRANCH_TO_BUILD"'*"
-            }' "$SLACK_WEBHOOK"
+              curl -X POST -H "Content-type: application/json" --data '{
+                "text": "❌ *FE HRD deployment FAILED* for branch *'"$BRANCH_TO_BUILD"'*"
+              }' "$WEBHOOK_URL"
             '''
+            }
         }
     }
 }
