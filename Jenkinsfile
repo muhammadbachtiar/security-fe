@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SLACK_WEBHOOK = credentials('slack-webhook-url')
+        SLACK_WEBHOOK = credentials('jenkinskey')
     }
 
     parameters {
