@@ -4,8 +4,9 @@ pipeline {
     triggers {
         githubPush()
     }
+
     environment {
-        SLACK_WEBHOOK = credentials('jenkinskey')
+        SLACK_WEBHOOK = credentials('jenkinskey') // Slack webhook disimpan sebagai "Secret Text"
     }
 
     parameters {
@@ -45,20 +46,20 @@ pipeline {
     post {
         success {
             echo "✅ Deployment sukses ke /var/www/fe-sarana-hrd dari branch: ${params.BRANCH_TO_BUILD}"
-            sh """
-            curl -X POST -H 'Content-type: application/json' --data '{
-              "text": "✅ *FE HRD deployed successfully* from *${params.BRANCH_TO_BUILD}* to `/var/www/fe-sarana-hrd`"
+            sh '''#!/bin/bash
+            curl -X POST -H "Content-type: application/json" --data '{
+              "text": "✅ *FE HRD deployed successfully* from *'"$BRANCH_TO_BUILD"'* to `/var/www/fe-sarana-hrd`"
             }' "$SLACK_WEBHOOK"
-            """
+            '''
         }
 
         failure {
             echo "❌ Deployment gagal untuk branch: ${params.BRANCH_TO_BUILD}"
-            sh """
-            curl -X POST -H 'Content-type: application/json' --data '{
-              "text": "❌ *FE HRD deployment FAILED* for branch *${params.BRANCH_TO_BUILD}*"
+            sh '''#!/bin/bash
+            curl -X POST -H "Content-type: application/json" --data '{
+              "text": "❌ *FE HRD deployment FAILED* for branch *'"$BRANCH_TO_BUILD"'*"
             }' "$SLACK_WEBHOOK"
-            """
+            '''
         }
     }
 }
