@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        SLACK_WEBHOOK = credentials('slack-webhook-url')
+    }
+
     parameters {
         choice(name: 'BRANCH_TO_BUILD', choices: ['dev', 'main', 'ci/cd'], description: 'Pilih branch yang ingin dibuild')
     }
@@ -23,10 +27,10 @@ pipeline {
 
                         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
                             cd /var/www/fe-sarana-hrd &&
-                            docker system prune -af &&
                             docker compose down || true &&
                             docker compose build --no-cache &&
-                            docker compose up -d
+                            docker compose up -d &&
+                            docker system prune -af
                         '
                         """
                     }
@@ -37,22 +41,21 @@ pipeline {
 
     post {
         success {
-            withCredentials([string(credentialsId: 'slack-webhook-url', variable: 'SLACK_WEBHOOK')]) {
-                sh """
-                curl -X POST -H 'Content-type: application/json' --data '{
-                  "text": "✅ *FE HRD deployed* from *${params.BRANCH_TO_BUILD}* to production at \`/var/www/fe-sarana-hrd\`"
-                }' "$SLACK_WEBHOOK"
-                """
-            }
+            echo "✅ Deployment sukses ke /var/www/fe-sarana-hrd dari branch: ${params.BRANCH_TO_BUILD}"
+            sh """
+            curl -X POST -H 'Content-type: application/json' --data '{
+              "text": "✅ *FE HRD deployed successfully* from *${params.BRANCH_TO_BUILD}* to `/var/www/fe-sarana-hrd`"
+            }' "$SLACK_WEBHOOK"
+            """
         }
+
         failure {
-            withCredentials([string(credentialsId: 'slack-webhook-url', variable: 'SLACK_WEBHOOK')]) {
-                sh """
-                curl -X POST -H 'Content-type: application/json' --data '{
-                  "text": "❌ *FE HRD failed to deploy* from *${params.BRANCH_TO_BUILD}*"
-                }' "$SLACK_WEBHOOK"
-                """
-            }
+            echo "❌ Deployment gagal untuk branch: ${params.BRANCH_TO_BUILD}"
+            sh """
+            curl -X POST -H 'Content-type: application/json' --data '{
+              "text": "❌ *FE HRD deployment FAILED* for branch *${params.BRANCH_TO_BUILD}*"
+            }' "$SLACK_WEBHOOK"
+            """
         }
     }
 }
