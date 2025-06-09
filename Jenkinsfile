@@ -30,11 +30,12 @@
                             scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} root@18.142.177.215:/var/www/fe-sarana-hrd/.env
 
                             ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
-                                cd /var/www/fe-sarana-hrd &&
-                                docker compose down || true &&
-                                docker compose build &&
-                                docker compose up -d &&
-                                docker system prune -af
+                           cd /var/www/fe-sarana-hrd &&
+                            docker compose down || true &&
+                            docker compose build &&
+                            docker compose up -d &&
+                            docker image prune -f &&
+                            docker builder prune -f
                             '
                             """
                         }
