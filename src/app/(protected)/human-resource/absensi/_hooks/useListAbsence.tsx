@@ -29,7 +29,7 @@ function useListAbsence({ limit, page, from, to }: Props) {
         to,
         order: "desc",
         by: "created_at",
-        with: "staff,shift",
+        with: "staff.divisi,shift",
       });
       return response;
     },
@@ -55,6 +55,11 @@ function useListAbsence({ limit, page, from, to }: Props) {
       title: "Nama Staff",
       dataIndex: "staff",
       render: (value, record) => <p>{record?.staff?.nama}</p>,
+    },
+    {
+      title: "Divisi",
+      dataIndex: "divisi",
+      render: (value, record) => <p>{record.staff.divisi.name}</p>,
     },
     {
       title: "Tanggal",

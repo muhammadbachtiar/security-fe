@@ -22,6 +22,7 @@ function useListStaff({ limit, page }: Props) {
       const response = await StaffService.getAll({
         page_size: limit,
         page,
+        with: "divisi",
       });
       return response;
     },
@@ -52,6 +53,11 @@ function useListStaff({ limit, page }: Props) {
       title: "NIP",
       dataIndex: "nip",
       render: (value = "") => <p>{value}</p>,
+    },
+    {
+      title: "Divisi",
+      dataIndex: "divisi",
+      render: (value, record) => <p>{record.divisi.name}</p>,
     },
     {
       title: "Status",

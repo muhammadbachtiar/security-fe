@@ -18,6 +18,7 @@ function EditGajiPokok({ staffId }: { staffId: number }) {
 
   const { data: staff, isLoading } = useQuery({
     queryKey: ["STAFF", staffId],
+    enabled: modal.isOpen,
     queryFn: async () => {
       const response = await StaffService.getOne(+staffId);
       return response;
