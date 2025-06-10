@@ -18,6 +18,7 @@ function useListSalary({ limit, page, from, to }: Props) {
       const response = await StaffService.getAll({
         page_size: limit,
         page,
+        with: "divisi",
       });
       return response;
     },
@@ -43,6 +44,11 @@ function useListSalary({ limit, page, from, to }: Props) {
       title: "Nama",
       dataIndex: "nama",
       render: (value = "") => <p>{value}</p>,
+    },
+    {
+      title: "Divisi",
+      dataIndex: "divisi",
+      render: (value, record) => <p>{record.divisi.name}</p>,
     },
     {
       title: "NIP",
