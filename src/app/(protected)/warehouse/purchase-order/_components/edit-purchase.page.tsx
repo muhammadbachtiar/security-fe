@@ -94,7 +94,7 @@ function EditPurchase() {
             },
             {
               title: "Purchase",
-              url: "/purchase-order",
+              url: "/warehouse/purchase-order",
             },
             {
               title: "Edit Purchase",

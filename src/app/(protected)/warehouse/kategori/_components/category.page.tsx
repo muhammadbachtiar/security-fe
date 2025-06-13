@@ -82,7 +82,7 @@ function SatuanPage() {
                 !isProduct && "bg-white"
               )}
             >
-              Kategori
+              Kategori Bahan
             </div>
             <div
               onClick={() => setIsProduct(true)}

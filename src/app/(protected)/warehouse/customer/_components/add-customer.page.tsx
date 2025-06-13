@@ -43,8 +43,8 @@ function AddCustomerPage() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
-          setMyLatitude(position.coords.latitude);
-          setMyLongitude(position.coords.longitude);
+          setMyLatitude(position.coords?.latitude);
+          setMyLongitude(position.coords?.longitude);
         },
         (error: GeolocationPositionError) => {
           if (error.code === error.PERMISSION_DENIED) {
@@ -73,7 +73,7 @@ function AddCustomerPage() {
 
   const onSubmit = async (val: any) => {
     try {
-      setMarker([]);
+      setMarker(null);
       setLoading(true);
       if (marker) {
         await CustomerService.create({
@@ -112,7 +112,7 @@ function AddCustomerPage() {
             },
             {
               title: "Customer",
-              url: "/customer",
+              url: "/warehouse/customer",
             },
             {
               title: "Tambah Customer",
@@ -152,7 +152,7 @@ function AddCustomerPage() {
           </Form.Item>
           <Form.Item
             label="Deskripsi"
-            name="deskripsi"
+            name="description"
             className="w-full !mb-2"
           >
             <Input.TextArea placeholder="Tulis deskripsi..." maxLength={255} />

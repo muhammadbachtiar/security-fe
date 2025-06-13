@@ -13,7 +13,7 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 import AddMaterial from "../../../_components/add-material";
 
-function TambahProdukMasuk() {
+function TambahProdukKeluar() {
   const [loading, setLoading] = useState(false);
   const [pic, setPic] = useState("");
 
@@ -121,11 +121,11 @@ function TambahProdukMasuk() {
               url: `/warehouse/gudang/${gudangId}`,
             },
             {
-              title: "Produk Masuk",
-              url: `/warehouse/gudang/${gudangId}/produk-masuk`,
+              title: "Produk Keluar",
+              url: `/warehouse/gudang/${gudangId}/produk-keluar`,
             },
             {
-              title: "Proses Produk Masuk",
+              title: "Proses Produk Keluar",
               url: "#",
             },
           ]}
@@ -134,7 +134,7 @@ function TambahProdukMasuk() {
 
       <div className="bg-white p-4 rounded-lg space-y-4">
         <div className="border-b pb-3">
-          <p className="text-2xl font-semibold">Proses produk masuk</p>
+          <p className="text-2xl font-semibold">Proses produk keluar</p>
         </div>
 
         <div className="bg-white p-4 rounded-lg space-y-4">
@@ -174,4 +174,4 @@ function TambahProdukMasuk() {
   );
 }
 
-export default TambahProdukMasuk;
+export default TambahProdukKeluar;

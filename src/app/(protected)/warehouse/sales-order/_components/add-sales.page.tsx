@@ -14,7 +14,7 @@ import ProductService from "@/services/product/product.service";
 import SalesOrderService from "@/services/sales-order/sales.service";
 import dayjs from "dayjs";
 
-function AddPurchasePage() {
+function AddSalesPage() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -73,10 +73,10 @@ function AddPurchasePage() {
             },
             {
               title: "Purchase",
-              url: "/purchase-order",
+              url: "/warehouse/sales-order",
             },
             {
-              title: "Tambah Purchase",
+              title: "Tambah Sales Order",
               url: "#",
             },
           ]}
@@ -258,4 +258,4 @@ function AddPurchasePage() {
   );
 }
 
-export default AddPurchasePage;
+export default AddSalesPage;

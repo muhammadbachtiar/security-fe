@@ -77,7 +77,7 @@ function SatuanPage() {
                 !isProduct && "bg-white"
               )}
             >
-              Satuan
+              Satuan Bahan
             </div>
             <div
               onClick={() => setIsProduct(true)}

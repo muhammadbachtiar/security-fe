@@ -118,7 +118,7 @@ function AddGudangPage() {
             },
             {
               title: "Gudang",
-              url: "/gudang",
+              url: "/warehouse/gudang",
             },
             {
               title: "Tambah Gudang",

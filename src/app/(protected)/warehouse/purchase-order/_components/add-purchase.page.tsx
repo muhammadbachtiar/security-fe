@@ -84,7 +84,7 @@ function AddPurchasePage() {
             },
             {
               title: "Purchase",
-              url: "/purchase-order",
+              url: "/warehouse/purchase-order",
             },
             {
               title: "Tambah Purchase",

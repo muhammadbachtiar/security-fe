@@ -18,6 +18,7 @@ function useListRecipe({ limit, page }: Props) {
       const response = await RecipeService.getAll({
         page_size: limit,
         page,
+        with: "bahan",
       });
       return response;
     },
@@ -38,6 +39,11 @@ function useListRecipe({ limit, page }: Props) {
       dataIndex: "no",
       render: (text: string) => <Typography.Text>{text}</Typography.Text>,
       align: "center",
+    },
+    {
+      title: "Bahan",
+      dataIndex: "bahan",
+      render: (value, record) => <p>{record.bahan.name}</p>,
     },
     {
       title: "Jumlah",

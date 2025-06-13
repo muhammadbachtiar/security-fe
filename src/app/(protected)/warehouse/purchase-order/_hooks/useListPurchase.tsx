@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, TableProps, Typography } from "antd";
+import { Button, TableProps, Tag, Typography } from "antd";
 import "moment/locale/id";
 import PurchaseService from "@/services/purchase-order/purchase.service";
 import { TPurchase } from "@/services/purchase-order/purchase.type";
 import { DeletePurchase } from "../_components/delete-purchase";
 import { Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { STATUS_PURCHASE } from "@/lib/constants";
 
 type Props = {
   page: number;
@@ -46,11 +47,23 @@ function useListPurchase({ limit, page }: Props) {
       dataIndex: "code",
       render: (value = "") => <p>{value}</p>,
     },
-
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (value = Number) => {
+        const status = STATUS_PURCHASE.find((s) => s.value === value);
+        return (
+          <Tag color={status?.color || "default"}>
+            {status?.name || "Tidak Diketahui"}
+          </Tag>
+        );
+      },
+    },
     {
       title: "Action",
       key: "",
       render: (value, record) => {
+        if (record.status > 0) return null;
         return (
           <div key={record.id} className="flex gap-[8px]">
             <DeletePurchase purchaseId={record.id} />

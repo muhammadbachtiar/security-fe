@@ -84,7 +84,7 @@ function EditSalesOrder() {
             },
             {
               title: "Sales Order",
-              url: "/sales-order",
+              url: "/warehouse/sales-order",
             },
             {
               title: "Edit Sales Order",

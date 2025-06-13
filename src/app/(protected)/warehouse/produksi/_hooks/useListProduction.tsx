@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { TableProps, Typography } from "antd";
 import "moment/locale/id";
-import { DeleteProduct } from "../_components/delete-production";
+import { DeleteProduction } from "../_components/delete-production";
 import GudangService from "@/services/gudang/gudang.service";
 import { TProduction } from "@/services/gudang/gudang.type";
 import EditProduction from "../_components/edit-production";
@@ -66,7 +66,7 @@ function useListProduction({ limit, page }: Props) {
       render: (value, record) => {
         return (
           <div key={record.id} className="flex gap-[8px]">
-            <DeleteProduct productId={record.id} />
+            <DeleteProduction productId={record.id} />
             <EditProduction prodId={record.id} />
           </div>
         );
