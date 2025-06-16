@@ -47,7 +47,7 @@ pipeline {
                     ]) {
                         sh '''
                         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $REMOTE_HOST '
-                            if [ ! -d $APP_DIR/.git ]; then
+                            if [ !  $APP_DIR/.git ]; then
                                 echo "📥 Cloning fresh repo..."
                                 rm -rf $APP_DIR &&
                                 git clone -b '$BRANCH_TO_BUILD' https://$GIT_USER:$GIT_TOKEN@github.com/SaranaTechnology/FE-sarana-hrd.git $APP_DIR
