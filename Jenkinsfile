@@ -1,66 +1,95 @@
-    pipeline {
-        agent any
+pipeline {
+    agent any
 
-        triggers {
-            githubPush()
+    triggers {
+        githubPush()
+    }
+
+    environment {
+        BRANCH_TO_BUILD = 'dev'
+        REMOTE_HOST = 'root@18.142.177.215'
+        APP_DIR = '/var/www/fe-sarana-hrd'
+    }
+
+    stages {
+        stage('Pre-Deploy Check') {
+            steps {
+                slackSend(
+                    channel: '#info-server',
+                    color: '#439FE0',
+                    message: "🚀 *Pre-deploy check started* for *${BRANCH_TO_BUILD}* on `${REMOTE_HOST}`"
+                )
+
+                sshagent(['ssh-server-root']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \$REMOTE_HOST '
+                        echo "📦 Cek direktori \$APP_DIR" &&
+                        if [ -d \$APP_DIR ]; then
+                            echo "✅ Directory exists: \$APP_DIR"
+                        else
+                            echo "ℹ️ Directory not found. Akan dibuat saat clone."
+                        fi
+
+                        echo "🔍 Cek docker status"
+                        docker ps || echo "Docker not running"
+
+                        echo "💡 Branch to deploy: ${BRANCH_TO_BUILD}"
+                    '
+                    """
+                }
+            }
         }
 
-        parameters {
-            choice(name: 'BRANCH_TO_BUILD', choices: ['dev', 'main', 'ci/cd'], description: 'Pilih branch yang ingin dibuild')
-        }
-
-        stages {
-            stage('Deploy to Host as Root') {
-                steps {
-                    sshagent(['ssh-server-root']) {
-                        withCredentials([
-                            usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN'),
-                            file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
-                        ]) {
-                            sh """
-                             ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
-                            if [ ! -d /var/www/fe-sarana-hrd ]; then
-                                git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(['ssh-server-root']) {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN'),
+                        file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
+                    ]) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \$REMOTE_HOST '
+                            if [ ! -d \$APP_DIR ]; then
+                                git clone -b ${BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git \$APP_DIR
                             else
-                                cd /var/www/fe-sarana-hrd &&
+                                cd \$APP_DIR &&
                                 git fetch origin &&
-                                git reset --hard origin/${params.BRANCH_TO_BUILD}
+                                git reset --hard origin/${BRANCH_TO_BUILD}
                             fi
                         '
-                            scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} root@18.142.177.215:/var/www/fe-sarana-hrd/.env
 
-                            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
-                           cd /var/www/fe-sarana-hrd &&
+                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} \$REMOTE_HOST:\$APP_DIR/.env
+
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \$REMOTE_HOST '
+                            cd \$APP_DIR &&
                             docker compose down || true &&
                             docker compose build &&
                             docker compose up -d &&
                             docker image prune -f &&
                             docker builder prune -f
-                            '
-                            """
-                        }
+                        '
+                        """
                     }
                 }
             }
         }
+    }
+
     post {
         success {
-            echo "✅ Deployment sukses ke /var/www/fe-sarana-hrd dari branch: ${params.BRANCH_TO_BUILD}"
             slackSend(
-                    channel: '#info-server',
-                    color: 'good',
-                    message: "✅ *FE HRD deployed successfully* from *${params.BRANCH_TO_BUILD}* to `/var/www/fe-sarana-hrd`"
-                )
+                channel: '#info-server',
+                color: 'good',
+                message: "✅ *FE HRD deployed (dev)* to `/var/www/fe-sarana-hrd`"
+            )
         }
 
         failure {
-            echo "❌ Deployment gagal untuk branch: ${params.BRANCH_TO_BUILD}"
             slackSend(
-                    channel: '#info-server',
-                    color: 'danger',
-                    message: "❌ *FE HRD deployment failed* for *${params.BRANCH_TO_BUILD}* to `/var/www/fe-sarana-hrd`"
-                )
-
-            }
+                channel: '#info-server',
+                color: 'danger',
+                message: "❌ *FE HRD deployment failed (dev)* to `/var/www/fe-sarana-hrd`"
+            )
         }
     }
+}
