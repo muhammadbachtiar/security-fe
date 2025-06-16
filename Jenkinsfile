@@ -8,7 +8,7 @@ pipeline {
     environment {
         BRANCH_TO_BUILD = 'dev'
         REMOTE_HOST = 'root@18.142.177.215'
-        APP_DIR = '/var/www/fe-sarana-hrd'
+        APP_DIR = '/var/www/fe-sarana-hrd/'
     }
 
     stages {
