@@ -17,56 +17,61 @@ pipeline {
                 slackSend(
                     channel: '#info-server',
                     color: '#439FE0',
-                    message: "🟡 *Pre-deploy check started* for *${BRANCH_TO_BUILD}* on `${REMOTE_HOST}`"
+                    message: "🟡 *Pre-deploy check started* for branch *${BRANCH_TO_BUILD}* on `${REMOTE_HOST}`"
                 )
 
-                sshagent(['ssh-server-root']) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \$REMOTE_HOST '
-                        echo "📦 Cek direktori \$APP_DIR" &&
-                        if [ -d \$APP_DIR ]; then
-                            echo "✅ Directory exists: \$APP_DIR"
+                sshagent(credentials: ['ssh-server-root']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $REMOTE_HOST '
+                        echo "📦 Checking directory $APP_DIR" &&
+                        if [ -d $APP_DIR ]; then
+                            echo "✅ Directory exists: $APP_DIR"
                         else
-                            echo "ℹ️ Directory not found. Akan dibuat saat clone."
+                            echo "ℹ️ Directory not found. Will be created if cloning is needed."
                         fi
 
-                        echo "🔍 Cek docker status"
+                        echo "🔍 Docker status:"
                         docker ps || echo "Docker not running"
                     '
-                    """
+                    '''
                 }
             }
         }
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['ssh-server-root']) {
+                sshagent(credentials: ['ssh-server-root']) {
                     withCredentials([
                         usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN'),
                         file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
                     ]) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \$REMOTE_HOST '
-                            if [ ! -d \$APP_DIR ]; then
-                                git clone -b ${BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git \$APP_DIR
+                        sh '''
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $REMOTE_HOST '
+                            if [ ! -d $APP_DIR/.git ]; then
+                                echo "📥 Cloning fresh repo..."
+                                rm -rf $APP_DIR &&
+                                git clone -b '$BRANCH_TO_BUILD' https://$GIT_USER:$GIT_TOKEN@github.com/SaranaTechnology/FE-sarana-hrd.git $APP_DIR
                             else
-                                cd \$APP_DIR &&
+                                echo "🔄 Pulling latest code..."
+                                cd $APP_DIR &&
                                 git fetch origin &&
-                                git reset --hard origin/${BRANCH_TO_BUILD}
+                                git reset --hard origin/$BRANCH_TO_BUILD
                             fi
                         '
 
-                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} \$REMOTE_HOST:\$APP_DIR/.env
+                        echo "📤 Uploading .env..."
+                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ENVFILE $REMOTE_HOST:$APP_DIR/.env
 
-                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \$REMOTE_HOST '
-                            cd \$APP_DIR &&
+                        echo "🚀 Running Docker Compose..."
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $REMOTE_HOST '
+                            cd $APP_DIR &&
                             docker compose down || true &&
                             docker compose build &&
                             docker compose up -d &&
                             docker image prune -f &&
                             docker builder prune -f
                         '
-                        """
+                        '''
                     }
                 }
             }
@@ -78,7 +83,7 @@ pipeline {
             slackSend(
                 channel: '#info-server',
                 color: 'good',
-                message: "✅ *FE HRD deployed (dev)* successfully to `${APP_DIR}`"
+                message: "✅ *FE HRD deployed successfully* from branch *${BRANCH_TO_BUILD}* to `${APP_DIR}`"
             )
         }
 
@@ -86,7 +91,7 @@ pipeline {
             slackSend(
                 channel: '#info-server',
                 color: 'danger',
-                message: "❌ *FE HRD deployment failed* to `${APP_DIR}`"
+                message: "❌ *FE HRD deployment failed* for branch *${BRANCH_TO_BUILD}* to `${APP_DIR}`"
             )
         }
     }
