@@ -17,7 +17,7 @@ pipeline {
                 slackSend(
                     channel: '#info-server',
                     color: '#439FE0',
-                    message: "🚀 *Pre-deploy check started* for *${BRANCH_TO_BUILD}* on `${REMOTE_HOST}`"
+                    message: "🟡 *Pre-deploy check started* for *${BRANCH_TO_BUILD}* on `${REMOTE_HOST}`"
                 )
 
                 sshagent(['ssh-server-root']) {
@@ -32,8 +32,6 @@ pipeline {
 
                         echo "🔍 Cek docker status"
                         docker ps || echo "Docker not running"
-
-                        echo "💡 Branch to deploy: ${BRANCH_TO_BUILD}"
                     '
                     """
                 }
@@ -80,7 +78,7 @@ pipeline {
             slackSend(
                 channel: '#info-server',
                 color: 'good',
-                message: "✅ *FE HRD deployed (dev)* to `/var/www/fe-sarana-hrd`"
+                message: "✅ *FE HRD deployed (dev)* successfully to `${APP_DIR}`"
             )
         }
 
@@ -88,7 +86,7 @@ pipeline {
             slackSend(
                 channel: '#info-server',
                 color: 'danger',
-                message: "❌ *FE HRD deployment failed (dev)* to `/var/www/fe-sarana-hrd`"
+                message: "❌ *FE HRD deployment failed* to `${APP_DIR}`"
             )
         }
     }
