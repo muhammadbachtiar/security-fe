@@ -2,48 +2,76 @@ pipeline {
     agent any
 
     triggers {
-        githubPush()  // Trigger dari webhook GitHub
+        githubPush()
     }
 
     environment {
-        SLACK_WEBHOOK = credentials('slack-webhook-url') // <-- simpan webhook di Jenkins Credentials
-    }
-
-    parameters {
-        choice(name: 'BRANCH_TO_BUILD', choices: ['dev', 'main', 'ci/cd'], description: 'Pilih branch yang ingin dibuild')
+        BRANCH_TO_BUILD = 'dev'
     }
 
     stages {
-        stage('Deploy to Host') {
+        stage('Pre-Deploy Check') {
             steps {
-                sshagent(['ssh-server-root']) {
+                slackSend(
+                    channel: '#info-server',
+                    color: '#439FE0',
+                    message: "🟡 *Pre-deploy check started* for branch *${BRANCH_TO_BUILD}*"
+                )
+
+                sshagent(credentials: ['ssh-server-root']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
+                        echo "📦 Checking /var/www/fe-sarana-hrd" &&
+                        if [ -d /var/www/fe-sarana-hrd ]; then
+                            echo "✅ Directory exists"
+                        else
+                            echo "ℹ️ Directory not found. Will be created during clone."
+                        fi
+
+                        echo "🔍 Docker status:"
+                        docker ps || echo "Docker not running"
+                    '
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(credentials: ['ssh-server-root']) {
                     withCredentials([
-                        usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN'),
+                        usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT'),
                         file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
                     ]) {
-                        sh """
+                        sh '''
                         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
-                            echo "🧹 Remove old files"
-                            rm -rf /var/www/fe-sarana-hrd &&
-                            echo "⬇️ Cloning branch ${params.BRANCH_TO_BUILD}"
-                            git clone -b ${params.BRANCH_TO_BUILD} https://${GIT_USER}:${GIT_TOKEN}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
+                            if [ ! -d /var/www/fe-sarana-hrd/.git ]; then
+                                echo "📥 Cloning fresh repo..."
+                                rm -rf /var/www/fe-sarana-hrd &&
+                                git clone -b '$BRANCH_TO_BUILD' https://$GIT_USER:$GIT_PAT@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
+                            else
+                                echo "🔄 Pulling latest code..."
+                                cd /var/www/fe-sarana-hrd &&
+                                git checkout $BRANCH_TO_BUILD &&
+                                git fetch  &&
+                                git reset --hard &&
+                                git pull
+                            fi
                         '
 
-                        echo "📦 Copying .env file"
-                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} root@18.142.177.215:/var/www/fe-sarana-hrd/.env
+                        echo "📤 Uploading .env..."
+                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ENVFILE root@18.142.177.215:/var/www/fe-sarana-hrd/.env
 
+                        echo "🚀 Running Docker Compose..."
                         ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
                             cd /var/www/fe-sarana-hrd &&
-                            echo "🛑 Stopping old container"
                             docker compose down || true &&
-                            echo "🧹 Pruning docker"
-                            docker system prune -af &&
-                            echo "🔨 Building docker image"
-                            docker compose build --no-cache &&
-                            echo "🚀 Starting container"
-                            docker compose up -d
+                            docker compose build &&
+                            docker compose up -d &&
+                            docker image prune -f &&
+                            docker builder prune -f
                         '
-                        """
+                        '''
                     }
                 }
             }
@@ -52,18 +80,19 @@ pipeline {
 
     post {
         success {
-            sh """
-            curl -X POST -H 'Content-type: application/json' --data '{
-              "text": "✅ *FE HRD deployed* from *${params.BRANCH_TO_BUILD}* to production at `/var/www/fe-sarana-hrd`"
-            }' $SLACK_WEBHOOK
-            """
+            slackSend(
+                channel: '#info-server',
+                color: 'good',
+                message: "✅ *FE HRD deployed successfully* from branch *${BRANCH_TO_BUILD}*"
+            )
         }
+
         failure {
-            sh """
-            curl -X POST -H 'Content-type: application/json' --data '{
-              "text": "❌ *FE HRD failed to deploy* from *${params.BRANCH_TO_BUILD}*"
-            }' $SLACK_WEBHOOK
-            """
+            slackSend(
+                channel: '#info-server',
+                color: 'danger',
+                message: "❌ *FE HRD deployment failed* from branch *${BRANCH_TO_BUILD}*"
+            )
         }
     }
 }
