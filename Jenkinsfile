@@ -51,9 +51,10 @@ pipeline {
                                 git clone -b '$BRANCH_TO_BUILD' https://$GIT_USER:$GIT_PAT@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
                             else
                                 echo "🔄 Pulling latest code..."
-        cd /var/www/fe-sarana-hrd &&
-        git fetch origin &&
-        git reset --hard origin/${BRANCH_TO_BUILD}
+                                cd /var/www/fe-sarana-hrd &&
+                                git fetch origin &&
+                                git reset --hard origin/${BRANCH_TO_BUILD} &&
+                                git pull origin ${BRANCH_TO_BUILD}
                             fi
                         '
 
