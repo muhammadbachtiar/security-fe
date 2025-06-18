@@ -52,9 +52,10 @@ pipeline {
                             else
                                 echo "🔄 Pulling latest code..."
                                 cd /var/www/fe-sarana-hrd &&
-                                git fetch origin &&
-                                git reset --hard origin/${BRANCH_TO_BUILD} &&
-                                git pull origin ${BRANCH_TO_BUILD}
+                                git checkout $BRANCH_TO_BUILD &&
+                                git fetch  &&
+                                git reset --hard &&
+                                git pull
                             fi
                         '
 
