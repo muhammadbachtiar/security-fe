@@ -54,7 +54,7 @@ function useLeaveList({ limit, page, status }: Props) {
     {
       title: "Divisi",
       dataIndex: "divisi",
-      render: (value, record) => <p>{record.staff.divisi.name}</p>,
+      render: (value, record) => <p>{record.staff?.divisi?.name || "-"}</p>,
     },
     {
       title: "Tipe",

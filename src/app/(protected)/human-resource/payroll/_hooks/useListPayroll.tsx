@@ -56,7 +56,7 @@ function useListPayroll({ limit, page }: Props) {
     {
       title: "Divisi",
       dataIndex: "divisi",
-      render: (value, record) => <p>{record.staff.divisi.name}</p>,
+      render: (value, record) => <p>{record.staff?.divisi?.name || "-"}</p>,
     },
     {
       title: "Periode",
