@@ -34,7 +34,7 @@ export function ShowQRLeave() {
       >
         <div className="flex justify-center">
           <Canvas
-            text={`https://fe-sarana-hrd.vercel.app/leave-input`}
+            text={`${origin}/leave-input`}
             options={{
               errorCorrectionLevel: "M",
               margin: 3,

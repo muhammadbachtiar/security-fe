@@ -34,7 +34,7 @@ export function ShowQRAOvertime() {
       >
         <div className="flex justify-center">
           <Canvas
-            text={`https://fe-sarana-hrd.vercel.app/overtime-input`}
+            text={`${origin}/overtime-input`}
             options={{
               errorCorrectionLevel: "M",
               margin: 3,
