@@ -2,6 +2,7 @@
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { useQRCode } from "next-qrcode";
+import { useEffect, useState } from "react";
 
 export function ShowQRLeave() {
    const [origin, setOrigin] = useState("");
