@@ -4,10 +4,16 @@ import { Button, Modal, Tooltip, Typography } from "antd";
 import { useQRCode } from "next-qrcode";
 
 export function ShowQRAOvertime() {
-  const modal = useDisclosure();
+   const [origin, setOrigin] = useState("");
+   const modal = useDisclosure();
 
-  const { Canvas } = useQRCode();
-
+   const { Canvas } = useQRCode();
+   useEffect(() => {
+    if (window.location) {
+      setOrigin(window.location.origin);
+    }
+  }, []);
+ 
   return (
     <Tooltip title="QR Code">
       <Button onClick={() => modal.onOpen()}>QR Code Lembur</Button>
