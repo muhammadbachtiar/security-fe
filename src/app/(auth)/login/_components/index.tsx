@@ -4,7 +4,7 @@
 import errorResponse from "@/lib/error";
 import { loginCore } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
-import { useAuthStore } from "@/store/auth.store";
+import { authStore } from "@/store/auth.store";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ function LoginPage() {
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { setRole, setToken, setUser } = useAuthStore();
+  const { setRole, setToken, setUser } = authStore();
 
   async function onSubmit(values: any) {
     try {
@@ -34,8 +34,6 @@ function LoginPage() {
           )
         )
       );
-
-      console.log({ response, auth, userPermissionsCore });
 
       const { roles, ...userData } = auth.data;
 

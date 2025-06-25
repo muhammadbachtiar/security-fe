@@ -10,7 +10,9 @@ type UserStore = {
   hrdRole: PermissionType[];
   coreRole: PermissionType[];
   whRole: PermissionType[];
+  hasHydrated: boolean;
   logout: () => void;
+  setHydrate: () => void;
   setUser: (value: UserType) => void;
   setRole: (
     type: "whRole" | "hrdRole" | "coreRole",
@@ -19,7 +21,7 @@ type UserStore = {
   setToken: (type: "whToken" | "hrdToken" | "coreToken", value: string) => void;
 };
 
-export const useAuthStore = create<UserStore>()(
+export const authStore = create<UserStore>()(
   persist(
     (set) => ({
       user: null,
@@ -29,6 +31,12 @@ export const useAuthStore = create<UserStore>()(
       whRole: [],
       hrdRole: [],
       coreRole: [],
+      hasHydrated: false,
+      setHydrate: () =>
+        set((state) => ({
+          ...state,
+          hasHydrated: true,
+        })),
       setRole: (type, value) =>
         set((state) => ({
           ...state,
@@ -53,8 +61,14 @@ export const useAuthStore = create<UserStore>()(
           whRole: [],
           hrdRole: [],
           coreRole: [],
+          hasHydrated: true, // reset juga
         }),
     }),
-    { name: "user_info" }
+    {
+      name: "user_info",
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrate();
+      },
+    }
   )
 );
