@@ -1,34 +1,20 @@
 import { AppPermission } from "@/configs/permissions";
-import AuthService from "@/services/auth/auth.service";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { authStore } from "@/store/auth.store";
 
 function usePermission() {
-  const [permissions, setPermissions] = useState<string[]>([]);
-
-  const { data: user } = useQuery({
-    // improve with local storage
-    queryKey: ["ME"],
-    queryFn: async () => {
-      const response = await AuthService.me();
-      return response;
-    },
-  });
+  const { whRole, coreRole, hrdRole, user } = authStore();
 
   const checkPermission = (permission: AppPermission[]) => {
-    if (user?.data.id === 1) {
+    if (user?.id === 1) {
       return true;
     }
-    return permission.some((perm) => permissions.includes(perm));
+    const allRoles = [...hrdRole, ...coreRole, ...whRole];
+    return allRoles.some((perm) =>
+      permission.includes(perm.function as AppPermission)
+    );
   };
-  useEffect(() => {
-    const permissionsLocal = localStorage.getItem("permissions") as string;
-    const dataPermissions = JSON.parse(permissionsLocal);
 
-    setPermissions(dataPermissions);
-  }, []);
-
-  return { checkPermission, userPermissions: permissions };
+  return { checkPermission, userPermissions: [] };
 }
 
 export default usePermission;

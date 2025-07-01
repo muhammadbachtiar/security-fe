@@ -4,6 +4,7 @@
 import errorResponse from "@/lib/error";
 import { loginCore } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
+import { authStore } from "@/store/auth.store";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ function LoginPage() {
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { setRole, setToken, setUser } = authStore();
 
   async function onSubmit(values: any) {
     try {
@@ -24,16 +26,22 @@ function LoginPage() {
         with: "roles.permission",
         token: response.data.token,
       });
-      const userPermissions = Array.from(
+
+      const userPermissionsCore = Array.from(
         new Set(
-          auth.data.roles.flatMap((role) =>
-            role.permission.map((p) => p.function)
+          auth.data?.roles?.flatMap((role) =>
+            role.permission.filter((p) => p.app === "core")
           )
         )
       );
+
       const { roles, ...userData } = auth.data;
 
-      localStorage.setItem("permissions", JSON.stringify(userPermissions));
+      setToken("coreToken", response.data.token);
+      setRole("coreRole", userPermissionsCore);
+      setUser(userData);
+
+      localStorage.setItem("permissions", JSON.stringify(userPermissionsCore));
       localStorage.setItem("user_data", JSON.stringify(userData));
 
       if (response.success) {

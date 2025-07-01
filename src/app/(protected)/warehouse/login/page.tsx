@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import errorResponse from "@/lib/error";
 import { loginWms } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
+import { authStore } from "@/store/auth.store";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import { useState } from "react";
@@ -13,14 +15,39 @@ function LoginPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const { setRole, setToken, setUser } = authStore();
+
   async function onSubmit(values: any) {
     try {
       setLoading(true);
       const response = await AuthService.loginWms(values);
+
+      const auth = await AuthService.me({
+        with: "roles.permission",
+        token: response.data.token,
+      });
+
+      const userPermissionsWh = Array.from(
+        new Set(
+          auth.data?.roles?.flatMap((role) =>
+            role.permission.filter((p) => p.app === "warehouse")
+          )
+        )
+      );
+
+      const { roles, ...userData } = auth.data;
+
+      setToken("whToken", response.data.token);
+      setRole("whRole", userPermissionsWh);
+      setUser(userData);
+
+      localStorage.setItem("permissions", JSON.stringify(userPermissionsWh));
+      localStorage.setItem("user_data", JSON.stringify(userData));
+
       if (response.success) {
         loginWms(response.data.token);
         toast.success("Login Berhasil");
-        window.location.href = "/warehouse";
+        // window.location.href = "/warehouse";
       }
     } catch (error: any) {
       errorResponse(error);
