@@ -60,13 +60,7 @@ function AppNavbar() {
               },
               label: (
                 <Link type="next-link" href="/profile" passHref>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "12px",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="flex items-center gap-3">
                     <UserIcon />
                     Profile
                   </div>
@@ -82,11 +76,7 @@ function AppNavbar() {
               },
               label: (
                 <div
-                  style={{
-                    display: "flex",
-                    gap: "12px",
-                    alignItems: "center",
-                  }}
+                  className="flex items-center gap-3"
                   data-test="logout-button"
                 >
                   <PowerIcon />

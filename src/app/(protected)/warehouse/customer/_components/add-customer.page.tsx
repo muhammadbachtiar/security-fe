@@ -178,7 +178,7 @@ function AddCustomerPage() {
                 zoom={12}
                 minZoom={MIN_ZOOM_LEVEL}
                 maxZoom={MAX_ZOOM_LEVEL}
-                style={{ height: 500, width: "100%" }}
+                className="h-[500px] w-full"
                 zoomControl={true}
               >
                 <MapClickHandler

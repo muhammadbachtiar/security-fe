@@ -56,7 +56,7 @@ const SortableItem = ({
   return (
     <div ref={setNodeRef} style={style}>
       <div
-        style={{ marginBottom: 8, cursor: "grab", fontWeight: 600 }}
+        className="mb-[8px] cursor-grab font-semibold"
         {...attributes}
         {...listeners}
       >
@@ -231,12 +231,12 @@ const FormDetailPO = ({
           items={details.map((u) => u.id)}
           strategy={verticalListSortingStrategy}
         >
-          <Space direction="vertical" style={{ width: "100%" }}>
+          <Space direction="vertical" className="w-full">
             {details.map((detail, index) => {
               const error = errors[detail.id] || {};
               return (
                 <SortableItem key={detail.id} id={detail.id}>
-                  <Space direction="vertical" style={{ width: "100%" }}>
+                  <Space direction="vertical" className="w-full">
                     {detail.type === "product" && (
                       <>
                         <Select
@@ -250,7 +250,7 @@ const FormDetailPO = ({
                           onChange={(v) => handleChange(index, "product_id", v)}
                         />
                         {error.product_id && (
-                          <div style={{ color: "#ff4d4f", fontSize: 12 }}>
+                          <div className="text-[#ff4d4f] text-sm">
                             {error.product_id}
                           </div>
                         )}
@@ -269,7 +269,7 @@ const FormDetailPO = ({
                           onChange={(v) => handleChange(index, "bahan_id", v)}
                         />
                         {error.bahan_id && (
-                          <div style={{ color: "#ff4d4f", fontSize: 12 }}>
+                          <div className="text-[#ff4d4f] text-sm">
                             {error.bahan_id}
                           </div>
                         )}
@@ -279,11 +279,11 @@ const FormDetailPO = ({
                       placeholder="Jumlah"
                       value={detail.jumlah}
                       onChange={(val) => handleChange(index, "jumlah", val)}
-                      style={{ width: "100%" }}
+                      className="w-full"
                       status={error.jumlah ? "error" : ""}
                     />
                     {error.jumlah && (
-                      <div style={{ color: "#ff4d4f", fontSize: 12 }}>
+                      <div className="text-[#ff4d4f] text-sm">
                         {error.jumlah}
                       </div>
                     )}
@@ -291,11 +291,11 @@ const FormDetailPO = ({
                       placeholder="Harga"
                       value={detail.price}
                       onChange={(val) => handleChange(index, "price", val)}
-                      style={{ width: "100%" }}
+                      className="w-full"
                       status={error.price ? "error" : ""}
                     />
                     {error.price && (
-                      <div style={{ color: "#ff4d4f", fontSize: 12 }}>
+                      <div className="text-[#ff4d4f] text-sm">
                         {error.price}
                       </div>
                     )}

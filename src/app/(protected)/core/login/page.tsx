@@ -82,9 +82,7 @@ function LoginPage() {
             src="/images/sarana-logo.png"
             width={500}
             height={500}
-            style={{
-              width: "100px",
-            }}
+            className="w-[100px]"
             priority
             sizes="500px"
           />

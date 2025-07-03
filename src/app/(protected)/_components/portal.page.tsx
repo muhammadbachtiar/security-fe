@@ -24,9 +24,7 @@ function PortalPage() {
                 src="/images/sarana-logo.png"
                 width={500}
                 height={500}
-                style={{
-                  width: "200px",
-                }}
+                className="w-[200px]"
                 priority
                 sizes="500px"
               />
@@ -50,10 +48,7 @@ function PortalPage() {
                   alt={"Core App"}
                   src={"/illustration/core-illustration.svg"}
                   sizes="100vw"
-                  style={{
-                    height: "auto",
-                    objectFit: "contain",
-                  }}
+                  className="h-auto object-contain"
                 />
               </div>
               <h3 className="text-xl tracking-tight">Core Application</h3>
@@ -71,9 +66,7 @@ function PortalPage() {
                   alt={"Human Resource App"}
                   src={"/illustration/hrd-illustration.svg"}
                   sizes="100vw"
-                  style={{
-                    objectFit: "contain",
-                  }}
+                  className="object-contain"
                 />
               </div>
               <h3 className="text-xl tracking-tight">
@@ -93,9 +86,7 @@ function PortalPage() {
                   alt={"Warehouse App"}
                   src={"/illustration/warehouse-illustration.svg"}
                   sizes="100vw"
-                  style={{
-                    objectFit: "contain",
-                  }}
+                  className="object-contain"
                 />
               </div>
               <h3 className="text-xl tracking-tight">Warehouse Application</h3>
