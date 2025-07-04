@@ -14,7 +14,6 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { TPurchaseDetailInput } from "@/services/purchase-order/purchase.type";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
@@ -40,21 +39,20 @@ const SortableItem = ({
   id: string | number;
   children: React.ReactNode;
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+  const { attributes, listeners, setNodeRef } = useSortable({ id });
 
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    marginBottom: 16,
-    border: "1px solid #d9d9d9",
-    padding: 16,
-    borderRadius: 8,
-    background: "#fafafa",
-  };
+  // const style: React.CSSProperties = {
+  //   transform: CSS.Transform.toString(transform),
+  //   transition,
+  //   marginBottom: 16,
+  //   border: "1px solid #d9d9d9",
+  //   padding: 16,
+  //   borderRadius: 8,
+  //   background: "#fafafa",
+  // };
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef}>
       <div
         className="mb-[8px] cursor-grab font-semibold"
         {...attributes}
@@ -328,7 +326,7 @@ const FormDetailPO = ({
         </SortableContext>
       </DndContext>
 
-      <Space className="flex justify-end w-full" style={{ marginTop: 10 }}>
+      <Space className="flex justify-end w-full mt-[10px]">
         <Button
           type="text"
           className="!border !border-blue-500 !text-blue-500"

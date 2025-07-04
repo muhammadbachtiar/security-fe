@@ -14,32 +14,41 @@ function ProtectRoutes({ children }: { children: React.ReactNode }) {
 
   const shouldRedirect = useMemo(() => {
     if (!hasHydrated) return false;
+    const isNoToken = !coreToken && !hrdToken && !whToken;
 
+    // 1. Jika di halaman "/" dan semua token tidak ada, redirect ke "/login"
+    if (pathname === "/") {
+      if (isNoToken) return "/login";
+    }
+
+    if (pathname === "/human-resource" && !hrdToken) {
+      return "/human-resource/login";
+    }
+
+    if (pathname === "/login" && coreToken) return "/";
+    // // 2. Jika di halaman "/login" dan ada coreToken, redirect ke "/"
     if (pathname === "/human-resource/login" && hrdToken)
       return "/human-resource";
-    if (pathname === "/warehouse/login" && whToken) return "/warehouse";
-    if (pathname === "/core/login" && coreToken) return "/core";
 
+    if (pathname === "/warehouse/login" && whToken) return "/warehouse";
+
+    // // 3. Redirect proteksi role
     if (
-      pathname?.startsWith("/human-resource") &&
+      pathname.startsWith("/human-resource") &&
       !hrdToken &&
       pathname !== "/human-resource/login"
     )
       return "/human-resource/login";
 
     if (
-      pathname?.startsWith("/warehouse") &&
+      pathname.startsWith("/warehouse") &&
       !whToken &&
       pathname !== "/warehouse/login"
     )
       return "/warehouse/login";
 
-    if (
-      pathname?.startsWith("/core") &&
-      !coreToken &&
-      pathname !== "/core/login"
-    )
-      return "/core/login";
+    if (pathname.startsWith("/core") && !coreToken && pathname !== "/login")
+      return "/login";
 
     return false;
   }, [pathname, coreToken, hrdToken, whToken, hasHydrated]);
@@ -47,7 +56,7 @@ function ProtectRoutes({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (shouldRedirect) {
       setRedirecting(true);
-      router.replace(shouldRedirect);
+      window.location.href = shouldRedirect;
     } else {
       setRedirecting(false);
     }
