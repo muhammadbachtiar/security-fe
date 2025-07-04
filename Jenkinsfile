@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         BRANCH_TO_BUILD = 'dev'
+        DEPLOY_HOST = 'root@18.141.108.110'
     }
 
     stages {
@@ -19,19 +20,19 @@ pipeline {
                 )
 
                 sshagent(credentials: ['ssh-server-root']) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.141.108.110'
-                        echo "📦 Checking /var/www/fe-sarana-hrd" &&
-                        if [ -d /var/www/fe-sarana-hrd ]; then
-                            echo "✅ Directory exists"
-                        else
-                            echo "ℹ️ Directory not found. Will be created during clone."
-                        fi
+                    sh """
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${DEPLOY_HOST} '
+                            echo "📦 Checking /var/www/fe-sarana-hrd"
+                            if [ -d /var/www/fe-sarana-hrd ]; then
+                                echo "✅ Directory exists"
+                            else
+                                echo "ℹ️ Directory not found. Will be created during clone."
+                            fi
 
-                        echo "🔍 Docker status:"
-                        docker ps || echo "Docker not running"
-                    '
-                    '''
+                            echo "🔍 Docker status:"
+                            docker ps || echo "Docker not running"
+                        '
+                    """
                 }
             }
         }
@@ -43,35 +44,35 @@ pipeline {
                         usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT'),
                         file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
                     ]) {
-                        sh '''
-                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.141.108.110'
-                            if [ ! -d /var/www/fe-sarana-hrd/.git ]; then
-                                echo "📥 Cloning fresh repo..."
-                                rm -rf /var/www/fe-sarana-hrd &&
-                                git clone -b '$BRANCH_TO_BUILD' https://$GIT_USER:$GIT_PAT@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
-                            else
-                                echo "🔄 Pulling latest code..."
+                        sh """
+                            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${DEPLOY_HOST} '
+                                if [ ! -d /var/www/fe-sarana-hrd/.git ]; then
+                                    echo "📥 Cloning fresh repo..."
+                                    rm -rf /var/www/fe-sarana-hrd &&
+                                    git clone -b "${BRANCH_TO_BUILD}" https://${GIT_USER}:${GIT_PAT}@github.com/SaranaTechnology/FE-sarana-hrd.git /var/www/fe-sarana-hrd
+                                else
+                                    echo "🔄 Pulling latest code..."
+                                    cd /var/www/fe-sarana-hrd &&
+                                    git checkout ${BRANCH_TO_BUILD} &&
+                                    git fetch &&
+                                    git reset --hard &&
+                                    git pull
+                                fi
+                            '
+
+                            echo "📤 Uploading .env..."
+                            scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${ENVFILE} ${DEPLOY_HOST}:/var/www/fe-sarana-hrd/.env
+
+                            echo "🚀 Running Docker Compose..."
+                            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${DEPLOY_HOST} '
                                 cd /var/www/fe-sarana-hrd &&
-                                git checkout $BRANCH_TO_BUILD &&
-                                git fetch  &&
-                                git reset --hard &&
-                                git pull
-                            fi
-                        '
-
-                        echo "📤 Uploading .env..."
-                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ENVFILE root@18.141.108.110:/var/www/fe-sarana-hrd/.env
-
-                        echo "🚀 Running Docker Compose..."
-                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.141.108.110 '
-                            cd /var/www/fe-sarana-hrd &&
-                            docker compose down || true &&
-                            docker compose build &&
-                            docker compose up -d &&
-                            docker image prune -f &&
-                            docker builder prune -f
-                        '
-                        '''
+                                docker compose down || true &&
+                                docker compose build &&
+                                docker compose up -d &&
+                                docker image prune -f &&
+                                docker builder prune -f
+                            '
+                        """
                     }
                 }
             }
