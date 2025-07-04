@@ -20,7 +20,7 @@ pipeline {
 
                 sshagent(credentials: ['ssh-server-root']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
+                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.141.108.110'
                         echo "📦 Checking /var/www/fe-sarana-hrd" &&
                         if [ -d /var/www/fe-sarana-hrd ]; then
                             echo "✅ Directory exists"
@@ -44,7 +44,7 @@ pipeline {
                         file(credentialsId: 'env-fe-saranahrd', variable: 'ENVFILE')
                     ]) {
                         sh '''
-                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.141.108.110'
                             if [ ! -d /var/www/fe-sarana-hrd/.git ]; then
                                 echo "📥 Cloning fresh repo..."
                                 rm -rf /var/www/fe-sarana-hrd &&
@@ -60,10 +60,10 @@ pipeline {
                         '
 
                         echo "📤 Uploading .env..."
-                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ENVFILE root@18.142.177.215:/var/www/fe-sarana-hrd/.env
+                        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ENVFILE root@18.141.108.110:/var/www/fe-sarana-hrd/.env
 
                         echo "🚀 Running Docker Compose..."
-                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.142.177.215 '
+                        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@18.141.108.110 '
                             cd /var/www/fe-sarana-hrd &&
                             docker compose down || true &&
                             docker compose build &&
