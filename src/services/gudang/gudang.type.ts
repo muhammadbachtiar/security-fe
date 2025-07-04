@@ -54,3 +54,17 @@ export type TProduction = {
   product: TProduct;
   gudang: TGudang;
 };
+
+export type THistory = {
+  id: number;
+  gudang_id: number;
+  bahan_id: number;
+  tipe: string;
+  tipe_id: number;
+  jumlah: number;
+  nama: string;
+  keterangan: string;
+  created_at: string;
+  updated_at: string;
+  bahan: TMaterial;
+};

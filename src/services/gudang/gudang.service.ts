@@ -6,6 +6,7 @@ import {
   TMaterialInOut,
   TProductInOut,
   TProduction,
+  THistory
 } from "./gudang.type";
 import { TMaterial } from "../material/material.type";
 import { TProduct } from "../product/product.type";
@@ -43,6 +44,15 @@ const GudangService = {
   getOne: async (gudangId: number, params?: any) => {
     const response = await axiosConfigWms.get<BaseResponseDto<TGudang>>(
       `/gudang/${gudangId}`,
+      {
+        params,
+      }
+    );
+    return response.data;
+  },
+  getHistory: async (params: any) => {
+    const response = await axiosConfigWms.get<BaseResponsePaginate<THistory[]>>(
+      "/history",
       {
         params,
       }
