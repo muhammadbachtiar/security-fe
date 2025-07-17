@@ -1,12 +1,22 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { useQRCode } from "next-qrcode";
+import { useEffect, useState } from "react";
 
 export function ShowQRAbsence() {
+  const [origin, setOrigin] = useState("");
   const modal = useDisclosure();
 
   const { Canvas } = useQRCode();
+
+  useEffect(() => {
+    if (window.location) {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
   return (
     <Tooltip title="QR Code">
@@ -34,7 +44,7 @@ export function ShowQRAbsence() {
       >
         <div className="flex justify-center">
           <Canvas
-            text={`https://fe-sarana-hrd.vercel.app/absence`}
+            text={`${origin}/absence`}
             options={{
               errorCorrectionLevel: "M",
               margin: 3,

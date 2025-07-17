@@ -42,6 +42,20 @@ const UnitService = {
     );
     return response.data;
   },
+  export: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/satuan`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
+  exportProduct: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/satuan-product`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
   getAllProductUnit: async (params: any) => {
     const response = await axiosConfigWms.get<BaseResponsePaginate<TUnit[]>>(
       "/product-satuan",

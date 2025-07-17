@@ -50,6 +50,11 @@ function useListMaterial({ limit, page }: Props) {
       render: (value = "") => <p>{value}</p>,
     },
     {
+      title: "Stok",
+      dataIndex: "stok",
+      render: (value = "") => <p>{value}</p>,
+    },
+    {
       title: "Action",
       key: "",
       render: (value, record) => {

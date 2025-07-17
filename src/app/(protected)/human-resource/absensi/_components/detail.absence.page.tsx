@@ -122,7 +122,7 @@ function DetailAbsence() {
               zoom={DEFAULT_MAP_ZOOM}
               minZoom={MIN_ZOOM_LEVEL}
               maxZoom={MAX_ZOOM_LEVEL}
-              style={{ height: 380, width: "100%" }}
+              className="h-[380px] w-full"
               zoomControl={true}
             >
               <TileLayer

@@ -1,10 +1,14 @@
 "use client";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { useState } from "react";
 import AppBreadcrumbs from "@/components/common/app-breadcrums";
-import { cn } from "@/lib/utils";
+import { cn, handleDownloadCsv } from "@/lib/utils";
 import AddCategory from "./add-category";
 import useListCategory from "../_hooks/useListCategory";
+import errorResponse from "@/lib/error";
+import CategoryService from "@/services/category/category.service";
+import { AxiosError } from "axios";
+import { DownloadIcon } from "lucide-react";
 
 function SatuanPage() {
   const [pagination, setPagination] = useState({
@@ -13,6 +17,7 @@ function SatuanPage() {
   });
 
   const [isProduct, setIsProduct] = useState(false);
+  const [isLoadingExport, setIsLoadingExport] = useState(false);
 
   const {
     columns,
@@ -25,6 +30,23 @@ function SatuanPage() {
     page: pagination.page,
     isProduct,
   });
+
+  const handleExport = async () => {
+    try {
+      setIsLoadingExport(true);
+      if (isProduct) {
+        const res = await CategoryService.exportProduct();
+        handleDownloadCsv(res, "product-category");
+      } else {
+        const res = await CategoryService.export();
+        handleDownloadCsv(res, "category");
+      }
+    } catch (error) {
+      errorResponse(error as AxiosError);
+    } finally {
+      setIsLoadingExport(false);
+    }
+  };
 
   return (
     <div className="p-4 space-y-4">
@@ -51,25 +73,36 @@ function SatuanPage() {
           </div>
         </div>
 
-        <div className="flex rounded-lg bg-gray-200 w-fit p-1 gap-1">
-          <div
-            onClick={() => setIsProduct(false)}
-            className={cn(
-              "rounded-md py-1 px-2 cursor-pointer",
-              !isProduct && "bg-white"
-            )}
-          >
-            Kategori
+        <div className="flex justify-between">
+          <div className="flex rounded-lg bg-gray-200 w-fit p-1 gap-1">
+            <div
+              onClick={() => setIsProduct(false)}
+              className={cn(
+                "rounded-md text-sm py-1 px-2 cursor-pointer",
+                !isProduct && "bg-white"
+              )}
+            >
+              Kategori Bahan
+            </div>
+            <div
+              onClick={() => setIsProduct(true)}
+              className={cn(
+                "rounded-md text-sm py-1 px-2 cursor-pointer",
+                isProduct && "bg-white"
+              )}
+            >
+              Kategori Produk
+            </div>
           </div>
-          <div
-            onClick={() => setIsProduct(true)}
-            className={cn(
-              "rounded-md py-1 px-2 cursor-pointer",
-              isProduct && "bg-white"
-            )}
+
+          <Button
+            icon={<DownloadIcon className="w-4 h-4" />}
+            type="default"
+            loading={isLoadingExport}
+            onClick={handleExport}
           >
-            Kategori Produk
-          </div>
+            Export
+          </Button>
         </div>
 
         <div className="overflow-auto">

@@ -10,12 +10,7 @@ function Image({ alt, src }: Props) {
     <_Image
       alt={alt}
       src={src}
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        objectPosition: "center",
-      }}
+      className="w-full h-full object-cover object-center"
       priority
       width={500}
       height={300}

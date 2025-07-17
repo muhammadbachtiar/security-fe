@@ -1,6 +1,5 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { SidebarTrigger } from "../ui/sidebar";
 import { Avatar, Dropdown } from "antd";
 import { ChevronDownIcon, PowerIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
@@ -8,14 +7,17 @@ import Cookies from "js-cookie";
 import { useQuery } from "@tanstack/react-query";
 import AuthService from "@/services/auth/auth.service";
 import { cn } from "@/lib/utils";
+import { authStore } from "@/store/auth.store";
 
 function AppNavbar() {
   const pathname = usePathname();
+  const store = authStore();
 
   const handleLogout = () => {
     Cookies.remove("session_core");
     Cookies.remove("session_wms");
     Cookies.remove("session_hrd");
+    store.logout();
     window.location.href = "/login";
   };
 
@@ -34,12 +36,9 @@ function AppNavbar() {
   return (
     <nav
       className={cn(
-        "h-14 px-4 w-full border-b flex items-center bg-white",
-        pathname === "/" ? "justify-end" : "justify-between"
+        "h-14 px-4 w-full border-b flex items-center bg-white justify-end"
       )}
     >
-      {pathname !== "/" && <SidebarTrigger />}
-
       <Dropdown
         placement="bottomRight"
         trigger={["click"]}
@@ -60,13 +59,7 @@ function AppNavbar() {
               },
               label: (
                 <Link type="next-link" href="/profile" passHref>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "12px",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="flex items-center gap-3">
                     <UserIcon />
                     Profile
                   </div>
@@ -82,11 +75,7 @@ function AppNavbar() {
               },
               label: (
                 <div
-                  style={{
-                    display: "flex",
-                    gap: "12px",
-                    alignItems: "center",
-                  }}
+                  className="flex items-center gap-3"
                   data-test="logout-button"
                 >
                   <PowerIcon />

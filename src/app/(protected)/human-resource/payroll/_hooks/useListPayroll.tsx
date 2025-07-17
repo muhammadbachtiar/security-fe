@@ -26,7 +26,7 @@ function useListPayroll({ limit, page }: Props) {
       const response = await PayrollService.getAll({
         page_size: limit,
         page,
-        with: "staff",
+        with: "staff.divisi",
       });
       return response;
     },
@@ -52,6 +52,11 @@ function useListPayroll({ limit, page }: Props) {
       title: "Staff",
       dataIndex: "staff",
       render: (value: TStaff) => <p>{value.nama}</p>,
+    },
+    {
+      title: "Divisi",
+      dataIndex: "divisi",
+      render: (value, record) => <p>{record.staff?.divisi?.name || "-"}</p>,
     },
     {
       title: "Periode",

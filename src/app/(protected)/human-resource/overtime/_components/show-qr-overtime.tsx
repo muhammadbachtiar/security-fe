@@ -2,12 +2,19 @@
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { useQRCode } from "next-qrcode";
+import { useEffect, useState } from "react";
 
 export function ShowQRAOvertime() {
-  const modal = useDisclosure();
+   const [origin, setOrigin] = useState("");
+   const modal = useDisclosure();
 
-  const { Canvas } = useQRCode();
-
+   const { Canvas } = useQRCode();
+   useEffect(() => {
+    if (window.location) {
+      setOrigin(window.location.origin);
+    }
+  }, []);
+ 
   return (
     <Tooltip title="QR Code">
       <Button onClick={() => modal.onOpen()}>QR Code Lembur</Button>
@@ -34,7 +41,7 @@ export function ShowQRAOvertime() {
       >
         <div className="flex justify-center">
           <Canvas
-            text={`https://fe-sarana-hrd.vercel.app/overtime-input`}
+            text={`${origin}/overtime-input`}
             options={{
               errorCorrectionLevel: "M",
               margin: 3,

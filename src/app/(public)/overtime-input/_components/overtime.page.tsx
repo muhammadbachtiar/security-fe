@@ -69,10 +69,7 @@ function OvertimePage() {
             alt={"Banner Login"}
             src={"/images/sarana-logo.png"}
             sizes="100vw"
-            style={{
-              width: "200px",
-              height: "auto",
-            }}
+            className="w-[200px] h-auto"
           />
           <p className="text-center font-semibold text-2xl">Pengajuan Lembur</p>
         </div>

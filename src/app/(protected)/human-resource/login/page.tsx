@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import errorResponse from "@/lib/error";
 import { loginHrd } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
+import { authStore } from "@/store/auth.store";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import { useState } from "react";
@@ -12,11 +14,35 @@ function LoginPage() {
   const [form] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
+  const { setRole, setToken, setUser } = authStore();
 
   async function onSubmit(values: any) {
     try {
       setLoading(true);
       const response = await AuthService.loginHrd(values);
+
+      const auth = await AuthService.me({
+        with: "roles.permission",
+        token: response.data.token,
+      });
+
+      const userPermissionsHrd = Array.from(
+        new Set(
+          auth.data?.roles?.flatMap((role) =>
+            role.permission.filter((p) => p.app === "hrd")
+          )
+        )
+      );
+
+      const { roles, ...userData } = auth.data;
+
+      setToken("hrdToken", response.data.token);
+      setRole("hrdRole", userPermissionsHrd);
+      setUser(userData);
+
+      localStorage.setItem("permissions", JSON.stringify(userPermissionsHrd));
+      localStorage.setItem("user_data", JSON.stringify(userData));
+
       if (response.success) {
         loginHrd(response.data.token);
         toast.success("Login Berhasil");
@@ -79,9 +105,7 @@ function LoginPage() {
             src="/images/sarana-logo.png"
             width={500}
             height={500}
-            style={{
-              width: "100px",
-            }}
+            className="w-[100px]"
             priority
             sizes="500px"
           />

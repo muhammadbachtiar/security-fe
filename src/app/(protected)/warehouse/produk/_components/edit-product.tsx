@@ -29,6 +29,7 @@ function EditProduct({ productId }: { productId: number }) {
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["PRODUCT", productId, modal.isOpen],
+    enabled: modal.isOpen,
     queryFn: async () => {
       const response = await ProductService.getOne(productId);
       return response;
@@ -134,7 +135,7 @@ function EditProduct({ productId }: { productId: number }) {
           onClick: form.submit,
         }}
         confirmLoading={loading}
-        title={<Typography.Title level={4}>Edit Bahan</Typography.Title>}
+        title={<Typography.Title level={4}>Edit Produk</Typography.Title>}
       >
         <Form
           form={form}

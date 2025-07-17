@@ -24,6 +24,7 @@ function EditRecipe({ recipeId }: { recipeId: number }) {
       const response = await RecipeService.getOne(recipeId);
       return response;
     },
+    enabled: modal.isOpen,
   });
 
   const { data: materials } = useQuery({

@@ -6,7 +6,7 @@ import errorResponse from "@/lib/error";
 import DivisionService from "@/services/divisi/divisi.service";
 import StaffService from "@/services/staff/staff.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
+import { Button, DatePicker, Form, Input, Select } from "antd";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
@@ -98,7 +98,14 @@ function AddPage() {
               className="w-full !mb-2"
               rules={[{ required: true, message: "Nama harus diisi" }]}
             >
-              <Input placeholder="Nama" maxLength={255} />
+              <Input
+                placeholder="Nama"
+                maxLength={255}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  form.setFieldsValue({ nip: value });
+                }}
+              />
             </Form.Item>
           </div>
           <div className="flex gap-2">
@@ -121,7 +128,14 @@ function AddPage() {
               className="!mb-2 w-full"
               rules={[{ required: true, message: "Nomor Telepon harus diisi" }]}
             >
-              <Input placeholder="Nomor Telepon" maxLength={255} />
+              <Input
+                placeholder="Nomor Telepon"
+                maxLength={255}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  form.setFieldsValue({ notelp: value });
+                }}
+              />
             </Form.Item>
           </div>
           <div className="flex gap-2">
@@ -177,7 +191,14 @@ function AddPage() {
               className="w-full !mb-2"
               rules={[{ required: true, message: "NIK harus diisi" }]}
             >
-              <Input placeholder="NIK" maxLength={255} />
+              <Input
+                placeholder="NIK"
+                maxLength={255}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  form.setFieldsValue({ ktp: value });
+                }}
+              />
             </Form.Item>
             <Form.Item
               label="Jabatan"
@@ -254,7 +275,14 @@ function AddPage() {
               <Input placeholder="Email" maxLength={255} />
             </Form.Item>
             <Form.Item label="NPWP" name="npwp" className="w-full !mb-2">
-              <Input placeholder="NPWP" maxLength={255} />
+              <Input
+                placeholder="NPWP"
+                maxLength={255}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  form.setFieldsValue({ npwp: value });
+                }}
+              />
             </Form.Item>
           </div>
 
@@ -277,11 +305,15 @@ function AddPage() {
             className="!mb-0"
             rules={[{ required: true, message: "Gaji pokok harus diisi" }]}
           >
-            <InputNumber
+            <Input
               prefix="Rp. "
               min={0}
               placeholder={`0`}
               className="!w-full"
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                form.setFieldsValue({ salary: value });
+              }}
             />
           </Form.Item>
 

@@ -1,20 +1,20 @@
 import { AppPermission } from "@/configs/permissions";
-import { useEffect, useState } from "react";
+import { authStore } from "@/store/auth.store";
 
 function usePermission() {
-  const [permissions, setPermissions] = useState<string[]>([]);
+  const { whRole, coreRole, hrdRole, user } = authStore();
 
   const checkPermission = (permission: AppPermission[]) => {
-    return permission.some((perm) => permissions.includes(perm));
+    if (user?.id === 1) {
+      return true;
+    }
+    const allRoles = [...hrdRole, ...coreRole, ...whRole];
+    return allRoles.some((perm) =>
+      permission.includes(perm.function as AppPermission)
+    );
   };
-  useEffect(() => {
-    const permissionsLocal = localStorage.getItem("permissions") as string;
-    const dataPermissions = JSON.parse(permissionsLocal);
 
-    setPermissions(dataPermissions);
-  }, []);
-
-  return { checkPermission, userPermissions: permissions };
+  return { checkPermission, userPermissions: [] };
 }
 
 export default usePermission;

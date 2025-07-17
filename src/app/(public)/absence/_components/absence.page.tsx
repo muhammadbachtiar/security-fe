@@ -90,10 +90,7 @@ function AbsencePage() {
             alt={"Banner Login"}
             src={"/images/sarana-logo.png"}
             sizes="100vw"
-            style={{
-              width: "200px",
-              height: "auto",
-            }}
+            className="w-[200px] h-auto"
           />
           <p className="text-center font-semibold text-2xl">Absensi</p>
         </div>
@@ -113,10 +110,7 @@ function AbsencePage() {
               alt={"Aktivasi Lokasi"}
               src={"/images/activation-browser.jpg"}
               sizes="100vw"
-              style={{
-                width: "380px",
-                height: "auto",
-              }}
+              className="w-[380px] h-auto"
             />
           </div>
           <div className="border rounded-lg overflow-hidden w-fit mx-auto">
@@ -127,10 +121,7 @@ function AbsencePage() {
               alt={"Aktivasi Lokasi"}
               src={"/images/activation-location.jpg"}
               sizes="100vw"
-              style={{
-                width: "380px",
-                height: "auto",
-              }}
+              className="w-[380px] h-auto"
             />
           </div>
         </div>

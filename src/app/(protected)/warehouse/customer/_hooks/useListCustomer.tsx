@@ -52,7 +52,7 @@ function useListCustomer({ limit, page }: Props) {
       render: (value = "") => <p>{value}</p>,
     },
     {
-      title: "Nomo Telepon",
+      title: "Nomor Telepon",
       dataIndex: "mobile_phone",
       render: (value = "") => <p>{value}</p>,
     },

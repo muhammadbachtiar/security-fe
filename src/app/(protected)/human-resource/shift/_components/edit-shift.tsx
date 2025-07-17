@@ -68,8 +68,14 @@ function EditShift({ shiftId }: { shiftId: number }) {
   useEffect(() => {
     if (shift) {
       form.setFieldValue("nama", shift.data.nama);
-      form.setFieldValue("jam_masuk", dayjs(shift.data.jam_masuk).utc());
-      form.setFieldValue("jam_keluar", dayjs(shift.data.jam_keluar).utc());
+      form.setFieldValue(
+        "jam_masuk",
+        dayjs(shift.data.jam_masuk).utc().utcOffset(7)
+      );
+      form.setFieldValue(
+        "jam_keluar",
+        dayjs(shift.data.jam_keluar).utc().utcOffset(7)
+      );
     }
   }, [shift]);
 

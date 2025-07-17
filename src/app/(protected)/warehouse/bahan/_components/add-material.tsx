@@ -178,7 +178,7 @@ function AddMaterial() {
             className="w-full !mb-2"
             rules={[{ required: true, message: "SKU harus diisi" }]}
           >
-            <InputNumber className="!w-full" placeholder="SKU" min={0} />
+            <Input className="!w-full" placeholder="SKU" min={0} />
           </Form.Item>
         </Form>
       </Modal>

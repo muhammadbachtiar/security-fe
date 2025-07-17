@@ -1,3 +1,5 @@
+import { TDivision } from "../divisi/divisi.type";
+
 export type TStaff = {
   id: 3;
   division_id: number;
@@ -18,6 +20,7 @@ export type TStaff = {
   overtime_count?: number;
   absences_count?: number;
   permit_count?: number;
+  divisi: TDivision;
   overtime_sum_hours?: string | null;
   absences_sum_hours?: string | null;
   updated_at: string;

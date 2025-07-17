@@ -134,7 +134,14 @@ function EditPage() {
                 className="w-full !mb-2"
                 rules={[{ required: true, message: "Nama harus diisi" }]}
               >
-                <Input placeholder="Nama" maxLength={255} />
+                <Input
+                  placeholder="Nama"
+                  maxLength={255}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    form.setFieldsValue({ nip: value });
+                  }}
+                />
               </Form.Item>
             </div>
             <div className="flex gap-2">
@@ -161,7 +168,14 @@ function EditPage() {
                   { required: true, message: "Nomor Telepon harus diisi" },
                 ]}
               >
-                <Input placeholder="Nomor Telepon" maxLength={255} />
+                <Input
+                  placeholder="Nomor Telepon"
+                  maxLength={255}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    form.setFieldsValue({ notelp: value });
+                  }}
+                />
               </Form.Item>
             </div>
             <div className="flex gap-2">
@@ -217,7 +231,14 @@ function EditPage() {
                 className="w-full !mb-2"
                 rules={[{ required: true, message: "NIK harus diisi" }]}
               >
-                <Input placeholder="NIK" maxLength={255} />
+                <Input
+                  placeholder="NIK"
+                  maxLength={255}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    form.setFieldsValue({ ktp: value });
+                  }}
+                />
               </Form.Item>
               <Form.Item
                 label="Jabatan"
@@ -296,7 +317,14 @@ function EditPage() {
                 <Input placeholder="Email" maxLength={255} />
               </Form.Item>
               <Form.Item label="NPWP" name="npwp" className="w-full !mb-2">
-                <Input placeholder="NPWP" maxLength={255} />
+                <Input
+                  placeholder="NPWP"
+                  maxLength={255}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    form.setFieldsValue({ npwp: value });
+                  }}
+                />
               </Form.Item>
             </div>
 

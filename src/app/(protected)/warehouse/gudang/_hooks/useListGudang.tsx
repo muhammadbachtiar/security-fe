@@ -5,7 +5,7 @@ import { DeleteGudang } from "../_components/delete-gudang";
 import GudangService from "@/services/gudang/gudang.service";
 import { TGudang } from "@/services/gudang/gudang.type";
 import { useRouter } from "next/navigation";
-import { PencilIcon } from "lucide-react";
+import { EyeIcon, PencilIcon } from "lucide-react";
 
 type Props = {
   page: number;
@@ -62,6 +62,11 @@ function useListGudang({ limit, page }: Props) {
               icon={<PencilIcon className="w-4 h-4 !text-orange-500" />}
               type="text"
               onClick={() => router.push(`/warehouse/gudang/${record.id}/edit`)}
+            ></Button>
+            <Button
+              icon={<EyeIcon className="w-4 h-4 !text-blue-500" />}
+              type="text"
+              onClick={() => router.push(`/warehouse/gudang/${record.id}`)}
             ></Button>
           </div>
         );

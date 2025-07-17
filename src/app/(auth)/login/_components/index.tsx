@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import errorResponse from "@/lib/error";
 import { loginCore } from "@/lib/session";
 import AuthService from "@/services/auth/auth.service";
+import { authStore } from "@/store/auth.store";
 import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,6 +16,7 @@ function LoginPage() {
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { setRole, setToken, setUser } = authStore();
 
   async function onSubmit(values: any) {
     try {
@@ -24,17 +27,22 @@ function LoginPage() {
         token: response.data.token,
       });
 
-      console.log({ auth });
-
-      const userPermissions = Array.from(
+      const userPermissionsCore = Array.from(
         new Set(
-          auth.data.roles.flatMap((role) =>
-            role.permission.map((p) => p.function)
+          auth.data?.roles?.flatMap((role) =>
+            role.permission.filter((p) => p.app === "core")
           )
         )
       );
 
-      localStorage.setItem("permissions", JSON.stringify(userPermissions));
+      const { roles, ...userData } = auth.data;
+
+      setToken("coreToken", response.data.token);
+      setRole("coreRole", userPermissionsCore);
+      setUser(userData);
+
+      localStorage.setItem("permissions", JSON.stringify(userPermissionsCore));
+      localStorage.setItem("user_data", JSON.stringify(userData));
 
       if (response.success) {
         loginCore(response.data.token);
@@ -97,9 +105,7 @@ function LoginPage() {
             src="/images/sarana-logo.png"
             width={500}
             height={500}
-            style={{
-              width: "100px",
-            }}
+            className="w-[100px]"
             priority
             sizes="500px"
           />

@@ -2,12 +2,19 @@
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { Button, Modal, Tooltip, Typography } from "antd";
 import { useQRCode } from "next-qrcode";
+import { useEffect, useState } from "react";
 
 export function ShowQRLeave() {
-  const modal = useDisclosure();
+   const [origin, setOrigin] = useState("");
+   const modal = useDisclosure();
 
-  const { Canvas } = useQRCode();
-
+   const { Canvas } = useQRCode();
+   useEffect(() => {
+    if (window.location) {
+      setOrigin(window.location.origin);
+    }
+  }, []);
+ 
   return (
     <Tooltip title="QR Code">
       <Button onClick={() => modal.onOpen()}>QR Code Leave</Button>
@@ -34,7 +41,7 @@ export function ShowQRLeave() {
       >
         <div className="flex justify-center">
           <Canvas
-            text={`https://fe-sarana-hrd.vercel.app/leave-input`}
+            text={`${origin}/leave-input`}
             options={{
               errorCorrectionLevel: "M",
               margin: 3,

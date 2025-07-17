@@ -32,6 +32,23 @@ const CategoryService = {
     );
     return response.data;
   },
+  export: async (params?: any) => {
+    const response = await axiosConfigWms.get(`/export/excel/category`, {
+      params,
+      responseType: "blob",
+    });
+    return response.data;
+  },
+  exportProduct: async (params?: any) => {
+    const response = await axiosConfigWms.get(
+      `/export/excel/product-category`,
+      {
+        params,
+        responseType: "blob",
+      }
+    );
+    return response.data;
+  },
   getOne: async (unitId: number, params?: any) => {
     const response = await axiosConfigWms.get<BaseResponseDto<TCategory>>(
       `/category/${unitId}`,

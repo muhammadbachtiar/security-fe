@@ -23,7 +23,7 @@ function useLeaveList({ limit, page, status }: Props) {
       const response = await LeaveService.getAll({
         page_size: limit,
         page,
-        with: "staff",
+        with: "staff.divisi",
         ...(status && { status }),
       });
       return response;
@@ -50,6 +50,11 @@ function useLeaveList({ limit, page, status }: Props) {
       title: "Nama Staff",
       dataIndex: "staff",
       render: (value, record) => <p>{record.staff?.nama}</p>,
+    },
+    {
+      title: "Divisi",
+      dataIndex: "divisi",
+      render: (value, record) => <p>{record.staff?.divisi.name || "-"}</p>,
     },
     {
       title: "Tipe",

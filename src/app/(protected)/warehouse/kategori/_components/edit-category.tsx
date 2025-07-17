@@ -24,7 +24,7 @@ function EditCategory({
 
   const { data: categoryProduct, isLoading: isLoadingProduct } = useQuery({
     queryKey: ["CATEGORY_PRODUCT", categoryId, modal.isOpen],
-    enabled: isProduct,
+    enabled: isProduct && modal.isOpen,
     queryFn: async () => {
       const response = await CategoryService.getOneProductCategory(categoryId);
       return response;
@@ -32,7 +32,7 @@ function EditCategory({
   });
   const { data: category, isLoading } = useQuery({
     queryKey: ["CATEGORY", categoryId, modal.isOpen],
-    enabled: !isProduct,
+    enabled: !isProduct && modal.isOpen,
     queryFn: async () => {
       const response = await CategoryService.getOne(categoryId);
       return response;
