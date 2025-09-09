@@ -148,18 +148,18 @@ export default function SecurityScannerDashboard() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
           <div className="flex items-center gap-3">
             <Shield className="w-8 h-8 text-blue-600" />
             <div>
-              <Title level={2} className="!mb-0">
+              <Title level={2} className="!mb-0 text-lg sm:text-2xl">
                 Security Scanner
               </Title>
-              <Text type="secondary">Dashboard Keamanan Website</Text>
+              <Text type="secondary" className="text-sm sm:text-base">Dashboard Keamanan Website</Text>
             </div>
           </div>
 
-          <Button type="primary" icon={<Plus className="w-4 h-4" />} onClick={() => setIsModalOpen(true)}>
+          <Button type="primary" icon={<Plus className="w-4 h-4" />} onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
             Scan Baru
           </Button>
         </div>
@@ -204,34 +204,34 @@ export default function SecurityScannerDashboard() {
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                          <Title level={5} className="!mb-0">
+                          <Title level={5} className="!mb-0 text-base sm:text-lg">
                             {scan.target}
                           </Title>
                           {getStatusBadge(scan.status)}
                           </div>
                           <Row gutter={[16, 8]}>
-                          <Col xs={12} md={6}>
-                            <Text type="secondary">
+                          <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                             <Text strong>Tool:</Text> {scan.tool?.toUpperCase()}
                             </Text>
                           </Col>
-                          <Col xs={12} md={6}>
-                            <Text type="secondary">
+                          <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                             <Text strong>Mode:</Text> {scan.mode}
                             </Text>
                           </Col>
-                          <Col xs={12} md={6}>
-                            <Text type="secondary">
+                          <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                             <Text strong>Source:</Text> {scan.source}
                             </Text>
                           </Col>
-                          <Col xs={12} md={6}>
-                            <Text type="secondary">
+                          <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                             <Text strong>Triggered:</Text> {scan.triggered_at ? formatDate(scan.triggered_at) : "-"}
                             </Text>
                           </Col>
-                          <Col xs={12} md={6}>
-                            <Text type="secondary">
+                          <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                             <Text strong>Durasi:</Text>{" "}
                             {scan.duration_ms
                               ? `${Math.floor(scan.duration_ms / 60000)}m ${Math.round((scan.duration_ms % 60000) / 1000)}s`
@@ -239,23 +239,23 @@ export default function SecurityScannerDashboard() {
                             </Text>
                           </Col>
                           {scan.branch && (
-                            <Col xs={12} md={6}>
-                            <Text type="secondary">
+                            <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                               <Text strong>Branch:</Text> {scan.branch}
                             </Text>
                             </Col>
                           )}
                           {scan.commit_sha && (
-                            <Col xs={12} md={6}>
-                            <Text type="secondary">
+                            <Col xs={24} sm={12} md={6}>
+                            <Text type="secondary" className="text-sm sm:text-base">
                               <Text strong>Commit:</Text> {scan.commit_sha}
                             </Text>
                             </Col>
                           )}
                             <Col xs={24} md={12}>
-                            <Text type="secondary">
+                            <Text type="secondary" className="text-sm sm:text-base">
                               <Text strong>Counts:</Text>{" "}
-                              <span className="ml-1 flex gap-2">
+                              <span className="ml-1 flex flex-wrap gap-2">
                                 <Badge color="red" count={scan.counts?.critical || 0} showZero />
                                 <Text className="ml-1">Critical</Text>
                                 <Badge color="volcano" count={scan.counts?.high || 0} showZero />
@@ -271,7 +271,7 @@ export default function SecurityScannerDashboard() {
                             </Col>
                             {scan.artifact_url && (
                             <Col xs={24} md={12}>
-                              <Text type="secondary">
+                              <Text type="secondary" className="text-sm sm:text-base">
                               <Text strong>Report:</Text>{" "}
                               <Button
                                 type="link"
@@ -279,6 +279,7 @@ export default function SecurityScannerDashboard() {
                                 target="_blank"
                                 download
                                 icon={<Shield className="w-4 h-4" />}
+                                className="p-0"
                               >
                                 Download
                               </Button>
@@ -290,6 +291,7 @@ export default function SecurityScannerDashboard() {
                               type="default"
                               href={`/${tenant}/${scan.id}`}
                               icon={<Focus className="w-4 h-4" />}
+                              className="w-full sm:w-auto"
                             >
                               Detail
                             </Button>
@@ -308,7 +310,10 @@ export default function SecurityScannerDashboard() {
           open={isModalOpen}
           onCancel={() => setIsModalOpen(false)}
           footer={null}
-          width={600}
+          width="100%"
+          style={{ maxWidth: "100%", padding: "0 10px" }}
+          bodyStyle={{ padding: "16px 12px" }}
+          className="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto"
         >
           <Form
             form={form}
@@ -319,16 +324,17 @@ export default function SecurityScannerDashboard() {
               mode: "url",
               source: "manual",
             }}
+            className="space-y-4"
           >
-            <Row gutter={16}>
-              <Col span={12}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                 <Form.Item label="Tool" name="tool" rules={[{ required: true, message: "Tool harus dipilih" }]}>
                   <Select>
                     <Option value="zap">ZAP</Option>
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                 <Form.Item label="Mode" name="mode" rules={[{ required: true, message: "Mode harus dipilih" }]}>
                   <Select>
                     <Option value="url">URL</Option>
@@ -349,13 +355,13 @@ export default function SecurityScannerDashboard() {
               <Input placeholder="manual" />
             </Form.Item>
 
-            <Row gutter={16}>
-              <Col span={12}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                 <Form.Item label="Branch (Opsional)" name="branch">
                   <Input placeholder="main" />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                 <Form.Item label="Commit SHA (Opsional)" name="commit_sha">
                   <Input placeholder="scan-20250826" />
                 </Form.Item>
@@ -368,11 +374,13 @@ export default function SecurityScannerDashboard() {
 
             <Divider />
 
-            <div className="flex gap-2">
-              <Button type="primary" htmlType="submit" loading={loading} className="flex-1">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button type="primary" htmlType="submit" loading={loading} className="flex-1 min-w-[120px]">
                 Mulai Scan
               </Button>
-              <Button onClick={() => setIsModalOpen(false)}>Batal</Button>
+              <Button onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto min-w-[120px]">
+                Batal
+              </Button>
             </div>
           </Form>
         </Modal>

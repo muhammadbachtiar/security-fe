@@ -198,8 +198,8 @@ export default function ScanDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-6xl mx-auto px-2 sm:px-0">
         {/* Header */}
         <div className="mb-6">
           <Button
@@ -209,12 +209,12 @@ export default function ScanDetailPage({
           >
             Kembali
           </Button>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                 Detail Scan Keamanan
               </h1>
-              <p className="text-gray-600">ID: {scanDetail.id}</p>
+              <p className="text-sm sm:text-base text-gray-600">ID: {scanDetail.id}</p>
             </div>
             <Tag
               color={getStatusColor(scanDetail.status)}
@@ -232,8 +232,8 @@ export default function ScanDetailPage({
 
         {/* Vulnerability Statistics */}
         <Card title="Statistik Kerentanan" className="mb-6">
-          <Row gutter={16}>
-            <Col span={6}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Statistic
                 title="Critical"
                 value={scanDetail?.counts?.critical || 0}
@@ -241,7 +241,7 @@ export default function ScanDetailPage({
                 prefix={<BugOutlined />}
               />
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Statistic
                 title="High"
                 value={scanDetail?.counts?.high || 0}
@@ -249,7 +249,7 @@ export default function ScanDetailPage({
                 prefix={<BugOutlined />}
               />
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Statistic
                 title="Medium"
                 value={scanDetail?.counts?.medium || 0}
@@ -257,7 +257,7 @@ export default function ScanDetailPage({
                 prefix={<BugOutlined />}
               />
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Statistic
                 title="Low"
                 value={scanDetail?.counts?.low || 0}
@@ -278,33 +278,35 @@ export default function ScanDetailPage({
 
         {/* Scan Information */}
         <Card title="Informasi Scan" className="mb-6">
-          <Descriptions bordered column={2}>
-            <Descriptions.Item label="Target" span={2}>
-              <a
-                href={scanDetail.target}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                {scanDetail.target}
-              </a>
-            </Descriptions.Item>
-            <Descriptions.Item label="Tool">
-              <Tag color="blue">{scanDetail?.tool?.toUpperCase() || '-'}</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="Tenant">
-              <Tag color="green">{scanDetail.tenant_id}</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="Sumber">
-              <Tag color="purple">{scanDetail.source}</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="Durasi">
-              {formatDuration(scanDetail.duration_ms)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Dimulai" span={2}>
-              {formatDate(scanDetail.triggered_at)}
-            </Descriptions.Item>
-          </Descriptions>
+          <div className="overflow-x-auto">
+            <Descriptions bordered column={2}>
+              <Descriptions.Item label="Target" span={2}>
+                <a
+                  href={scanDetail.target}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 break-all"
+                >
+                  {scanDetail.target}
+                </a>
+              </Descriptions.Item>
+              <Descriptions.Item label="Tool">
+                <Tag color="blue">{scanDetail?.tool?.toUpperCase() || '-'}</Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Tenant">
+                <Tag color="green">{scanDetail.tenant_id}</Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Sumber">
+                <Tag color="purple">{scanDetail.source}</Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Durasi">
+                {formatDuration(scanDetail.duration_ms)}
+              </Descriptions.Item>
+              <Descriptions.Item label="Dimulai" span={2}>
+                {formatDate(scanDetail.triggered_at)}
+              </Descriptions.Item>
+            </Descriptions>
+          </div>
         </Card>
 
           {analysisResult && (
@@ -328,7 +330,7 @@ export default function ScanDetailPage({
                   {analysisResult.findings.map((finding, index) => (
                     <Panel
                       header={
-                        <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-wrap items-center justify-between w-full gap-2">
                           <div className="flex items-center space-x-3">
                             <Tag color={getSeverityColor(finding.severity)} icon={getSeverityIcon(finding.severity)}>
                               {finding.severity.toUpperCase()}
@@ -371,11 +373,13 @@ export default function ScanDetailPage({
 
         {/* Additional Actions */}
         <Card title="Aksi" className="mb-6">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <Button
               type="primary"
               target="_blank"
               href={scanDetail.artifact_url}
+              className="w-full sm:w-auto px-2 sm:px-4 py-2"
+              size="middle"
             >
               Unduh Laporan
             </Button>
@@ -383,7 +387,7 @@ export default function ScanDetailPage({
               form={form}
               layout="vertical"
               onFinish={handleSubmit}
-              className="flex items-center gap-4"
+              className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto"
             >
               <Form.Item
                 name="scan_id"
@@ -392,7 +396,7 @@ export default function ScanDetailPage({
               >
                 <Input type="hidden" />
               </Form.Item>
-              <Button htmlType="submit" loading={loading}>
+              <Button htmlType="submit" loading={loading} className="w-full sm:w-auto px-2 sm:px-4 py-2" size="middle">
                 Analyze
               </Button>
             </Form>
