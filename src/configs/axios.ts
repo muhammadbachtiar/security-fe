@@ -1,24 +1,11 @@
-import { getSessionHrd, getSessionCore, getSessionWms } from "@/lib/session";
+import { getSessionHrd } from "@/lib/session";
 import axios, { AxiosError } from "axios";
 
-const API_VERSION = "/api/v1";
+const API_VERSION = "/v1";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const axiosConfig = axios.create({
-  baseURL: "/api" + API_VERSION,
-  headers: {
-    Accept: "application/json",
-  },
-});
-
-export const axiosConfigWms = axios.create({
-  baseURL: "/wms" + API_VERSION,
-  headers: {
-    Accept: "application/json",
-  },
-});
-
-export const axiosConfigCore = axios.create({
-  baseURL: "/api-core" + API_VERSION,
+  baseURL: API_URL + API_VERSION,
   headers: {
     Accept: "application/json",
   },
@@ -42,83 +29,6 @@ axiosConfig.interceptors.response.use(
     return res;
   },
   async function (error: AxiosError) {
-    if (error.response) {
-      if (error.response.status === 401) {
-        // * Unauthorized
-        try {
-          // logout();
-          window.location.href = "/";
-        } catch (_error) {
-          return Promise.reject(_error);
-        }
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-axiosConfigWms.interceptors.request.use(
-  async function (config) {
-    const session = getSessionWms();
-    if (session) {
-      config.headers.Authorization = "Bearer " + session;
-    }
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
-
-axiosConfigWms.interceptors.response.use(
-  function (res) {
-    return res;
-  },
-  async function (error: AxiosError) {
-    if (error.response) {
-      if (error.response.status === 401) {
-        // * Unauthorized
-        try {
-          // logout();
-          window.location.href = "/";
-        } catch (_error) {
-          return Promise.reject(_error);
-        }
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-axiosConfigCore.interceptors.request.use(
-  async function (config) {
-    const session = getSessionCore();
-    if (session) {
-      config.headers.Authorization = "Bearer " + session;
-    }
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
-
-axiosConfigCore.interceptors.response.use(
-  function (res) {
-    return res;
-  },
-  async function (error: AxiosError) {
-    if (error.response) {
-      if (error.response.status === 401) {
-        // * Unauthorized
-        try {
-          // logout();
-          window.location.href = "/";
-        } catch (_error) {
-          return Promise.reject(_error);
-        }
-      }
-    }
     return Promise.reject(error);
   }
 );

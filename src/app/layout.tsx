@@ -4,7 +4,6 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-import ProtectRoutes from "@/providers/protect-routes";
 
 export const metadata: Metadata = {
   title: "Sarana Technology",
@@ -21,11 +20,9 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <QueryProvider>
           <AntdRegistry>
-            <ProtectRoutes>
-              <NextTopLoader />
+           <NextTopLoader />
               <div>{children}</div>
               <Toaster richColors position="top-right" />
-            </ProtectRoutes>
           </AntdRegistry>
         </QueryProvider>
       </body>

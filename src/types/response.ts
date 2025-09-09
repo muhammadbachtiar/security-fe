@@ -15,11 +15,13 @@ export type BaseResponsePaginate<T> = {
   message: string;
   data: T;
   meta: {
-    next_page_url?: null | string;
-    prev_page_url?: null | string;
-    total: number;
-    per_page: number;
-    current_page: number;
-    last_page: number;
+    has_more?: boolean;
+    is_first_page: boolean;
+    limit: number;
+    next_cursor?: {
+      cursor_id: string;
+      cursor_time: string;
+      next_url: string;
+    };
   };
 };
